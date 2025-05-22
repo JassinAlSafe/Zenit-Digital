@@ -1,6 +1,5 @@
 "use client";
 
-import { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { CursorProvider } from "../utils/CursorContext";
@@ -30,17 +29,21 @@ export default function RootLayout({
 
   useEffect(() => {
     // Track navigation paths in sessionStorage
-    const previousPath = sessionStorage.getItem('previousPath');
+    const previousPath = sessionStorage.getItem("previousPath");
     const currentPath = pathname;
-    
+
     // Check if we're coming back from a specific path like booking
-    if (previousPath && previousPath.includes('/booking') && currentPath === '/') {
+    if (
+      previousPath &&
+      previousPath.includes("/booking") &&
+      currentPath === "/"
+    ) {
       // If coming back from booking page to home, reload
       window.location.reload();
     }
-    
+
     // Store current path for next navigation
-    sessionStorage.setItem('previousPath', currentPath);
+    sessionStorage.setItem("previousPath", currentPath);
   }, [pathname]);
 
   return (
@@ -53,6 +56,14 @@ export default function RootLayout({
           data-cbid="74ed7c8b-7181-40f8-9019-c8770f9209f8"
           data-blockingmode="auto"
         />
+        {process.env.NODE_ENV === "production" && (
+          <Script
+            id="usercentrics-cmp"
+            strategy="afterInteractive"
+            src="https://web.cmp.usercentrics.eu/ui/loader.js"
+            data-settings-id="2zT-81iaBdXcEU"
+          />
+        )}
       </head>
       <body>
         <CursorProvider>
