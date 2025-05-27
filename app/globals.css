@@ -116,11 +116,137 @@ input[type="submit"] *,
   pointer-events: none;
 }
 
-/* Fix iOS touchscreen highlight issues and Android touch optimizations */
+/* Hero section text alignment and layout fixes */
+.hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+  background: white;
+}
+
+.hero-section h1 {
+  text-align: center;
+  max-width: 100%;
+  margin: 0 auto;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+
+.hero-section .word {
+  display: inline-block;
+  margin-right: 0.15em;
+}
+
+.hero-section p {
+  text-align: center;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.hero-section .cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Ensure consistent centering across all screen sizes */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-section .word {
+    margin-right: 0.1em;
+  }
+
+  .hero-section p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero-section h1 {
+    line-height: 0.9;
+    letter-spacing: -0.015em;
+  }
+}
+
+@media (min-width: 1025px) {
+  .hero-section h1 {
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ===========================================
+   iPad-Specific Issue Fixes
+   =========================================== */
+
+/* 1. HOVER STATES: Replace CSS :hover with touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover states on touch devices and replace with touch alternatives */
+  button:hover,
+  a:hover,
+  .interactive:hover {
+    /* Reset hover styles on touch devices */
+    transform: none !important;
+    background-color: initial !important;
+    color: initial !important;
+    opacity: initial !important;
+  }
+
+  /* Touch-friendly active states instead of hover */
+  button:active,
+  a:active,
+  .interactive:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+    transition: all 0.1s ease;
+  }
+
+  /* Touch feedback for buttons */
+  button,
+  .btn,
+  .interactive {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Ripple effect for touch feedback */
+  button::after,
+  .btn::after,
+  .interactive::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+    pointer-events: none;
+  }
+
+  button:active::after,
+  .btn:active::after,
+  .interactive:active::after {
+    width: 200%;
+    height: 200%;
+  }
+}
+
+/* Fix iOS touchscreen highlight issues and enhanced touch optimizations */
 @media (hover: none) {
   body {
     cursor: auto; /* Restore default cursor on touch devices */
-    /* Android-specific touch optimizations */
+    /* Enhanced touch optimizations */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -132,19 +258,291 @@ input[type="submit"] *,
   input[type="submit"],
   .interactive {
     cursor: auto !important; /* Restore default cursor on interactive elements for touch devices */
-    /* Improve touch targets for Android */
+    /* Improve touch targets - Apple HIG recommendations */
     min-height: 44px;
     min-width: 44px;
     touch-action: manipulation;
   }
 
-  /* Android-specific button optimizations */
+  /* Enhanced button optimizations for touch */
   button {
     -webkit-appearance: none;
     appearance: none;
     border-radius: 0;
     background-clip: padding-box;
   }
+}
+
+/* 2. FORM INPUTS: Prevent unwanted zooming and ensure proper sizing */
+input,
+select,
+textarea {
+  /* Prevent iOS zoom on input focus */
+  font-size: 16px !important; /* iOS won't zoom if font-size is 16px or larger */
+  line-height: 1.4;
+
+  /* Enhanced touch targets for form elements */
+  min-height: 44px;
+  padding: 12px 16px;
+
+  /* Remove iOS default styling */
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: inherit;
+
+  /* Touch optimizations */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Specific input type optimizations */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="number"] {
+  font-size: 16px !important;
+  min-height: 50px; /* Larger touch target */
+  padding: 14px 16px;
+}
+
+textarea {
+  font-size: 16px !important;
+  min-height: 100px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+select {
+  font-size: 16px !important;
+  min-height: 50px;
+  padding: 14px 16px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+/* Focus states for accessibility */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--custom-blue);
+  outline-offset: 2px;
+  border-color: var(--custom-blue);
+  box-shadow: 0 0 0 3px rgba(0, 0, 46, 0.1);
+}
+
+/* 3. FIXED POSITIONING: Handle scrolling issues */
+@media screen and (max-width: 1366px) and (hover: none) {
+  /* Fix position fixed elements on touch devices */
+  .fixed-element,
+  .navbar,
+  .header,
+  nav[class*="fixed"],
+  [class*="fixed"] {
+    /* Better fixed positioning for mobile */
+    position: fixed;
+    z-index: 1000;
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  /* Handle iOS Safari viewport changes for fixed elements */
+  .fixed-top {
+    top: 0;
+    top: env(safe-area-inset-top, 0);
+  }
+
+  .fixed-bottom {
+    bottom: 0;
+    bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* Prevent fixed elements from causing layout issues during scroll */
+  .fixed-element {
+    /* Use transform instead of changing top/left for better performance */
+    transition: transform 0.3s ease;
+  }
+}
+
+/* 4. SAFE AREAS: Support for newer iPad models */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    /* Add safe area padding for devices with notches/rounded corners */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left, 0);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right, 0);
+  }
+
+  /* Navigation with safe areas */
+  nav,
+  .navbar,
+  .header {
+    padding-top: calc(1rem + env(safe-area-inset-top, 0));
+    padding-left: calc(1rem + env(safe-area-inset-left, 0));
+    padding-right: calc(1rem + env(safe-area-inset-right, 0));
+  }
+
+  /* Footer with safe areas */
+  footer,
+  .footer {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+    padding-left: calc(1rem + env(safe-area-inset-left, 0));
+    padding-right: calc(1rem + env(safe-area-inset-right, 0));
+  }
+
+  /* Full-screen elements */
+  .hero-section,
+  .full-screen {
+    /* Account for safe areas in full-screen sections */
+    min-height: calc(
+      100vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0)
+    );
+    padding-top: calc(2rem + env(safe-area-inset-top, 0));
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0));
+    padding-left: calc(2rem + env(safe-area-inset-left, 0));
+    padding-right: calc(2rem + env(safe-area-inset-right, 0));
+  }
+
+  /* Loading screen with safe areas */
+  .loading-screen {
+    top: env(safe-area-inset-top, 0);
+    bottom: env(safe-area-inset-bottom, 0);
+    left: env(safe-area-inset-left, 0);
+    right: env(safe-area-inset-right, 0);
+  }
+}
+
+/* 5. PERFORMANCE: Optimize animations and transitions for mobile */
+@media screen and (max-width: 1366px) and (hover: none) {
+  /* Reduce motion for better performance on mobile */
+  * {
+    /* Hardware acceleration for smoother animations */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Optimize animations for mobile performance */
+  .animate,
+  [class*="animate-"],
+  [class*="transition-"] {
+    /* Use transform and opacity for better performance */
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Reduce animation complexity on low-end devices */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Performance-optimized scroll animations */
+  .scroll-animate {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  /* Optimize large text animations */
+  .text-super-large {
+    /* Use transform for text animations instead of font-size changes */
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Optimize GSAP animations for mobile */
+  .gsap-animate {
+    /* Prepare elements for hardware acceleration */
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+  }
+}
+
+/* Low performance device optimizations */
+.low-performance-device * {
+  /* Disable expensive effects on low-end devices */
+  filter: none !important;
+  backdrop-filter: none !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.low-performance-device .text-super-large {
+  /* Simplify large text rendering */
+  font-size: 10rem !important;
+  will-change: auto;
+}
+
+.low-performance-device .gsap-animate {
+  /* Reduce animation complexity */
+  animation-duration: var(--animation-duration, 200ms) !important;
+  transition-duration: var(--animation-duration, 200ms) !important;
+}
+
+/* Reduced motion preferences */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: var(--animation-duration, 100ms) !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: var(--animation-duration, 100ms) !important;
+}
+
+/* CSS custom properties for dynamic animation settings */
+:root {
+  --animation-duration: 400ms;
+  --animation-easing: ease-out;
+}
+
+/* Safe area utility classes */
+.supports-safe-area {
+  /* Base styles for devices that support safe areas */
+}
+
+.has-safe-area-insets {
+  /* Styles for devices with actual safe area insets */
+}
+
+.has-safe-area-insets .hero-section {
+  /* Additional padding for hero sections on devices with notches */
+  padding-top: calc(2rem + env(safe-area-inset-top, 0)) !important;
 }
 
 .custom-blue {
@@ -325,62 +723,104 @@ button {
   }
 }
 
-/* iPad device-specific optimizations using media queries */
-@media screen and (min-width: 768px) and (max-width: 1024px) {
+/* ===========================================
+   iPad and iOS Device Specific Optimizations
+   =========================================== */
+
+/* iPad Portrait */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
   body {
-    /* Enhanced scrolling on iPad */
+    /* Enhanced scrolling on iPad Portrait */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: none;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .hero-section {
+    /* Optimize hero section for iPad portrait */
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+    padding: 2rem;
+  }
+
+  .text-super-large {
+    /* Adjust large text for iPad portrait */
+    font-size: 12rem;
+    line-height: 0.9;
   }
 
   .selected-works-section {
-    /* Optimize Selected Works for iPad */
+    /* Optimize Selected Works for iPad Portrait */
     transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    padding: 2rem;
   }
 
   .sticky {
-    /* Fix sticky positioning on iPad */
+    /* Fix sticky positioning on iPad Portrait */
     position: -webkit-sticky;
     position: sticky;
     will-change: transform;
   }
 
   .scroll-container {
-    /* Improve scroll performance on iPad */
+    /* Improve scroll performance on iPad Portrait */
     -webkit-overflow-scrolling: touch;
     transform: translate3d(0, 0, 0);
   }
 
-  /* iPad-specific touch improvements */
+  /* iPad Portrait touch improvements */
   button,
   .interactive {
-    /* Better touch targets for iPad */
+    /* Better touch targets for iPad Portrait */
     min-height: 44px;
     min-width: 44px;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
+
+  /* Navigation adjustments for iPad Portrait */
+  nav {
+    padding: 1.5rem 2rem;
+  }
+
+  /* Content spacing adjustments */
+  .container {
+    max-width: 90%;
+    padding: 0 2rem;
+  }
 }
 
-/* iOS Safari specific fixes - applies to iPhone and iPad Safari */
-@supports (-webkit-touch-callout: none) {
+/* iPad Landscape */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
   body {
-    /* Fix Safari-specific rendering issues */
+    /* Enhanced scrolling on iPad Landscape */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
     -webkit-text-size-adjust: 100%;
-    -webkit-font-smoothing: antialiased;
   }
 
-  .h-screen {
-    /* Fix viewport height issues in Safari */
-    height: 100vh;
-    height: calc(var(--vh-actual, 1vh) * 100);
+  .hero-section {
+    /* Optimize hero section for iPad landscape */
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+    padding: 1.5rem 3rem;
   }
-}
 
-/* iPad landscape optimizations */
-@media screen and (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
+  .text-super-large {
+    /* Adjust large text for iPad landscape */
+    font-size: 15rem;
+    line-height: 0.85;
+  }
+
+  .selected-works-section {
+    /* Optimize Selected Works for iPad Landscape */
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
   .selected-works-section .text-section {
     /* Ensure proper sticky behavior on iPad landscape */
     height: 100vh;
@@ -392,18 +832,271 @@ button {
     scroll-snap-align: start;
     scroll-snap-stop: normal;
   }
+
+  /* iPad Landscape touch improvements */
+  button,
+  .interactive {
+    /* Better touch targets for iPad Landscape */
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Navigation adjustments for iPad Landscape */
+  nav {
+    padding: 1rem 3rem;
+  }
+
+  /* Content spacing adjustments */
+  .container {
+    max-width: 95%;
+    padding: 0 3rem;
+  }
 }
 
-/* iPad portrait optimizations */
-@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-  .selected-works-section {
-    /* Adjust padding for iPad portrait */
-    padding-top: 2rem;
+/* iPad Pro (11-inch and 12.9-inch) */
+@media only screen and (min-device-width: 1024px) and (max-device-width: 1366px) {
+  body {
+    /* Enhanced scrolling on iPad Pro */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .hero-section {
+    /* Optimize hero section for iPad Pro */
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+    padding: 2rem 4rem;
   }
 
   .text-super-large {
-    /* Adjust large text for iPad portrait */
-    font-size: 15rem;
+    /* Adjust large text for iPad Pro */
+    font-size: 18rem;
+    line-height: 0.8;
+  }
+
+  .selected-works-section {
+    /* Optimize Selected Works for iPad Pro */
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    padding: 2rem 4rem;
+  }
+
+  .sticky {
+    /* Fix sticky positioning on iPad Pro */
+    position: -webkit-sticky;
+    position: sticky;
+    will-change: transform;
+  }
+
+  .scroll-container {
+    /* Improve scroll performance on iPad Pro */
+    -webkit-overflow-scrolling: touch;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* iPad Pro touch improvements */
+  button,
+  .interactive {
+    /* Better touch targets for iPad Pro */
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Navigation adjustments for iPad Pro */
+  nav {
+    padding: 1.5rem 4rem;
+  }
+
+  /* Content spacing adjustments */
+  .container {
+    max-width: 90%;
+    padding: 0 4rem;
+  }
+
+  /* Enhanced typography for larger iPad Pro screens */
+  h1 {
+    font-size: 3.5rem;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+  }
+
+  h3 {
+    font-size: 2rem;
+  }
+
+  p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+}
+
+/* General iPad device optimizations (touch devices only) */
+@media screen and (min-width: 768px) and (max-width: 1366px) and (hover: none) and (pointer: coarse) {
+  /* iPad-specific performance optimizations - TOUCH DEVICES ONLY */
+  * {
+    /* Hardware acceleration for smoother animations */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Prevent text selection issues on touch */
+  body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Allow text selection for content areas */
+  p,
+  .content,
+  .text-content {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+
+  /* Optimize scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Fix for iOS Safari bounce - TOUCH DEVICES ONLY */
+  body {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+
+  #__next,
+  main {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Desktop Mac optimizations (hover-capable devices) */
+@media screen and (min-width: 768px) and (hover: hover) and (pointer: fine) {
+  /* Ensure normal scrolling on desktop devices like Mac */
+  body {
+    position: static !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Better scrollbar styling for Mac */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* iOS Safari specific fixes - applies to iPhone and iPad Safari */
+@supports (-webkit-touch-callout: none) {
+  /* Fix for iOS Safari address bar resizing */
+  html,
+  body {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+
+  body {
+    /* Fix Safari-specific rendering issues */
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+
+    /* Fix for iOS rubber band scrolling */
+    overscroll-behavior: none;
+  }
+
+  .h-screen {
+    /* Fix viewport height issues in Safari */
+    height: 100vh;
+    height: calc(var(--vh-actual, 1vh) * 100);
+    height: -webkit-fill-available;
+  }
+
+  /* Prevent zoom on input focus */
+  input,
+  select,
+  textarea {
+    font-size: 16px; /* iOS won't zoom if font-size is 16px or larger */
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+
+  /* Additional iOS input optimizations */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  textarea {
+    /* Prevent iOS zoom and styling issues */
+    font-size: 16px;
+    line-height: 1.4;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    background-clip: padding-box;
+  }
+
+  /* Fix iOS keyboard viewport issues */
+  .ios-keyboard-fix {
+    position: relative;
+    height: 100vh;
+    height: -webkit-fill-available;
+    overflow: hidden;
+  }
+}
+
+/* Additional iOS Safari specific optimizations */
+@media screen and (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
+  /* Additional landscape-specific adjustments for all iPad sizes */
+  .scroll-content {
+    /* Enhanced scroll performance for landscape mode */
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+
+  .loading-screen {
+    /* Ensure loading screen covers properly in landscape */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
   }
 }
 
@@ -411,6 +1104,197 @@ button {
 @media (hover: none) and (pointer: coarse) {
   * {
     touch-action: manipulation;
+  }
+}
+
+/* ===========================================
+   Mobile First Responsive Breakpoints
+   =========================================== */
+
+/* Mobile first approach - Base styles (mobile) already defined above */
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 90%;
+    padding: 0 2rem;
+  }
+
+  .hero-section {
+    padding: 2rem;
+  }
+
+  .text-super-large {
+    font-size: 14rem;
+  }
+
+  /* Navigation adjustments for tablets */
+  nav {
+    padding: 1.5rem 2rem;
+  }
+
+  /* Typography scaling for tablets */
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  /* Button sizing for tablets */
+  button,
+  .interactive {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  body {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 85%;
+    padding: 0 3rem;
+  }
+
+  .hero-section {
+    padding: 3rem 4rem;
+  }
+
+  .text-super-large {
+    font-size: 16rem;
+  }
+
+  /* Navigation adjustments for desktop */
+  nav {
+    padding: 1.5rem 3rem;
+  }
+
+  /* Typography scaling for desktop */
+  h1 {
+    font-size: 3rem;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+  }
+
+  h3 {
+    font-size: 2rem;
+  }
+
+  /* Enhanced spacing for desktop */
+  .space-lg {
+    margin: 2rem;
+  }
+
+  .space-md {
+    margin: 1.5rem;
+  }
+
+  .space-sm {
+    margin: 1rem;
+  }
+
+  /* Desktop-specific optimizations */
+  .selected-works-section {
+    padding: 3rem 4rem;
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 80%;
+    padding: 0 4rem;
+  }
+
+  .text-super-large {
+    font-size: 20rem;
+  }
+
+  .hero-section {
+    padding: 4rem 6rem;
+  }
+
+  /* Enhanced typography for large screens */
+  h1 {
+    font-size: 3.5rem;
+  }
+
+  h2 {
+    font-size: 3rem;
+  }
+
+  h3 {
+    font-size: 2.5rem;
+  }
+}
+
+/* iPad specific orientation handling */
+@media (orientation: landscape) and (max-height: 768px) {
+  /* Landscape tablet adjustments */
+  .hero-section {
+    padding: 1.5rem 3rem;
+    min-height: 100vh;
+  }
+
+  .text-super-large {
+    font-size: 12rem;
+    line-height: 0.85;
+  }
+
+  /* Optimize navigation for landscape tablets */
+  nav {
+    padding: 1rem 2rem;
+  }
+
+  /* Adjust content spacing for landscape */
+  .container {
+    padding: 0 2rem;
+  }
+
+  /* Optimize sections for landscape viewing */
+  .selected-works-section {
+    padding: 1.5rem 2rem;
+  }
+
+  /* Typography adjustments for landscape */
+  h1 {
+    font-size: 2.2rem;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+
+  h3 {
+    font-size: 1.4rem;
+  }
+
+  /* Loading screen optimization for landscape */
+  .loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
   }
 }
 

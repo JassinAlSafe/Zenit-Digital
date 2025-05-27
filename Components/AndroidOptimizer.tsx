@@ -7,11 +7,21 @@ export function AndroidOptimizer() {
     // Detect Android device
     const isAndroid = /Android/i.test(navigator.userAgent);
     const isOldAndroid = /Android [1-4]/i.test(navigator.userAgent);
-    const isLowMemory = navigator.deviceMemory && navigator.deviceMemory < 4;
+    const isLowMemory =
+      (navigator as any).deviceMemory && (navigator as any).deviceMemory < 4;
 
     if (isAndroid) {
       // Add Android class to body for CSS targeting
       document.body.classList.add("android-device");
+
+      // Add color-scheme meta tag to prevent Samsung browsers from applying dark mode
+      // Check if the meta tag already exists to avoid duplicates
+      if (!document.querySelector('meta[name="color-scheme"]')) {
+        const colorSchemeMetaTag = document.createElement("meta");
+        colorSchemeMetaTag.name = "color-scheme";
+        colorSchemeMetaTag.content = "light only";
+        document.head.appendChild(colorSchemeMetaTag);
+      }
 
       if (isOldAndroid) {
         document.body.classList.add("old-android");
@@ -90,6 +100,14 @@ export function AndroidOptimizer() {
           "old-android",
           "low-memory"
         );
+
+        // Remove the color-scheme meta tag when component unmounts
+        const existingColorSchemeTag = document.querySelector(
+          'meta[name="color-scheme"]'
+        );
+        if (existingColorSchemeTag) {
+          existingColorSchemeTag.remove();
+        }
       };
     }
   }, []);

@@ -13,6 +13,7 @@ import TestHeader from "../Components/TestHeader";
 // import Home from "../Components/Home";
 import Image from "next/image";
 import DebugPanel from "../Components/DebugPanel";
+import DeviceHandler from "../Components/DeviceHandler";
 
 export default function Page() {
   // Enhanced loading state management
@@ -433,6 +434,9 @@ export default function Page() {
         gsapReady={gsapReady}
         componentsReady={componentsReady}
       />
+
+      {/* Device Handler for iOS optimizations */}
+      <DeviceHandler />
 
       <style jsx>{`
         @keyframes fadeIn {
