@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import { CachedVideoSource } from "./CachedVideo";
 
 const Footer = () => {
   // Create refs to store our animation instances
@@ -159,7 +160,7 @@ const Footer = () => {
                 playsInline
                 className="w-full h-full object-cover"
               >
-                <source src="/globe.mp4" type="video/mp4" />
+                <CachedVideoSource src="globe.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>

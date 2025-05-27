@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import Link from "next/link";
+import { CachedVideoSource } from "./CachedVideo";
 
 function Test() {
   const videoRef = useRef(null);
@@ -92,7 +93,7 @@ function Test() {
             loop
             // Remove autoPlay attribute, we'll control this with JavaScript
           >
-            <source src="flower.mp4" type="video/mp4" />
+            <CachedVideoSource src="flower.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>

@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
+import CachedVideo from "./CachedVideo";
 
 const TestHeader = ({ onAnimationStart }) => {
   // Create refs for the video elements
@@ -132,8 +133,9 @@ const TestHeader = ({ onAnimationStart }) => {
 
         {/* Video for small screens (below md breakpoint) */}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-full max-w-sm block md:hidden z-0">
-          <video
+          <CachedVideo
             ref={mobileVideoRef}
+            src="airplane.mp4"
             className="w-full h-auto object-contain opacity-70"
             style={{
               filter:
@@ -143,16 +145,14 @@ const TestHeader = ({ onAnimationStart }) => {
             muted
             loop
             playsInline
-            src="/airplane.mp4"
-          >
-            Your browser does not support the video tag.
-          </video>
+          />
         </div>
 
         {/* Video for medium and large screens */}
-        <div className="absolute right-8 top-1/2 transform -translate-y-1/2 w-1/3 max-w-md hidden md:block z-0 pointer-events-none">
-          <video
+        <div className="absolute right-16 top-1/2 transform -translate-y-1/2 w-1/3 max-w-md hidden md:block z-0 pointer-events-none">
+          <CachedVideo
             ref={desktopVideoRef}
+            src="airplane.mp4"
             className="w-full h-auto object-contain opacity-60"
             style={{
               filter:
@@ -162,10 +162,7 @@ const TestHeader = ({ onAnimationStart }) => {
             muted
             loop
             playsInline
-            src="/airplane.mp4"
-          >
-            Your browser does not support the video tag.
-          </video>
+          />
         </div>
       </div>
     </section>
