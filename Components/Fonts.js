@@ -36,7 +36,7 @@ export function Fonts() {
         font-display: swap;
       }
 
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500;600&display=swap");
+      /* Remove Google Fonts import to prevent conflicts with Next.js Google Fonts API */
     `;
     document.head.appendChild(style);
 

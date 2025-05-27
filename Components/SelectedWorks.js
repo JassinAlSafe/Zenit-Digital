@@ -15,38 +15,94 @@ const SelectedWorks = () => {
     if (typeof window !== "undefined") {
       const titleLetters = document.querySelectorAll(".title-letter");
 
-      // IMPORTANT: Remove all GSAP setup for the section itself
-      // This will now be handled by the parent container
+      // Detect iPad for specific optimizations
+      const isIPad =
+        /iPad/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-      // Title animation only
+      // Initialize currentImage to 1 on component mount
+      setCurrentImage(1);
+
+      // iPad-specific ScrollTrigger configuration
+      if (isIPad) {
+        ScrollTrigger.config({
+          force3D: true,
+          nullTargetWarn: false,
+          ignoreMobileResize: true,
+        });
+      }
+
+      // Title animation with iPad optimizations
       if (titleLetters.length > 0) {
         gsap.set(titleLetters, { y: 160 });
         gsap.to(titleLetters, {
           y: 0,
-          duration: 1,
+          duration: isIPad ? 0.8 : 1, // Slightly faster on iPad
           stagger: 0.04,
           ease: "power3.out",
           scrollTrigger: {
             trigger: ".selected-works-section",
-            start: "top 80%",
+            start: isIPad ? "top 85%" : "top 80%", // Different trigger point for iPad
             toggleActions: "play none none none",
+            refreshPriority: isIPad ? 1 : 0, // Higher priority refresh on iPad
           },
         });
       }
 
-      // Update current image based on scroll position
+      // Update current image based on scroll position with iPad optimizations
       projects.forEach((project, index) => {
         const projectElement = document.querySelectorAll(".scroll-item")[index];
         if (projectElement) {
           ScrollTrigger.create({
             trigger: projectElement,
-            start: "top center",
-            end: "bottom center",
+            start: isIPad ? "top 70%" : "top center", // Better trigger point for iPad
+            end: isIPad ? "bottom 30%" : "bottom center",
             onEnter: () => setCurrentImage(index + 1),
             onEnterBack: () => setCurrentImage(index + 1),
+            refreshPriority: isIPad ? 1 : 0,
+            // iPad-specific optimizations
+            ...(isIPad && {
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+            }),
           });
         }
       });
+
+      // Ensure first project is active on initial load for iPad
+      if (isIPad) {
+        ScrollTrigger.addEventListener("refresh", () => {
+          // Check if we're at the top and set to first image
+          if (window.scrollY < 100) {
+            setCurrentImage(1);
+          }
+        });
+
+        // Set initial image on load
+        setTimeout(() => {
+          if (window.scrollY < 100) {
+            setCurrentImage(1);
+          }
+        }, 100);
+      }
+
+      // iPad-specific refresh after orientation change
+      if (isIPad) {
+        const handleOrientationChange = () => {
+          setTimeout(() => {
+            ScrollTrigger.refresh();
+          }, 200);
+        };
+
+        window.addEventListener("orientationchange", handleOrientationChange);
+
+        return () => {
+          window.removeEventListener(
+            "orientationchange",
+            handleOrientationChange
+          );
+        };
+      }
     }
   }, []);
 
@@ -99,18 +155,18 @@ const SelectedWorks = () => {
       </div>
 
       <div className="scroll-container flex flex-col md:flex-row mt-40">
-        {/* Left Fixed Text - Hidden on mobile */}
-        <div className="text-section w-full md:w-1/2 sticky top-0 h-screen hidden md:flex items-center">
-          <div className="text-content px-8">
-            <div className="text-super-large 2xl:text-[30rem] font-normal text-custom-pink">
+        {/* Left Fixed Text - Hidden on mobile, optimized for iPad */}
+        <div className="text-section w-full md:w-1/2 sticky top-0 h-screen hidden md:flex items-center ipad-portrait:hidden ipad-landscape:flex">
+          <div className="text-content px-8 ipad-landscape:px-6">
+            <div className="text-super-large 2xl:text-[30rem] ipad-landscape:text-[20rem] ipad-portrait:text-[15rem] font-normal text-custom-pink">
               {String(currentImage).padStart(2, "0")}
             </div>
           </div>
         </div>
 
-        {/* Right Scrolling Images with Details - Full width on mobile */}
-        <div className="image-section w-full md:w-1/2">
-          <div className="images space-y-20 px-8 md:px-6 lg:px-6 md:pr-16 pb-20">
+        {/* Right Scrolling Images with Details - Full width on mobile, optimized for iPad */}
+        <div className="image-section w-full md:w-1/2 ipad-portrait:w-full">
+          <div className="images space-y-20 px-8 md:px-6 lg:px-6 md:pr-16 pb-20 ipad-portrait:px-6 ipad-landscape:px-4">
             {projects.map((project) => (
               <div
                 key={project.id}

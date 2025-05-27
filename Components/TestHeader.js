@@ -76,7 +76,7 @@ const TestHeader = ({ onAnimationStart }) => {
 
   return (
     <section
-      className="relative h-screen w-full flex items-center justify-center"
+      className="hero-section relative h-screen w-full flex items-center justify-center"
       data-bg="white"
       data-text="var(--custom-blue)"
       data-button-bg="var(--custom-blue)"

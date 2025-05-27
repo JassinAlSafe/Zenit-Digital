@@ -8,6 +8,7 @@ const inter = Inter({
   weight: ["400", "500", "600"],
   display: "swap",
   preload: true,
+  variable: "--font-inter",
 });
 
 const firaCode = Fira_Code({
@@ -15,12 +16,14 @@ const firaCode = Fira_Code({
   weight: ["400", "500", "600"],
   display: "swap",
   preload: true,
+  variable: "--font-fira-code",
 });
 
 export function FontProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Apply font classes to document body
-    document.body.className = `${inter.className} ${document.body.className}`;
+    // Apply font classes to document body with fallbacks
+    const currentClasses = document.body.className;
+    document.body.className = `${inter.className} ${currentClasses}`;
 
     // Create CSS variables for the fonts
     document.documentElement.style.setProperty(
@@ -31,7 +34,15 @@ export function FontProvider({ children }: { children: React.ReactNode }) {
       "--font-fira-code",
       firaCode.style.fontFamily
     );
+
+    // Add cross-platform font rendering optimizations
+    document.documentElement.style.setProperty(
+      "--font-feature-settings",
+      '"kern" 1, "liga" 1, "calt" 1'
+    );
   }, []);
 
-  return <>{children}</>;
+  return (
+    <div className={`${inter.variable} ${firaCode.variable}`}>{children}</div>
+  );
 }

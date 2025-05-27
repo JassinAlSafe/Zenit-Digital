@@ -8,6 +8,7 @@ import EnvironmentInfo from "../Components/EnvironmentInfo";
 import GsapInitializer from "../Components/GsapInitializer";
 import { FontProvider } from "../Components/FontProvider";
 import NavigationHandler from "../Components/NavigationHandler";
+import { AndroidOptimizer } from "../Components/AndroidOptimizer";
 import { metadata, viewport } from "./metadata";
 
 export { metadata, viewport };
@@ -20,6 +21,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preload" href="/favicon2.png" as="image" type="image/png" />
+
         {process.env.NODE_ENV === "production" && (
           <Script
             id="usercentrics-cmp"
@@ -32,6 +35,7 @@ export default function RootLayout({
       <body>
         <FontProvider>
           <NavigationHandler />
+          <AndroidOptimizer />
           <Fonts />
           <EnvironmentInfo />
           <GsapInitializer />
