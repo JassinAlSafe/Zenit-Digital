@@ -24,9 +24,44 @@ export const deviceDetection = {
         return /iPod/.test(navigator.userAgent);
     },
 
+    // Detect Windows devices
+    isWindows: (): boolean => {
+        return /Windows/.test(navigator.userAgent) || /Win32|Win64|WOW64/.test(navigator.userAgent);
+    },
+
+    // Detect macOS devices
+    isMacOS: (): boolean => {
+        return /Mac OS X/.test(navigator.userAgent) && !/iPhone|iPad|iPod/.test(navigator.userAgent);
+    },
+
+    // Detect Android devices
+    isAndroid: (): boolean => {
+        return /Android/.test(navigator.userAgent);
+    },
+
     // Detect Safari browser
     isSafari: (): boolean => {
         return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    },
+
+    // Detect Chrome browser
+    isChrome: (): boolean => {
+        return /Chrome/.test(navigator.userAgent) && !/Edge|OPR/.test(navigator.userAgent);
+    },
+
+    // Detect Firefox browser
+    isFirefox: (): boolean => {
+        return /Firefox/.test(navigator.userAgent);
+    },
+
+    // Detect Edge browser (legacy and Chromium-based)
+    isEdge: (): boolean => {
+        return /Edge|Edg/.test(navigator.userAgent);
+    },
+
+    // Detect Internet Explorer
+    isIE: (): boolean => {
+        return /Trident|MSIE/.test(navigator.userAgent);
     },
 
     // Detect if device supports touch
@@ -40,6 +75,19 @@ export const deviceDetection = {
         return match ? parseInt(match[1], 10) : null;
     },
 
+    // Get Windows version
+    getWindowsVersion: (): string | null => {
+        const match = navigator.userAgent.match(/Windows NT (\d+\.\d+)/);
+        if (!match) return null;
+
+        const version = parseFloat(match[1]);
+        if (version >= 10.0) return '10+';
+        if (version >= 6.3) return '8.1';
+        if (version >= 6.2) return '8';
+        if (version >= 6.1) return '7';
+        return 'Legacy';
+    },
+
     // Check if device is in landscape mode
     isLandscape: (): boolean => {
         return window.innerWidth > window.innerHeight;
@@ -48,6 +96,67 @@ export const deviceDetection = {
     // Get device pixel ratio
     getPixelRatio: (): number => {
         return window.devicePixelRatio || 1;
+    },
+
+    // Get comprehensive browser info
+    getBrowserInfo: (): {
+        name: string;
+        platform: string;
+        supportsWebM: boolean;
+        supportsMP4: boolean;
+        preferredFormats: string[];
+    } => {
+        const ua = navigator.userAgent;
+        let browserName = 'Unknown';
+        let platform = 'Unknown';
+
+        // Detect browser
+        if (deviceDetection.isChrome()) browserName = 'Chrome';
+        else if (deviceDetection.isFirefox()) browserName = 'Firefox';
+        else if (deviceDetection.isEdge()) browserName = 'Edge';
+        else if (deviceDetection.isSafari()) browserName = 'Safari';
+        else if (deviceDetection.isIE()) browserName = 'Internet Explorer';
+
+        // Detect platform
+        if (deviceDetection.isWindows()) platform = 'Windows';
+        else if (deviceDetection.isMacOS()) platform = 'macOS';
+        else if (deviceDetection.isIOS()) platform = 'iOS';
+        else if (deviceDetection.isAndroid()) platform = 'Android';
+
+        // Determine codec support
+        const video = document.createElement('video');
+        const supportsWebM = video.canPlayType('video/webm; codecs="vp9,opus"') !== '';
+        const supportsMP4 = video.canPlayType('video/mp4; codecs="avc1.42E01E,mp4a.40.2"') !== '';
+
+        // Determine preferred formats based on browser and platform
+        let preferredFormats = ['mp4']; // Default to MP4 for maximum compatibility
+
+        if (platform === 'Windows') {
+            if (browserName === 'Chrome' || browserName === 'Edge') {
+                preferredFormats = supportsWebM ? ['mp4', 'webm'] : ['mp4'];
+            } else if (browserName === 'Firefox') {
+                preferredFormats = ['mp4', 'webm'];
+            } else {
+                preferredFormats = ['mp4']; // IE, legacy browsers
+            }
+        } else if (platform === 'macOS' || platform === 'iOS') {
+            if (browserName === 'Safari') {
+                preferredFormats = ['mp4']; // Safari prefers MP4
+            } else {
+                preferredFormats = supportsWebM ? ['mp4', 'webm'] : ['mp4'];
+            }
+        } else {
+            // Android, Linux, others
+            preferredFormats = supportsWebM ? ['webm', 'mp4'] : ['mp4'];
+        }
+
+        return {
+            name: browserName,
+            platform,
+            supportsWebM,
+            supportsMP4,
+            preferredFormats
+        };
     }
 };
 
@@ -163,10 +272,12 @@ export const touchUtils = {
 
 // iOS-specific fixes and optimizations
 export const iosOptimizations = {
-    // Apply iOS-specific body classes for CSS targeting
-    applyIOSClasses: (): void => {
+    // Apply platform-specific body classes for CSS targeting
+    applyPlatformClasses: (): void => {
         const body = document.body;
+        const browserInfo = deviceDetection.getBrowserInfo();
 
+        // Platform classes
         if (deviceDetection.isIOS()) {
             body.classList.add('ios-device');
 
@@ -177,15 +288,66 @@ export const iosOptimizations = {
             if (deviceDetection.isIPhone()) {
                 body.classList.add('iphone-device');
             }
+        }
 
-            if (deviceDetection.isSafari()) {
-                body.classList.add('safari-browser');
+        if (deviceDetection.isWindows()) {
+            body.classList.add('windows-device');
+            const winVersion = deviceDetection.getWindowsVersion();
+            if (winVersion) {
+                body.classList.add(`windows-${winVersion.toLowerCase().replace('+', '-plus')}`);
             }
+        }
+
+        if (deviceDetection.isMacOS()) {
+            body.classList.add('macos-device');
+        }
+
+        if (deviceDetection.isAndroid()) {
+            body.classList.add('android-device');
+        }
+
+        // Browser classes
+        body.classList.add(`browser-${browserInfo.name.toLowerCase().replace(' ', '-')}`);
+
+        // Browser-specific classes
+        if (deviceDetection.isSafari()) {
+            body.classList.add('safari-browser');
+        }
+
+        if (deviceDetection.isChrome()) {
+            body.classList.add('chrome-browser');
+        }
+
+        if (deviceDetection.isFirefox()) {
+            body.classList.add('firefox-browser');
+        }
+
+        if (deviceDetection.isEdge()) {
+            body.classList.add('edge-browser');
+        }
+
+        if (deviceDetection.isIE()) {
+            body.classList.add('ie-browser');
+        }
+
+        // Video codec support classes
+        if (browserInfo.supportsWebM) {
+            body.classList.add('supports-webm');
+        }
+
+        if (browserInfo.supportsMP4) {
+            body.classList.add('supports-mp4');
         }
 
         if (deviceDetection.isTouchDevice()) {
             body.classList.add('touch-device');
         }
+    },
+
+    // Apply iOS-specific body classes for CSS targeting (deprecated - use applyPlatformClasses)
+    applyIOSClasses: (): void => {
+        console.warn('applyIOSClasses is deprecated. Use applyPlatformClasses instead.');
+        iosOptimizations.applyPlatformClasses();
     },
 
     // Fix iOS Safari viewport issues
@@ -211,16 +373,17 @@ export const iosOptimizations = {
         elements.forEach((element) => {
             if (element instanceof HTMLElement) {
                 element.style.overscrollBehavior = 'none';
-                element.style.webkitOverflowScrolling = 'touch';
+                // Use type assertion for webkit-specific property
+                (element.style as any).webkitOverflowScrolling = 'touch';
             }
         });
     },
 
-    // Initialize all iOS optimizations
+    // Initialize all platform optimizations
     init: (): void => {
         if (typeof window === 'undefined') return;
 
-        iosOptimizations.applyIOSClasses();
+        iosOptimizations.applyPlatformClasses();
         iosOptimizations.fixIOSViewport();
 
         // Handle orientation changes
@@ -235,13 +398,28 @@ export const iosOptimizations = {
             }, { passive: false });
         }
 
-        console.log('iOS optimizations initialized', {
+        // Windows-specific optimizations
+        if (deviceDetection.isWindows()) {
+            // Improve text rendering on Windows
+            document.body.style.textRendering = 'optimizeLegibility';
+            (document.body.style as any).fontSmoothing = 'antialiased';
+            (document.body.style as any).webkitFontSmoothing = 'antialiased';
+        }
+
+        const browserInfo = deviceDetection.getBrowserInfo();
+        console.log('Platform optimizations initialized', {
+            platform: browserInfo.platform,
+            browser: browserInfo.name,
             isIOS: deviceDetection.isIOS(),
-            isIPad: deviceDetection.isIPad(),
-            isIPhone: deviceDetection.isIPhone(),
-            isSafari: deviceDetection.isSafari(),
+            isWindows: deviceDetection.isWindows(),
+            isMacOS: deviceDetection.isMacOS(),
+            isAndroid: deviceDetection.isAndroid(),
+            supportsWebM: browserInfo.supportsWebM,
+            supportsMP4: browserInfo.supportsMP4,
+            preferredFormats: browserInfo.preferredFormats,
             isTouchDevice: deviceDetection.isTouchDevice(),
-            iosVersion: deviceDetection.getIOSVersion()
+            iosVersion: deviceDetection.getIOSVersion(),
+            windowsVersion: deviceDetection.getWindowsVersion()
         });
     }
 };
@@ -357,15 +535,146 @@ export const testingUtils = {
         }
     },
 
+    // Test video codec support (Windows-specific)
+    testVideoCodecSupport: (): void => {
+        const video = document.createElement('video');
+        const browserInfo = deviceDetection.getBrowserInfo();
+
+        console.log('🎬 Video Codec Support Test');
+        console.log('Platform:', browserInfo.platform);
+        console.log('Browser:', browserInfo.name);
+
+        const codecs = {
+            'MP4 H.264': 'video/mp4; codecs="avc1.42E01E,mp4a.40.2"',
+            'MP4 H.265': 'video/mp4; codecs="hev1.1.6.L93.90"',
+            'WebM VP8': 'video/webm; codecs="vp8,vorbis"',
+            'WebM VP9': 'video/webm; codecs="vp9,opus"',
+            'WebM AV1': 'video/webm; codecs="av01.0.05M.08"',
+            'OGG Theora': 'video/ogg; codecs="theora,vorbis"'
+        };
+
+        Object.entries(codecs).forEach(([name, mimeType]) => {
+            const support = video.canPlayType(mimeType);
+            const status = support === 'probably' ? '✅ Probably' :
+                support === 'maybe' ? '⚠️ Maybe' : '❌ No';
+            console.log(`${status} ${name}: ${mimeType}`);
+        });
+
+        console.log('Preferred formats:', browserInfo.preferredFormats);
+    },
+
+    // Test video file accessibility
+    testVideoFileAccess: async (videoSources: string[]): Promise<void> => {
+        console.log('🔍 Testing Video File Access');
+
+        for (const src of videoSources) {
+            try {
+                const response = await fetch(src, { method: 'HEAD' });
+                if (response.ok) {
+                    console.log(`✅ ${src} - Accessible (${response.status})`);
+                    console.log(`   Content-Type: ${response.headers.get('Content-Type')}`);
+                    console.log(`   Content-Length: ${response.headers.get('Content-Length')}`);
+                    console.log(`   Accept-Ranges: ${response.headers.get('Accept-Ranges')}`);
+                } else {
+                    console.warn(`⚠️ ${src} - HTTP ${response.status}`);
+                }
+            } catch (error) {
+                console.error(`❌ ${src} - Failed to fetch:`, error);
+            }
+        }
+    },
+
+    // Test video element creation and loading
+    testVideoElementCreation: (videoSrc: string): Promise<{ success: boolean; error?: any }> => {
+        return new Promise((resolve) => {
+            const video = document.createElement('video');
+            video.muted = true;
+            video.playsInline = true;
+            video.preload = 'metadata';
+
+            const timeout = setTimeout(() => {
+                resolve({ success: false, error: 'Timeout' });
+            }, 10000);
+
+            video.addEventListener('loadedmetadata', () => {
+                clearTimeout(timeout);
+                console.log('✅ Video metadata loaded successfully');
+                console.log(`   Duration: ${video.duration}s`);
+                console.log(`   Dimensions: ${video.videoWidth}x${video.videoHeight}`);
+                resolve({ success: true });
+            });
+
+            video.addEventListener('error', (e) => {
+                clearTimeout(timeout);
+                console.error('❌ Video failed to load:', e);
+                resolve({ success: false, error: e });
+            });
+
+            video.src = videoSrc;
+        });
+    },
+
+    // Comprehensive Windows video diagnostics
+    runWindowsVideoDiagnostics: async (testVideoSrc?: string): Promise<void> => {
+        if (!deviceDetection.isWindows()) {
+            console.log('ℹ️ Not a Windows device, skipping Windows-specific diagnostics');
+            return;
+        }
+
+        console.log('🖥️ Running Windows Video Diagnostics...');
+
+        const browserInfo = deviceDetection.getBrowserInfo();
+        const windowsVersion = deviceDetection.getWindowsVersion();
+
+        console.log('System Information:');
+        console.log(`   Windows Version: ${windowsVersion}`);
+        console.log(`   Browser: ${browserInfo.name}`);
+        console.log(`   User Agent: ${navigator.userAgent}`);
+
+        // Test codec support
+        testingUtils.testVideoCodecSupport();
+
+        // Test hardware acceleration
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        console.log('Hardware Acceleration:', gl ? '✅ Available' : '❌ Not Available');
+
+        if (gl) {
+            const webglContext = gl as WebGLRenderingContext;
+            const debugInfo = webglContext.getExtension('WEBGL_debug_renderer_info');
+            if (debugInfo) {
+                console.log(`   GPU: ${webglContext.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)}`);
+            }
+        }
+
+        // Test video file if provided
+        if (testVideoSrc) {
+            console.log('\nTesting video file loading...');
+            await testingUtils.testVideoFileAccess([testVideoSrc]);
+            const result = await testingUtils.testVideoElementCreation(testVideoSrc);
+
+            if (!result.success) {
+                console.error('Video loading failed. Possible solutions:');
+                console.log('1. Check if video file exists and is accessible');
+                console.log('2. Verify video codec is supported on this browser');
+                console.log('3. Check browser security settings');
+                console.log('4. Try a different video format (MP4 is most compatible)');
+            }
+        }
+
+        console.log('🖥️ Windows Video Diagnostics Complete');
+    },
+
     // Run all compatibility tests
     runCompatibilityTests: (): void => {
         if (process.env.NODE_ENV === 'development') {
-            console.log('🧪 Running iPad compatibility tests...');
+            console.log('🧪 Running compatibility tests...');
 
             testingUtils.testHoverStates();
             testingUtils.testFormInputs();
             testingUtils.testFixedPositioning();
             testingUtils.testSafeAreas();
+            testingUtils.testVideoCodecSupport();
 
             // Test performance
             const stopFpsMonitor = performanceUtils.measureFrameRate((fps) => {

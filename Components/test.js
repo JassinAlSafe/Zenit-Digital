@@ -47,6 +47,22 @@ function Test() {
     }
   }, []);
 
+  // Handle video load errors
+  const handleVideoError = (e) => {
+    console.error("Video failed to load:", e);
+    console.log("Video source:", e.target.src);
+    console.log("Error code:", e.target.error?.code);
+    console.log("Error message:", e.target.error?.message);
+  };
+
+  const handleVideoLoadStart = () => {
+    console.log("Video loading started");
+  };
+
+  const handleVideoCanPlay = () => {
+    console.log("Video can play");
+  };
+
   return (
     <section
       className="min-h-screen flex flex-col"
@@ -100,6 +116,9 @@ function Test() {
             loop
             playsInline
             src={getVersionedVideoUrl("flower.mp4")}
+            onError={handleVideoError}
+            onLoadStart={handleVideoLoadStart}
+            onCanPlay={handleVideoCanPlay}
           >
             Your browser does not support the video tag.
           </video>

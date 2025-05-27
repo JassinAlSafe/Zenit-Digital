@@ -1362,3 +1362,111 @@ button {
     margin: 0.5rem;
   }
 }
+
+/* Improve font rendering on Windows */
+.windows-device {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-smoothing: antialiased;
+}
+
+/* Windows-specific video optimizations */
+.windows-device video {
+  /* Ensure proper video rendering on Windows */
+  width: 100%;
+  height: auto;
+  background-color: #000;
+  object-fit: cover;
+}
+
+/* Windows Edge browser optimizations */
+.edge-browser video {
+  /* Edge-specific video fixes */
+  -ms-interpolation-mode: bicubic;
+}
+
+/* Windows Chrome browser optimizations */
+.chrome-browser.windows-device video {
+  /* Chrome on Windows specific fixes */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Internet Explorer fallbacks */
+.ie-browser video {
+  /* IE doesn't support modern video features well */
+  width: 100%;
+  height: auto;
+  background: #000;
+}
+
+/* Video codec support classes */
+.supports-mp4:not(.supports-webm) video source[data-format="webm"] {
+  /* Hide WebM sources if not supported */
+  display: none !important;
+}
+
+.supports-webm:not(.supports-mp4) video source[data-format="mp4"] {
+  /* Hide MP4 sources if not supported (rare case) */
+  display: none !important;
+}
+
+/* Windows version specific optimizations */
+.windows-7 video,
+.windows-8 video,
+.windows-8-1 video {
+  /* Legacy Windows versions need simpler video handling */
+  filter: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.windows-10-plus video {
+  /* Modern Windows can handle advanced video features */
+  will-change: transform;
+}
+
+/* Windows font rendering improvements */
+.windows-device body,
+.windows-device * {
+  /* Better text rendering on Windows */
+  text-rendering: optimizeLegibility;
+  -webkit-font-feature-settings: "liga", "kern";
+  font-feature-settings: "liga", "kern";
+}
+
+/* Windows-specific responsive video container */
+.windows-device .optimized-video-container {
+  /* Ensure proper video container behavior on Windows */
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+.windows-device .optimized-video-container video {
+  /* Windows video element optimizations */
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Windows browser-specific error handling */
+.windows-device .video-error {
+  background: #f44336;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 4px;
+}
+
+/* Windows performance optimizations */
+.windows-device.low-performance-device video {
+  /* Reduce video complexity on low-end Windows devices */
+  filter: none !important;
+  transform: none !important;
+  will-change: auto;
+}

@@ -5,6 +5,7 @@ import {
   getOptimalStrategy,
   VIDEO_VERSIONS,
 } from "./videoCache";
+import { deviceDetection } from "./deviceUtils";
 
 /**
  * VideoManager Class
@@ -19,13 +20,24 @@ class VideoManager {
     this.enableLogging =
       options.enableLogging || process.env.NODE_ENV === "development";
 
-    // Progressive loading options
+    // Get browser info for optimal format selection
+    const browserInfo =
+      typeof window !== "undefined" ? deviceDetection.getBrowserInfo() : null;
+
+    // Progressive loading options with platform-specific defaults
     this.preloadStrategy = options.preloadStrategy || "metadata"; // 'none', 'metadata', 'auto'
-    this.formats = options.formats || ["webm", "mp4"]; // Preferred formats order
+    this.formats =
+      options.formats ||
+      (browserInfo ? browserInfo.preferredFormats : ["mp4", "webm"]);
 
     this.log("🎬 VideoManager initialized", {
       version: this.currentVersion,
       strategy: this.defaultStrategy,
+      platform: browserInfo?.platform || "Unknown",
+      browser: browserInfo?.name || "Unknown",
+      formats: this.formats,
+      supportsWebM: browserInfo?.supportsWebM || false,
+      supportsMP4: browserInfo?.supportsMP4 || false,
     });
   }
 
@@ -80,6 +92,54 @@ class VideoManager {
   }
 
   /**
+   * Check if browser supports specific video format and codec
+   * @param {string} format - Video format (mp4, webm, ogg)
+   * @returns {boolean} - Whether format is supported
+   */
+  canPlayFormat(format) {
+    if (typeof window === "undefined") return true; // SSR fallback
+
+    const video = document.createElement("video");
+
+    switch (format) {
+      case "mp4":
+        return (
+          video.canPlayType('video/mp4; codecs="avc1.42E01E,mp4a.40.2"') !== ""
+        );
+      case "webm":
+        // Check for VP9 first, fallback to VP8
+        return (
+          video.canPlayType('video/webm; codecs="vp9,opus"') !== "" ||
+          video.canPlayType('video/webm; codecs="vp8,vorbis"') !== ""
+        );
+      case "ogg":
+        return video.canPlayType('video/ogg; codecs="theora,vorbis"') !== "";
+      default:
+        return video.canPlayType(`video/${format}`) !== "";
+    }
+  }
+
+  /**
+   * Filter formats based on browser support
+   * @param {Array} formats - Array of video formats
+   * @returns {Array} - Filtered array of supported formats
+   */
+  getSupportedFormats(formats) {
+    const supportedFormats = formats.filter((format) =>
+      this.canPlayFormat(format)
+    );
+
+    // Ensure we always have at least one format (MP4 is most widely supported)
+    if (supportedFormats.length === 0) {
+      this.log("⚠️ No supported formats found, falling back to MP4");
+      return ["mp4"];
+    }
+
+    this.log("📹 Supported formats:", supportedFormats);
+    return supportedFormats;
+  }
+
+  /**
    * Generate video sources with different formats and cache strategies
    * @param {string} videoId - Video identifier
    * @param {string} strategy - Cache strategy
@@ -88,9 +148,33 @@ class VideoManager {
   async generateVideoSources(videoId, strategy, formats) {
     const sources = [];
 
-    for (const format of formats) {
+    // Filter formats based on browser support
+    const supportedFormats = this.getSupportedFormats(formats);
+
+    for (const format of supportedFormats) {
       const filename = `${videoId}.${format}`;
-      const mimeType = `video/${format}`;
+
+      // Get proper MIME type with codecs for better browser compatibility
+      let mimeType;
+      switch (format) {
+        case "mp4":
+          mimeType = 'video/mp4; codecs="avc1.42E01E,mp4a.40.2"'; // H.264 + AAC
+          break;
+        case "webm":
+          // Use VP9 if supported, otherwise VP8
+          const video = document.createElement("video");
+          if (video.canPlayType('video/webm; codecs="vp9,opus"') !== "") {
+            mimeType = 'video/webm; codecs="vp9,opus"'; // VP9 + Opus
+          } else {
+            mimeType = 'video/webm; codecs="vp8,vorbis"'; // VP8 + Vorbis fallback
+          }
+          break;
+        case "ogg":
+          mimeType = 'video/ogg; codecs="theora,vorbis"'; // Theora + Vorbis
+          break;
+        default:
+          mimeType = `video/${format}`;
+      }
 
       let videoUrl;
 
