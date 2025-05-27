@@ -38,6 +38,67 @@ const TestHeader = ({ onAnimationStart }) => {
       testingUtils.runWindowsVideoDiagnostics(airplaneVideoSrc);
     }
 
+    // Mac-specific airplane video debugging
+    if (typeof window !== "undefined" && deviceDetection.isMacOS()) {
+      console.log("🍎 Mac detected - running airplane video diagnostics");
+      const airplaneVideoSrc = getVersionedVideoUrl("airplane.mp4");
+      const airplaneVideoWebmSrc = getVersionedVideoUrl("airplane.webm");
+      console.log("Airplane MP4 source:", airplaneVideoSrc);
+      console.log("Airplane WebM source:", airplaneVideoWebmSrc);
+
+      // Log full URLs for direct testing
+      const baseUrl = window.location.origin;
+      console.log("🔗 Direct test URLs:");
+      console.log("MP4:", `${baseUrl}${airplaneVideoSrc}`);
+      console.log("WebM:", `${baseUrl}${airplaneVideoWebmSrc}`);
+
+      // Test video file accessibility on Mac
+      testingUtils.testVideoFileAccess([airplaneVideoSrc]).then(() => {
+        testingUtils
+          .testVideoElementCreation(airplaneVideoSrc)
+          .then((result) => {
+            if (!result.success) {
+              console.error(
+                "❌ Airplane video failed to load on Mac:",
+                result.error
+              );
+            } else {
+              console.log("✅ Airplane video loaded successfully on Mac");
+            }
+          });
+      });
+    }
+
+    // Debug video container visibility
+    setTimeout(() => {
+      console.log("🔍 Debugging video container visibility:");
+      if (mobileVideoContainerRef.current) {
+        const mobileStyles = window.getComputedStyle(
+          mobileVideoContainerRef.current
+        );
+        console.log("📱 Mobile container opacity:", mobileStyles.opacity);
+        console.log("📱 Mobile container visibility:", mobileStyles.visibility);
+        console.log("📱 Mobile container display:", mobileStyles.display);
+      }
+      if (desktopVideoContainerRef.current) {
+        const desktopStyles = window.getComputedStyle(
+          desktopVideoContainerRef.current
+        );
+        console.log("🖥️ Desktop container opacity:", desktopStyles.opacity);
+        console.log(
+          "🖥️ Desktop container visibility:",
+          desktopStyles.visibility
+        );
+        console.log("🖥️ Desktop container display:", desktopStyles.display);
+      }
+    }, 3000);
+
+    // Ensure video containers exist before setting up animations
+    if (!mobileVideoContainerRef.current || !desktopVideoContainerRef.current) {
+      console.error("❌ Video container refs not found");
+      return;
+    }
+
     // Hide everything initially
     gsap.set(".subtext, .cta-button", { autoAlpha: 0 });
     gsap.set(
@@ -53,13 +114,24 @@ const TestHeader = ({ onAnimationStart }) => {
     const words = document.querySelectorAll(".word");
     const wordCount = words.length;
 
+    if (wordCount === 0) {
+      console.error("❌ No word elements found for animation");
+      return;
+    }
+
+    console.log(`🎬 Setting up animations for ${wordCount} words`);
+
     // Create a single timeline for all animations
     const tl = gsap.timeline({
       onStart: () => {
+        console.log("🎬 Animation timeline started");
         // Notify parent component that animation has started
         if (onAnimationStart && typeof onAnimationStart === "function") {
           onAnimationStart();
         }
+      },
+      onComplete: () => {
+        console.log("🎉 Animation timeline completed");
       },
     });
 
@@ -74,7 +146,7 @@ const TestHeader = ({ onAnimationStart }) => {
 
       // After the last word animation starts, immediately queue up the next elements
       if (index === wordCount - 1) {
-        // Add animations for paragraph and button at the same time, immediately after the last word starts
+        // Add animations for paragraph and button
         tl.to(
           [".subtext", ".cta-button"],
           {
@@ -85,16 +157,18 @@ const TestHeader = ({ onAnimationStart }) => {
           "-=0.4"
         );
 
-        // Add airplane animation after paragraph and button have finished
+        // Add airplane animation after paragraph and button
         tl.to(
           [mobileVideoContainerRef.current, desktopVideoContainerRef.current],
           {
             autoAlpha: 1,
             scale: 1,
             x: 0,
-            delay: -0.4,
             duration: 0.9,
             ease: "power2.out",
+            onComplete: () => {
+              console.log("✈️ Video containers are now visible");
+            },
           },
           "+=0.1"
         );
@@ -200,7 +274,11 @@ const TestHeader = ({ onAnimationStart }) => {
           >
             <source
               src={getVersionedVideoUrl("airplane.mp4")}
-              type="video/mp4"
+              type="video/mp4; codecs='avc1.42E01E'"
+            />
+            <source
+              src={getVersionedVideoUrl("airplane.webm")}
+              type="video/webm; codecs='vp9'"
             />
             Your browser does not support the video tag.
           </video>
@@ -264,7 +342,11 @@ const TestHeader = ({ onAnimationStart }) => {
           >
             <source
               src={getVersionedVideoUrl("airplane.mp4")}
-              type="video/mp4"
+              type="video/mp4; codecs='avc1.42E01E'"
+            />
+            <source
+              src={getVersionedVideoUrl("airplane.webm")}
+              type="video/webm; codecs='vp9'"
             />
             Your browser does not support the video tag.
           </video>

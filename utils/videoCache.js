@@ -6,11 +6,15 @@
 
 // Video version configuration - PRIMARY CACHE STRATEGY
 const VIDEO_VERSIONS = {
-  "airplane.mp4": "1.2.3",
-  "globe.mp4": "1.1.0",
-  "flower.mp4": "1.0.5",
-  "baloon.mp4": "1.0.2",
-};
+  'airplane.mp4': '1.4.0',
+  'airplane.webm': '1.0.0',
+  'globe.mp4': '1.2.0',
+  'globe.webm': '1.0.0',
+  'flower.mp4': '1.1.0',
+  'flower.webm': '1.0.0',
+  'baloon.mp4': '1.1.0',
+  'baloon.webm': '1.0.0'
+};;
 
 // Hash-based file mapping (for production CDN)
 const VIDEO_HASHES = {
