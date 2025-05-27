@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
 import { getVersionedVideoUrl } from "../utils/videoCache";
+import { testingUtils, deviceDetection } from "../utils/deviceUtils";
 
 const TestHeader = ({ onAnimationStart }) => {
   // Create refs for the video containers (not the video elements themselves)
@@ -10,6 +11,33 @@ const TestHeader = ({ onAnimationStart }) => {
   const desktopVideoContainerRef = useRef(null);
 
   useEffect(() => {
+    // Windows-specific airplane video debugging
+    if (typeof window !== "undefined" && deviceDetection.isWindows()) {
+      console.log("🖥️ Windows detected - running airplane video diagnostics");
+      const airplaneVideoSrc = getVersionedVideoUrl("airplane.mp4");
+      console.log("Airplane video source:", airplaneVideoSrc);
+
+      // Test video file accessibility
+      testingUtils.testVideoFileAccess([airplaneVideoSrc]).then(() => {
+        // Test video element creation
+        testingUtils
+          .testVideoElementCreation(airplaneVideoSrc)
+          .then((result) => {
+            if (!result.success) {
+              console.error(
+                "❌ Airplane video failed to load on Windows:",
+                result.error
+              );
+            } else {
+              console.log("✅ Airplane video loaded successfully on Windows");
+            }
+          });
+      });
+
+      // Run comprehensive Windows video diagnostics
+      testingUtils.runWindowsVideoDiagnostics(airplaneVideoSrc);
+    }
+
     // Hide everything initially
     gsap.set(".subtext, .cta-button", { autoAlpha: 0 });
     gsap.set(
@@ -149,8 +177,31 @@ const TestHeader = ({ onAnimationStart }) => {
             muted
             loop
             playsInline
-            src={getVersionedVideoUrl("airplane.mp4")}
+            preload="metadata"
+            onLoadStart={() =>
+              console.log("📱 Mobile airplane video load started")
+            }
+            onLoadedMetadata={() =>
+              console.log("📱 Mobile airplane video metadata loaded")
+            }
+            onCanPlay={() => console.log("📱 Mobile airplane video can play")}
+            onError={(e) => {
+              console.error("❌ Mobile airplane video error:", e);
+              console.error("Video element:", e.target);
+              console.error("Error code:", e.target.error?.code);
+              console.error("Error message:", e.target.error?.message);
+            }}
+            onLoadedData={() =>
+              console.log("📱 Mobile airplane video data loaded")
+            }
+            onPlay={() =>
+              console.log("📱 Mobile airplane video started playing")
+            }
           >
+            <source
+              src={getVersionedVideoUrl("airplane.mp4")}
+              type="video/mp4"
+            />
             Your browser does not support the video tag.
           </video>
         </div>
@@ -170,8 +221,51 @@ const TestHeader = ({ onAnimationStart }) => {
             muted
             loop
             playsInline
-            src={getVersionedVideoUrl("airplane.mp4")}
+            preload="metadata"
+            onLoadStart={() =>
+              console.log("🖥️ Desktop airplane video load started")
+            }
+            onLoadedMetadata={() =>
+              console.log("🖥️ Desktop airplane video metadata loaded")
+            }
+            onCanPlay={() => console.log("🖥️ Desktop airplane video can play")}
+            onError={(e) => {
+              console.error("❌ Desktop airplane video error:", e);
+              console.error("Video element:", e.target);
+              console.error("Error code:", e.target.error?.code);
+              console.error("Error message:", e.target.error?.message);
+
+              // Windows-specific troubleshooting
+              if (deviceDetection.isWindows()) {
+                console.log("🔧 Windows troubleshooting:");
+                console.log("1. Checking video source URL:", e.target.src);
+                console.log(
+                  "2. Checking if file exists at:",
+                  getVersionedVideoUrl("airplane.mp4")
+                );
+                console.log(
+                  "3. Browser info:",
+                  deviceDetection.getBrowserInfo()
+                );
+
+                // Try alternative loading method
+                setTimeout(() => {
+                  console.log("🔄 Attempting to reload video...");
+                  e.target.load();
+                }, 1000);
+              }
+            }}
+            onLoadedData={() =>
+              console.log("🖥️ Desktop airplane video data loaded")
+            }
+            onPlay={() =>
+              console.log("🖥️ Desktop airplane video started playing")
+            }
           >
+            <source
+              src={getVersionedVideoUrl("airplane.mp4")}
+              type="video/mp4"
+            />
             Your browser does not support the video tag.
           </video>
         </div>
