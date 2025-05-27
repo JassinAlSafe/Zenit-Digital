@@ -3,13 +3,16 @@ import React, { useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Group5Image from "../assets/Group5.png";
 import Group78Image from "../assets/Group78-2.png";
+import Framer3Image from "../assets/Frame 3.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const SelectedWorks = () => {
   const [currentImage, setCurrentImage] = useState(1);
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -57,23 +60,29 @@ const SelectedWorks = () => {
       title: "Xtream E-sport Arena",
       description: "Gaming arena",
       links: ["Design", "Web Development"],
+      route: "/work/xtream-esport-arena",
     },
     {
       id: 2,
       image: Group78Image,
       title: "ShelfWise",
-      description: "Augmented Reality Experience",
+      description: "Inventory Management System",
       links: ["Design", "Fullstack Development"],
+      route: "/work/shelfwise",
     },
     {
       id: 3,
-      image:
-        "https://cdn.sanity.io/images/u1e81n72/production/5addc75bef476305d7ee2f1c8238a15685203c28-1200x1600.jpg/Hololens.jpg?q=95&fit=clip&auto=format&w=1439",
-      title: "Future Tech Showcase",
-      description: "Technology Expo",
-      links: ["UI/UX", "Prototyping"],
+      image: Framer3Image,
+      title: "SWEDISH DATA CENTER",
+      description: "",
+      links: ["Design", "Webnode"],
+      route: "/work/swedish-data-center",
     },
   ];
+
+  const handleProjectClick = (route) => {
+    router.push(route);
+  };
 
   return (
     <section
@@ -114,7 +123,8 @@ const SelectedWorks = () => {
             {projects.map((project) => (
               <div
                 key={project.id}
-                className="scroll-item space-y-6 border-custom-pink pb-8"
+                className="scroll-item space-y-6 border-custom-pink pb-8 cursor-pointer transition-transform hover:scale-[1.02] duration-300"
+                onClick={() => handleProjectClick(project.route)}
               >
                 {/* Image */}
                 {typeof project.image === "string" ? (
@@ -124,13 +134,13 @@ const SelectedWorks = () => {
                     width={1200}
                     height={1600}
                     unoptimized
-                    className="w-full h-auto rounded-md"
+                    className="w-full h-auto rounded-md transition-opacity hover:opacity-90"
                   />
                 ) : (
                   <Image
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-auto rounded-md"
+                    className="w-full h-auto rounded-md transition-opacity hover:opacity-90"
                     priority
                   />
                 )}
@@ -138,10 +148,10 @@ const SelectedWorks = () => {
                 {/* Title and Info */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4 gap-4">
                   <div>
-                    <h2 className="text-md md:text-xl lg:text-xl font-light text-custom-pink">
+                    <h2 className="text-md md:text-xl lg:text-xl font-light text-custom-pink transition-colors hover:text-opacity-80">
                       {project.description}
                     </h2>
-                    <h3 className="text-2xl md:text-3xl font-medium text-custom-pink">
+                    <h3 className="text-2xl md:text-3xl font-medium text-custom-pink transition-colors hover:text-opacity-80">
                       {project.title}
                     </h3>
                   </div>
@@ -152,6 +162,7 @@ const SelectedWorks = () => {
                       <button
                         key={index}
                         className="px-3 py-1 sm:px-4 sm:py-2 border-2 border-custom-pink text-custom-pink rounded-3xl bg-transparent hover:bg-custom-pink hover:text-custom-blue transition text-sm sm:text-base"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         {link}
                       </button>

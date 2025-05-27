@@ -12,6 +12,7 @@
     "clear-cache": "rm -rf .next && npm cache clean --force"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@sendgrid/mail": "^8.1.5",
     "aceternity-ui": "^0.2.2",
     "framer-motion": "^12.11.3",
