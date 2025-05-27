@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import { CachedVideoSource } from "./CachedVideo";
+import { getVersionedVideoUrl } from "../utils/videoCache";
 
 const Footer = () => {
   // Create refs to store our animation instances
@@ -154,13 +154,13 @@ const Footer = () => {
           <div className="absolute bottom-8 left-8 flex justify-end items-center">
             <div className="w-12 h-12 border bg-custom-green border-custom-lightGreen rounded-full flex items-center justify-center mr-4 overflow-hidden">
               <video
+                className="w-full h-full object-cover"
                 autoPlay
                 loop
                 muted
                 playsInline
-                className="w-full h-full object-cover"
+                src={getVersionedVideoUrl("globe.mp4")}
               >
-                <CachedVideoSource src="globe.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>

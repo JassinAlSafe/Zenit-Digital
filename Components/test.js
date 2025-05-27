@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import Link from "next/link";
-import { CachedVideoSource } from "./CachedVideo";
+import { getVersionedVideoUrl } from "../utils/videoCache";
 
 function Test() {
   const videoRef = useRef(null);
@@ -14,13 +14,19 @@ function Test() {
             // If video is in view
             if (entry.isIntersecting) {
               // Play the video
-              videoRef.current.play().catch((e) => {
-                console.log("Auto-play was prevented:", e);
-                // Many browsers require user interaction before playing videos with sound
-              });
+              const videoElement = entry.target.querySelector("video");
+              if (videoElement) {
+                videoElement.play().catch((e) => {
+                  console.log("Auto-play was prevented:", e);
+                  // Many browsers require user interaction before playing videos with sound
+                });
+              }
             } else {
               // Optionally pause when out of view
-              videoRef.current.pause();
+              const videoElement = entry.target.querySelector("video");
+              if (videoElement) {
+                videoElement.pause();
+              }
             }
           });
         },
@@ -84,16 +90,17 @@ function Test() {
         </div>
 
         {/* Right Section */}
-        <div className="w-full lg:w-1/2 relative flex items-center justify-center rounded-md bg-custom-green overflow-hidden mb-10">
+        <div
+          ref={videoRef}
+          className="w-full lg:w-1/2 relative flex items-center justify-center rounded-md bg-custom-green overflow-hidden mb-10"
+        >
           <video
-            ref={videoRef}
             className="w-full h-auto max-w-full sm:max-w-md lg:max-w-lg 2xl:scale-125"
-            playsInline
             muted
             loop
-            // Remove autoPlay attribute, we'll control this with JavaScript
+            playsInline
+            src={getVersionedVideoUrl("flower.mp4")}
           >
-            <CachedVideoSource src="flower.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>

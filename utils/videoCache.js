@@ -1,9 +1,10 @@
 /**
- * Video Cache Busting Utilities
- * Provides multiple strategies for preventing video caching issues
+ * Video Cache Busting Utilities - BEST PRACTICE IMPLEMENTATION
+ * Primary Strategy: Versioned URLs + Proper HTTP Headers
+ * Fallback Strategies: Dynamic URLs, Timestamps, Hash-based naming
  */
 
-// Video version configuration
+// Video version configuration - PRIMARY CACHE STRATEGY
 const VIDEO_VERSIONS = {
   "airplane.mp4": "1.2.3",
   "globe.mp4": "1.1.0",
@@ -11,7 +12,7 @@ const VIDEO_VERSIONS = {
   "baloon.mp4": "1.0.2",
 };
 
-// Hash-based file mapping (for production)
+// Hash-based file mapping (for production CDN)
 const VIDEO_HASHES = {
   "airplane.mp4": "airplane-abc123.mp4",
   "globe.mp4": "globe-def456.mp4",
@@ -20,10 +21,22 @@ const VIDEO_HASHES = {
 };
 
 /**
- * Dynamic URL Generation with Timestamps
- * Use JavaScript to generate timestamped URLs for cache busting
- * @param {string} baseUrl - Original video URL
- * @returns {string} - URL with timestamp parameter
+ * BEST PRACTICE: Get video URL with versioned parameter
+ * This is the most reliable method for cache busting
+ * @param {string} filename - Original video filename
+ * @param {string} version - Optional version override
+ * @returns {string} - Versioned video URL
+ */
+export const getVersionedVideoUrl = (filename, version = null) => {
+  const basePath = filename.startsWith("/") ? filename : `/${filename}`;
+  const videoVersion =
+    version || VIDEO_VERSIONS[filename.replace("/", "")] || "1.0.0";
+  return `${basePath}?v=${videoVersion}`;
+};
+
+/**
+ * Dynamic URL Generation with Timestamps (FALLBACK STRATEGY)
+ * Use when versioning isn't sufficient
  */
 export const getVideoURL = (baseUrl) => {
   const timestamp = Date.now();
@@ -32,10 +45,7 @@ export const getVideoURL = (baseUrl) => {
 };
 
 /**
- * Advanced dynamic URL generation with multiple parameters
- * @param {string} baseUrl - Original video URL
- * @param {Object} options - Configuration options
- * @returns {string} - URL with cache busting parameters
+ * Advanced dynamic URL generation (EMERGENCY FALLBACK)
  */
 export const getDynamicVideoURL = (baseUrl, options = {}) => {
   const {
@@ -57,7 +67,6 @@ export const getDynamicVideoURL = (baseUrl, options = {}) => {
   }
 
   if (useSessionId && typeof window !== "undefined") {
-    // Generate or retrieve session ID
     let sessionId = sessionStorage.getItem("video-session-id");
     if (!sessionId) {
       sessionId = Math.random().toString(36).substring(2, 15) + Date.now();
@@ -66,7 +75,6 @@ export const getDynamicVideoURL = (baseUrl, options = {}) => {
     params.append("sid", sessionId);
   }
 
-  // Add custom parameters
   Object.entries(customParams).forEach(([key, value]) => {
     params.append(key, value);
   });
@@ -81,26 +89,43 @@ export const getDynamicVideoURL = (baseUrl, options = {}) => {
 };
 
 /**
- * Get video URL with cache busting strategy
+ * SMART VIDEO URL RESOLVER - Chooses best strategy automatically
+ * Priority: 1. Versioned URLs, 2. Hash-based, 3. Dynamic fallback
  * @param {string} filename - Original video filename
- * @param {string} strategy - 'version' | 'hash' | 'timestamp' | 'dynamic' | 'aggressive'
- * @returns {string} - Video URL with cache busting applied
+ * @param {string} strategy - Force specific strategy or 'auto'
+ * @returns {string} - Optimized video URL
  */
-export const getVideoUrl = (filename, strategy = "version") => {
+export const getVideoUrl = (filename, strategy = "auto") => {
   const basePath = filename.startsWith("/") ? filename : `/${filename}`;
+  const cleanFilename = filename.replace("/", "");
 
+  // Auto-detect best strategy
+  if (strategy === "auto") {
+    // Use versioned URLs if version exists (BEST PRACTICE)
+    if (VIDEO_VERSIONS[cleanFilename]) {
+      return getVersionedVideoUrl(filename);
+    }
+    // Fall back to hash-based in production
+    if (process.env.NODE_ENV === "production" && VIDEO_HASHES[cleanFilename]) {
+      return `/${VIDEO_HASHES[cleanFilename]}`;
+    }
+    // Development fallback
+    return getVersionedVideoUrl(filename, "dev");
+  }
+
+  // Manual strategy selection
   switch (strategy) {
+    case "version":
+      return getVersionedVideoUrl(filename);
+
     case "hash":
-      // Use hash-based filename if available
-      const hashFilename = VIDEO_HASHES[filename.replace("/", "")];
-      return hashFilename ? `/${hashFilename}` : basePath;
+      const hashFilename = VIDEO_HASHES[cleanFilename];
+      return hashFilename ? `/${hashFilename}` : getVersionedVideoUrl(filename);
 
     case "timestamp":
-      // Use current timestamp for development/testing
       return getVideoURL(basePath);
 
     case "dynamic":
-      // Use advanced dynamic URL generation
       return getDynamicVideoURL(basePath, {
         useTimestamp: true,
         useRandomId: true,
@@ -108,7 +133,6 @@ export const getVideoUrl = (filename, strategy = "version") => {
       });
 
     case "aggressive":
-      // Most aggressive cache busting for problematic videos
       return getDynamicVideoURL(basePath, {
         useTimestamp: true,
         useRandomId: true,
@@ -116,87 +140,134 @@ export const getVideoUrl = (filename, strategy = "version") => {
         customParams: {
           cache: "no-store",
           pragma: "no-cache",
-          v: VIDEO_VERSIONS[filename.replace("/", "")] || "1.0.0",
+          v: VIDEO_VERSIONS[cleanFilename] || "1.0.0",
         },
       });
 
-    case "version":
     default:
-      // Use version parameter
-      const version = VIDEO_VERSIONS[filename.replace("/", "")];
-      return version ? `${basePath}?v=${version}` : basePath;
+      return getVersionedVideoUrl(filename);
   }
 };
 
 /**
- * Get multiple source URLs for video element
- * Useful for providing fallbacks
- * @param {string} filename - Original video filename
- * @returns {Array} - Array of source objects with different cache strategies
+ * Update video version - BEST PRACTICE for cache invalidation
+ * @param {string} filename - Video filename to update
+ * @param {string} newVersion - New version string (semantic versioning recommended)
  */
-export const getVideoSources = (filename) => {
-  return [
-    {
-      src: getVideoUrl(filename, "version"),
-      type: "video/mp4",
-      strategy: "version",
-    },
-    {
-      src: getVideoUrl(filename, "hash"),
-      type: "video/mp4",
-      strategy: "hash",
-    },
-  ];
+export const updateVideoVersion = (filename, newVersion) => {
+  const cleanFilename = filename.replace("/", "");
+  VIDEO_VERSIONS[cleanFilename] = newVersion;
+
+  if (process.env.NODE_ENV === "development") {
+    console.log(`📹 Updated ${cleanFilename} to version ${newVersion}`);
+  }
 };
 
 /**
- * Update video version (useful for development)
- * @param {string} filename - Video filename to update
- * @param {string} newVersion - New version string
+ * Bulk update video versions
+ * @param {Object} versionMap - Object mapping filenames to versions
  */
-export const updateVideoVersion = (filename, newVersion) => {
-  VIDEO_VERSIONS[filename.replace("/", "")] = newVersion;
+export const updateVideoVersions = (versionMap) => {
+  Object.entries(versionMap).forEach(([filename, version]) => {
+    updateVideoVersion(filename, version);
+  });
 };
 
 /**
  * Get current video version
- * @param {string} filename - Video filename
- * @returns {string} - Current version or 'unknown'
  */
 export const getVideoVersion = (filename) => {
-  return VIDEO_VERSIONS[filename.replace("/", "")] || "unknown";
+  return VIDEO_VERSIONS[filename.replace("/", "")] || "1.0.0";
 };
 
 /**
- * Development helper to force refresh all videos
- * @returns {void}
+ * Environment-based strategy selection
+ * BEST PRACTICE: Use versioned URLs in all environments
+ */
+export const getOptimalStrategy = () => {
+  if (typeof window === "undefined") return "version";
+
+  // Always prefer versioned URLs (best practice)
+  return "version";
+};
+
+/**
+ * Generate multiple video sources for progressive enhancement
+ * @param {string} filename - Base video filename (without extension)
+ * @param {Array} formats - Video formats to generate ['webm', 'mp4']
+ * @param {string} strategy - Cache strategy to use
+ */
+export const getMultiFormatVideoSources = (
+  filename,
+  formats = ["webm", "mp4"],
+  strategy = "auto"
+) => {
+  return formats.map((format) => ({
+    src: getVideoUrl(`${filename}.${format}`, strategy),
+    type: `video/${format}`,
+    format,
+    strategy: strategy === "auto" ? getOptimalStrategy() : strategy,
+  }));
+};
+
+/**
+ * Preload video for performance optimization
+ * @param {string} videoUrl - Video URL to preload
+ * @param {string} preloadType - 'none', 'metadata', 'auto'
+ */
+export const preloadVideo = (videoUrl, preloadType = "metadata") => {
+  if (typeof window === "undefined") return;
+
+  const link = document.createElement("link");
+  link.rel = "preload";
+  link.as = "video";
+  link.href = videoUrl;
+  if (preloadType !== "auto") {
+    link.setAttribute("data-preload", preloadType);
+  }
+  document.head.appendChild(link);
+};
+
+/**
+ * Force refresh all videos (development helper)
  */
 export const refreshAllVideos = () => {
   const videos = document.querySelectorAll("video");
   videos.forEach((video) => {
     const currentSrc = video.src;
     const filename = currentSrc.split("/").pop().split("?")[0];
+    // Use timestamp strategy for immediate refresh
     video.src = getVideoUrl(filename, "timestamp");
-    video.load(); // Force reload
+    video.load();
   });
 };
 
-// Environment-based strategy selection
-export const getOptimalStrategy = () => {
-  if (typeof window === "undefined") return "version";
-
-  // Use hash in production, version in development
-  const isProd = process.env.NODE_ENV === "production";
-  return isProd ? "hash" : "version";
-};
+// Export configuration for inspection
+export const getVideoConfig = () => ({
+  versions: { ...VIDEO_VERSIONS },
+  hashes: { ...VIDEO_HASHES },
+  optimalStrategy: getOptimalStrategy(),
+  environment: process.env.NODE_ENV,
+});
 
 export default {
+  // BEST PRACTICE methods (recommended)
+  getVersionedVideoUrl,
   getVideoUrl,
+  updateVideoVersion,
+  updateVideoVersions,
+  getMultiFormatVideoSources,
+
+  // Utility methods
+  getVideoVersion,
+  getOptimalStrategy,
+  preloadVideo,
+
+  // Fallback methods (when needed)
   getVideoURL,
   getDynamicVideoURL,
-  getVideoSources,
-  updateVideoVersion,
-  getVideoVersion,
   refreshAllVideos,
-  getOptimalStrategy,
+
+  // Configuration
+  getVideoConfig,
 };

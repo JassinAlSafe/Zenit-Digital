@@ -2,21 +2,24 @@ import React from "react";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
-import CachedVideo from "./CachedVideo";
+import { getVersionedVideoUrl } from "../utils/videoCache";
 
 const TestHeader = ({ onAnimationStart }) => {
-  // Create refs for the video elements
-  const mobileVideoRef = useRef(null);
-  const desktopVideoRef = useRef(null);
+  // Create refs for the video containers (not the video elements themselves)
+  const mobileVideoContainerRef = useRef(null);
+  const desktopVideoContainerRef = useRef(null);
 
   useEffect(() => {
     // Hide everything initially
     gsap.set(".subtext, .cta-button", { autoAlpha: 0 });
-    gsap.set([mobileVideoRef.current, desktopVideoRef.current], {
-      autoAlpha: 0,
-      scale: 0.9,
-      x: 30,
-    });
+    gsap.set(
+      [mobileVideoContainerRef.current, desktopVideoContainerRef.current],
+      {
+        autoAlpha: 0,
+        scale: 0.9,
+        x: 30,
+      }
+    );
 
     // Number of words in the title
     const words = document.querySelectorAll(".word");
@@ -56,7 +59,7 @@ const TestHeader = ({ onAnimationStart }) => {
 
         // Add airplane animation after paragraph and button have finished
         tl.to(
-          [mobileVideoRef.current, desktopVideoRef.current],
+          [mobileVideoContainerRef.current, desktopVideoContainerRef.current],
           {
             autoAlpha: 1,
             scale: 1,
@@ -132,10 +135,11 @@ const TestHeader = ({ onAnimationStart }) => {
         </div>
 
         {/* Video for small screens (below md breakpoint) */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-full max-w-sm block md:hidden z-0">
-          <CachedVideo
-            ref={mobileVideoRef}
-            src="airplane.mp4"
+        <div
+          ref={mobileVideoContainerRef}
+          className="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-full max-w-sm block md:hidden z-0"
+        >
+          <video
             className="w-full h-auto object-contain opacity-70"
             style={{
               filter:
@@ -145,14 +149,18 @@ const TestHeader = ({ onAnimationStart }) => {
             muted
             loop
             playsInline
-          />
+            src={getVersionedVideoUrl("airplane.mp4")}
+          >
+            Your browser does not support the video tag.
+          </video>
         </div>
 
         {/* Video for medium and large screens */}
-        <div className="absolute right-16 top-1/2 transform -translate-y-1/2 w-1/3 max-w-md hidden md:block z-0 pointer-events-none">
-          <CachedVideo
-            ref={desktopVideoRef}
-            src="airplane.mp4"
+        <div
+          ref={desktopVideoContainerRef}
+          className="absolute right-16 top-1/2 transform -translate-y-1/2 w-1/3 max-w-md hidden md:block z-0 pointer-events-none"
+        >
+          <video
             className="w-full h-auto object-contain opacity-60"
             style={{
               filter:
@@ -162,7 +170,10 @@ const TestHeader = ({ onAnimationStart }) => {
             muted
             loop
             playsInline
-          />
+            src={getVersionedVideoUrl("airplane.mp4")}
+          >
+            Your browser does not support the video tag.
+          </video>
         </div>
       </div>
     </section>

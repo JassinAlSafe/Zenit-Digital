@@ -1,10 +1,10 @@
-import { 
-  getVideoUrl, 
-  getVideoURL, 
+import {
+  getVideoUrl,
+  getVideoURL,
   getDynamicVideoURL,
   getOptimalStrategy,
-  VIDEO_VERSIONS 
-} from './videoCache';
+  VIDEO_VERSIONS,
+} from "./videoCache";
 
 /**
  * VideoManager Class
@@ -14,17 +14,18 @@ class VideoManager {
   constructor(options = {}) {
     this.videoCache = new Map();
     this.loadingPromises = new Map();
-    this.currentVersion = options.version || '1.0';
+    this.currentVersion = options.version || "1.0";
     this.defaultStrategy = options.strategy || getOptimalStrategy();
-    this.enableLogging = options.enableLogging || process.env.NODE_ENV === 'development';
-    
+    this.enableLogging =
+      options.enableLogging || process.env.NODE_ENV === "development";
+
     // Progressive loading options
-    this.preloadStrategy = options.preloadStrategy || 'metadata'; // 'none', 'metadata', 'auto'
-    this.formats = options.formats || ['webm', 'mp4']; // Preferred formats order
-    
-    this.log('🎬 VideoManager initialized', { 
-      version: this.currentVersion, 
-      strategy: this.defaultStrategy 
+    this.preloadStrategy = options.preloadStrategy || "metadata"; // 'none', 'metadata', 'auto'
+    this.formats = options.formats || ["webm", "mp4"]; // Preferred formats order
+
+    this.log("🎬 VideoManager initialized", {
+      version: this.currentVersion,
+      strategy: this.defaultStrategy,
     });
   }
 
@@ -40,11 +41,11 @@ class VideoManager {
       forceRefresh = false,
       formats = this.formats,
       poster,
-      preload = this.preloadStrategy
+      preload = this.preloadStrategy,
     } = options;
 
     const cacheKey = `${videoId}-${this.currentVersion}-${strategy}`;
-    
+
     // Return existing promise if already loading
     if (this.loadingPromises.has(cacheKey)) {
       return this.loadingPromises.get(cacheKey);
@@ -54,20 +55,20 @@ class VideoManager {
     if (!forceRefresh && this.videoCache.has(cacheKey)) {
       const cachedData = this.videoCache.get(cacheKey);
       this.applyVideoSources(element, cachedData, { poster, preload });
-      this.log('📁 Using cached video', { videoId, cacheKey });
+      this.log("📁 Using cached video", { videoId, cacheKey });
       return Promise.resolve(cachedData);
     }
 
     // Create loading promise
     const loadingPromise = this.generateVideoSources(videoId, strategy, formats)
-      .then(videoData => {
+      .then((videoData) => {
         this.videoCache.set(cacheKey, videoData);
         this.applyVideoSources(element, videoData, { poster, preload });
-        this.log('✅ Video loaded successfully', { videoId, strategy });
+        this.log("✅ Video loaded successfully", { videoId, strategy });
         return videoData;
       })
-      .catch(error => {
-        this.log('❌ Video loading failed', { videoId, error });
+      .catch((error) => {
+        this.log("❌ Video loading failed", { videoId, error });
         throw error;
       })
       .finally(() => {
@@ -86,38 +87,38 @@ class VideoManager {
    */
   async generateVideoSources(videoId, strategy, formats) {
     const sources = [];
-    
+
     for (const format of formats) {
       const filename = `${videoId}.${format}`;
       const mimeType = `video/${format}`;
-      
+
       let videoUrl;
-      
+
       // Use API route for dynamic strategies
-      if (['dynamic', 'aggressive', 'timestamp'].includes(strategy)) {
+      if (["dynamic", "aggressive", "timestamp"].includes(strategy)) {
         const apiBasePath = `/api/videos/${filename}`;
-        
+
         switch (strategy) {
-          case 'aggressive':
+          case "aggressive":
             videoUrl = getDynamicVideoURL(apiBasePath, {
               useTimestamp: true,
               useRandomId: true,
               useSessionId: true,
-              customParams: { 
-                cache: 'no-store',
-                pragma: 'no-cache',
-                format 
-              }
+              customParams: {
+                cache: "no-store",
+                pragma: "no-cache",
+                format,
+              },
             });
             break;
-          case 'dynamic':
+          case "dynamic":
             videoUrl = getDynamicVideoURL(apiBasePath, {
               useTimestamp: true,
               useRandomId: true,
-              customParams: { cache: 'no-store', format }
+              customParams: { cache: "no-store", format },
             });
             break;
-          case 'timestamp':
+          case "timestamp":
             videoUrl = getVideoURL(apiBasePath);
             break;
         }
@@ -125,12 +126,12 @@ class VideoManager {
         // Use direct file access for version/hash strategies
         videoUrl = getVideoUrl(filename, strategy);
       }
-      
+
       sources.push({
         src: videoUrl,
         type: mimeType,
         format,
-        strategy
+        strategy,
       });
     }
 
@@ -138,7 +139,7 @@ class VideoManager {
       sources,
       videoId,
       strategy,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -149,31 +150,33 @@ class VideoManager {
    * @param {Object} options - Application options
    */
   applyVideoSources(element, videoData, options = {}) {
-    const { poster, preload = 'metadata' } = options;
-    
+    const { poster, preload = "metadata" } = options;
+
     // Clear existing sources
-    element.innerHTML = '';
-    
+    element.innerHTML = "";
+
     // Set video attributes
     element.preload = preload;
     if (poster) {
       element.poster = poster;
     }
-    
+
     // Add video sources
-    videoData.sources.forEach(sourceData => {
-      const source = document.createElement('source');
+    videoData.sources.forEach((sourceData) => {
+      const source = document.createElement("source");
       source.src = sourceData.src;
       source.type = sourceData.type;
-      source.setAttribute('data-format', sourceData.format);
-      source.setAttribute('data-strategy', sourceData.strategy);
+      source.setAttribute("data-format", sourceData.format);
+      source.setAttribute("data-strategy", sourceData.strategy);
       element.appendChild(source);
     });
-    
+
     // Add fallback text
-    const fallback = document.createTextNode('Your browser doesn\'t support video playback.');
+    const fallback = document.createTextNode(
+      "Your browser doesn't support video playback."
+    );
     element.appendChild(fallback);
-    
+
     // Force reload
     element.load();
   }
@@ -184,19 +187,21 @@ class VideoManager {
    * @param {Object} options - Preload options
    */
   async preloadVideo(videoId, options = {}) {
-    const cacheKey = `${videoId}-${this.currentVersion}-${options.strategy || this.defaultStrategy}`;
-    
+    const cacheKey = `${videoId}-${this.currentVersion}-${
+      options.strategy || this.defaultStrategy
+    }`;
+
     if (this.videoCache.has(cacheKey)) {
       return this.videoCache.get(cacheKey);
     }
 
     return this.generateVideoSources(
-      videoId, 
-      options.strategy || this.defaultStrategy, 
+      videoId,
+      options.strategy || this.defaultStrategy,
       options.formats || this.formats
-    ).then(videoData => {
+    ).then((videoData) => {
       this.videoCache.set(cacheKey, videoData);
-      this.log('📦 Video preloaded', { videoId });
+      this.log("📦 Video preloaded", { videoId });
       return videoData;
     });
   }
@@ -207,22 +212,24 @@ class VideoManager {
    * @param {Object} options - Preload options
    */
   async preloadVideos(videoIds, options = {}) {
-    const preloadPromises = videoIds.map(videoId => 
-      this.preloadVideo(videoId, options).catch(error => {
-        this.log('⚠️ Preload failed for video', { videoId, error });
+    const preloadPromises = videoIds.map((videoId) =>
+      this.preloadVideo(videoId, options).catch((error) => {
+        this.log("⚠️ Preload failed for video", { videoId, error });
         return null;
       })
     );
 
     const results = await Promise.allSettled(preloadPromises);
-    const successful = results.filter(result => result.status === 'fulfilled' && result.value).length;
-    
-    this.log('📦 Batch preload completed', { 
-      total: videoIds.length, 
-      successful, 
-      failed: videoIds.length - successful 
+    const successful = results.filter(
+      (result) => result.status === "fulfilled" && result.value
+    ).length;
+
+    this.log("📦 Batch preload completed", {
+      total: videoIds.length,
+      successful,
+      failed: videoIds.length - successful,
     });
-    
+
     return results;
   }
 
@@ -233,7 +240,7 @@ class VideoManager {
   updateVersion(newVersion) {
     this.currentVersion = newVersion;
     this.clearCache();
-    this.log('🔄 Version updated', { newVersion });
+    this.log("🔄 Version updated", { newVersion });
   }
 
   /**
@@ -243,7 +250,7 @@ class VideoManager {
     const cacheSize = this.videoCache.size;
     this.videoCache.clear();
     this.loadingPromises.clear();
-    this.log('🗑️ Cache cleared', { previousSize: cacheSize });
+    this.log("🗑️ Cache cleared", { previousSize: cacheSize });
   }
 
   /**
@@ -254,7 +261,7 @@ class VideoManager {
       cacheSize: this.videoCache.size,
       loadingPromises: this.loadingPromises.size,
       currentVersion: this.currentVersion,
-      strategy: this.defaultStrategy
+      strategy: this.defaultStrategy,
     };
   }
 
@@ -263,23 +270,23 @@ class VideoManager {
    * @param {string} strategy - Optional new strategy to use
    */
   async refreshAllVideos(strategy) {
-    const videos = document.querySelectorAll('video[data-video-id]');
+    const videos = document.querySelectorAll("video[data-video-id]");
     const refreshPromises = [];
 
-    videos.forEach(video => {
-      const videoId = video.getAttribute('data-video-id');
+    videos.forEach((video) => {
+      const videoId = video.getAttribute("data-video-id");
       if (videoId) {
         refreshPromises.push(
-          this.loadVideo(videoId, video, { 
-            strategy: strategy || this.defaultStrategy, 
-            forceRefresh: true 
+          this.loadVideo(videoId, video, {
+            strategy: strategy || this.defaultStrategy,
+            forceRefresh: true,
           })
         );
       }
     });
 
     const results = await Promise.allSettled(refreshPromises);
-    this.log('🔄 Refreshed all videos', { count: results.length });
+    this.log("🔄 Refreshed all videos", { count: results.length });
     return results;
   }
 
@@ -297,22 +304,22 @@ class VideoManager {
       muted = true,
       loop = false,
       playsInline = true,
-      className = '',
+      className = "",
       poster,
-      preload = 'metadata'
+      preload = "metadata",
     } = options;
 
-    const video = document.createElement('video');
-    
+    const video = document.createElement("video");
+
     // Set attributes
-    video.setAttribute('data-video-id', videoId);
+    video.setAttribute("data-video-id", videoId);
     video.controls = controls;
     video.autoplay = autoplay;
     video.muted = muted;
     video.loop = loop;
     video.playsInline = playsInline;
     video.preload = preload;
-    
+
     if (width) video.width = width;
     if (height) video.height = height;
     if (className) video.className = className;
@@ -340,4 +347,4 @@ class VideoManager {
 export const videoManager = new VideoManager();
 
 // Export class for custom instances
-export default VideoManager; 
+export default VideoManager;
