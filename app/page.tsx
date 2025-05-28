@@ -6,6 +6,7 @@ import AboutSection from "../Components/AboutSection";
 import StackedCardsContainer from "../Components/SectionsContainer";
 import Test from "../Components/test";
 import Footer from "../Components/Footer";
+import CallToActionSection from "../Components/CallToActionSection";
 import TextScroll from "../Components/TextScroll";
 import Cookiebot from "../Components/Cookiebot";
 
@@ -206,6 +207,7 @@ export default function Page() {
         <Test />
         {/* <Page2/> */}
         <Footer />
+        <CallToActionSection />
       </div>
     </main>
   );

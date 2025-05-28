@@ -18,7 +18,6 @@ const MagneticButton = ({
     if (!button) return;
 
     const handleMouseMove = (e) => {
-      console.log("Magnetic button mouse move detected");
       const rect = button.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
@@ -35,7 +34,6 @@ const MagneticButton = ({
     };
 
     const handleMouseEnter = () => {
-      console.log("Magnetic button mouse enter detected");
       gsap.to(button, {
         scale: 1.1,
         duration: 0.3,
@@ -44,7 +42,6 @@ const MagneticButton = ({
     };
 
     const handleMouseLeave = () => {
-      console.log("Magnetic button mouse leave detected");
       gsap.to(button, {
         x: 0,
         y: 0,

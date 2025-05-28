@@ -7,6 +7,7 @@ import logo from "../assets/logo.png";
 import logo2 from "../assets/logo2.png";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import FlipText from "./FlipText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -422,35 +423,47 @@ const Navbar = () => {
             />
           </div>
 
-          <span className="font-bold text-md">ZENIT</span>
+          <FlipText
+            className="font-bold text-md"
+            animationType="slide"
+            duration={0.3}
+          >
+            ZENIT
+          </FlipText>
         </div>
 
         {/* Centered Nav Links - Desktop Only */}
         <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 z-50">
           <ul className="flex gap-10">
             <li className="hover:text-custom-blue cursor-pointer">
-              <button
+              <FlipText
                 onClick={() => navigateTo("about")}
                 className="border-none bg-transparent p-0 m-0 text-inherit font-inherit hover:text-custom-blue cursor-pointer"
+                animationType="slide"
+                duration={0.3}
               >
                 About
-              </button>
+              </FlipText>
             </li>
             <li className="hover:text-custom-blue cursor-pointer">
-              <button
+              <FlipText
                 onClick={() => navigateTo("work")}
                 className="border-none bg-transparent p-0 m-0 text-inherit font-inherit hover:text-custom-blue cursor-pointer"
+                animationType="slide"
+                duration={0.3}
               >
                 Cases
-              </button>
+              </FlipText>
             </li>
             <li className="hover:text-custom-blue cursor-pointer">
-              <button
+              <FlipText
                 onClick={() => navigateTo("services")}
                 className="border-none bg-transparent p-0 m-0 text-inherit font-inherit hover:text-custom-blue cursor-pointer"
+                animationType="slide"
+                duration={0.3}
               >
                 Services
-              </button>
+              </FlipText>
             </li>
           </ul>
         </div>
@@ -458,9 +471,13 @@ const Navbar = () => {
         {/* Button - Right */}
         <div className="hidden md:flex items-center ml-auto z-50 ">
           <Link href="/booking">
-            <button className="desktop-button px-6 py-2 text-white rounded-2xl hover:bg-gray-800 transition-colors duration-500">
+            <FlipText
+              className="desktop-button px-6 py-2 text-white rounded-2xl hover:bg-gray-800 transition-colors duration-500"
+              animationType="slide"
+              duration={0.3}
+            >
               Let&apos;s Talk
-            </button>
+            </FlipText>
           </Link>
         </div>
       </nav>

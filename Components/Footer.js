@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import MagneticButton from "./MagneticButton";
 
 const Footer = () => {
   // Create refs to store our animation instances
@@ -131,7 +132,10 @@ const Footer = () => {
           </h1>
 
           <Link href="/booking">
-            <button className="bg-custom-green hover:bg-[#135050] text-white rounded-full px-7 py-5 text-lg transition-colors flex items-center">
+            <MagneticButton
+              className="bg-custom-green hover:bg-[#135050] text-white rounded-full px-7 py-5 text-lg transition-colors flex items-center relative z-30"
+              magneticStrength={0.5}
+            >
               BOOK A CALL
               <svg
                 className="w-4 h-4 ml-2"
@@ -146,7 +150,7 @@ const Footer = () => {
                   d="M9 5l7 7-7 7"
                 ></path>
               </svg>
-            </button>
+            </MagneticButton>
           </Link>
 
           {/* Working Globally Section - with MP4 video replacing the globe emoji */}
