@@ -209,21 +209,42 @@ const CallToActionSection = () => {
         <div className="absolute bottom-6 right-6">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="w-10 h-10 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors duration-200"
+            aria-label="Scroll to top"
+            className="group relative w-14 h-14 bg-custom-green hover:bg-custom-green/90 rounded-full flex items-center justify-center overflow-hidden transition-all duration-500 ease-out hover:scale-90"
           >
-            <svg
-              className="w-4 h-4 text-gray-700"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 15l7-7 7 7"
-              ></path>
-            </svg>
+            {/* First arrow - slides up on hover */}
+            <span className="absolute flex transition-all duration-500 ease-in-out group-hover:-translate-y-20">
+              <svg
+                className="w-7 h-7 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth="2.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 15l7-7 7 7"
+                />
+              </svg>
+            </span>
+
+            {/* Second arrow - slides in from bottom on hover */}
+            <span className="absolute flex translate-y-20 transition-all duration-500 ease-in-out group-hover:translate-y-0">
+              <svg
+                className="w-7 h-7 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth="2.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 15l7-7 7 7"
+                />
+              </svg>
+            </span>
           </button>
         </div>
       </div>
