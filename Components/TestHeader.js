@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
 
@@ -7,6 +7,23 @@ const TestHeader = ({ onAnimationStart }) => {
   // Create refs for the video elements
   const mobileVideoRef = useRef(null);
   const desktopVideoRef = useRef(null);
+  
+  // State to store the video source
+  const [videoSrc, setVideoSrc] = useState("");
+
+  // Function to detect Safari browser
+  const isSafari = () => {
+    if (typeof window === "undefined") return false;
+    const userAgent = window.navigator.userAgent;
+    const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(userAgent);
+    return isSafariBrowser;
+  };
+
+  useEffect(() => {
+    // Set video source based on browser
+    const videoFormat = isSafari() ? "/airplane.mov" : "/airplane.webm";
+    setVideoSrc(videoFormat);
+  }, []);
 
   useEffect(() => {
     // Hide everything initially
@@ -136,7 +153,7 @@ const TestHeader = ({ onAnimationStart }) => {
                 muted
                 loop
                 playsInline
-                src="/airplane.mp4"
+                src={videoSrc}
               >
                 Your browser does not support the video tag.
               </video>
@@ -156,7 +173,7 @@ const TestHeader = ({ onAnimationStart }) => {
                   muted
                   loop
                   playsInline
-                  src="/airplane.mp4"
+                  src={videoSrc}
                 >
                   Your browser does not support the video tag.
                 </video>
