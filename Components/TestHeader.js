@@ -10,7 +10,7 @@ const TestHeader = ({ onAnimationStart }) => {
   // Create refs for the video elements
   const mobileVideoRef = useRef(null);
   const desktopVideoRef = useRef(null);
-  
+
   // State to store the video source
   const [videoSrc, setVideoSrc] = useState("");
 
@@ -31,11 +31,22 @@ const TestHeader = ({ onAnimationStart }) => {
   useEffect(() => {
     // Hide everything initially
     gsap.set(".subtext, .cta-container", { autoAlpha: 0 });
-    gsap.set([mobileVideoRef.current, desktopVideoRef.current], {
-      autoAlpha: 0,
-      scale: 0.9,
-      x: 30,
-    });
+
+    // Only set video properties if they exist
+    if (mobileVideoRef.current) {
+      gsap.set(mobileVideoRef.current, {
+        autoAlpha: 0,
+        scale: 0.9,
+        x: 30,
+      });
+    }
+    if (desktopVideoRef.current) {
+      gsap.set(desktopVideoRef.current, {
+        autoAlpha: 0,
+        scale: 0.9,
+        x: 30,
+      });
+    }
 
     // Number of words in the title
     const words = document.querySelectorAll(".word");
@@ -73,26 +84,32 @@ const TestHeader = ({ onAnimationStart }) => {
           "-=0.4"
         );
 
-        // Add airplane animation after paragraph and button have finished
-        tl.to(
-          [mobileVideoRef.current, desktopVideoRef.current],
-          {
-            autoAlpha: 1,
-            scale: 1,
-            x: 0,
-            delay: -0.4,
-            duration: 0.9,
-            ease: "power2.out",
-          },
-          "+=0.1"
-        );
+        // Add airplane animation after paragraph and button have finished - only if videos exist
+        const videoElements = [
+          mobileVideoRef.current,
+          desktopVideoRef.current,
+        ].filter(Boolean);
+        if (videoElements.length > 0) {
+          tl.to(
+            videoElements,
+            {
+              autoAlpha: 1,
+              scale: 1,
+              x: 0,
+              delay: -0.4,
+              duration: 0.9,
+              ease: "power2.out",
+            },
+            "+=0.1"
+          );
+        }
       }
     });
 
     return () => {
       tl.kill();
     };
-  }, [onAnimationStart]);
+  }, [onAnimationStart, videoSrc]); // Add videoSrc as dependency
 
   return (
     <section
@@ -110,11 +127,9 @@ const TestHeader = ({ onAnimationStart }) => {
             <div className="w-full 2xl:w-full lg:w-3/4 z-20 relative">
               <h1 className="text-6xl 2xl:text-[13rem] lg:text-9xl md:text-6xl font-medium  lg:font-medium lg:leading-none leading-none mb-6 text-custom-blue">
                 <span className="word">We</span>{" "}
-                <span className="word">turn</span>{" "}
-                <br />
+                <span className="word">turn</span> <br />
                 <span className="word italic ">dreams</span>{" "}
-                <span className="word">into</span>{" "}
-                <br />
+                <span className="word">into</span> <br />
                 <span className="word">Digital</span>{" "}
                 <span className="word">Reality</span>
               </h1>
@@ -150,29 +165,10 @@ const TestHeader = ({ onAnimationStart }) => {
 
             {/* Video for small screens (below md breakpoint) */}
             <div className="w-full block md:hidden z-10 relative">
-              <video
-                ref={mobileVideoRef}
-                className="w-full h-auto object-contain"
-                style={{
-                  filter:
-                    "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(900%) hue-rotate(200deg) brightness(80%) contrast(100%)",
-                }}
-                autoPlay
-                muted
-                loop
-                playsInline
-                src={videoSrc}
-              >
-                Your browser does not support the video tag.
-              </video>
-            </div>
-
-            {/* Video for medium and large screens */}
-            <div className="absolute right-0 mt-36 2xl:mt-60 top-24 w-1/2 h-full hidden md:block z-5 pointer-events-none">
-              <div className="relative w-full h-full flex items-center justify-end">
+              {videoSrc && (
                 <video
-                  ref={desktopVideoRef}
-                  className="w-full h-auto object-contain 2xl:scale-125"
+                  ref={mobileVideoRef}
+                  className="w-full h-auto object-contain"
                   style={{
                     filter:
                       "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(900%) hue-rotate(200deg) brightness(80%) contrast(100%)",
@@ -185,6 +181,29 @@ const TestHeader = ({ onAnimationStart }) => {
                 >
                   Your browser does not support the video tag.
                 </video>
+              )}
+            </div>
+
+            {/* Video for medium and large screens */}
+            <div className="absolute right-0 mt-36 2xl:mt-60 top-24 w-1/2 h-full hidden md:block z-5 pointer-events-none">
+              <div className="relative w-full h-full flex items-center justify-end">
+                {videoSrc && (
+                  <video
+                    ref={desktopVideoRef}
+                    className="w-full h-auto object-contain 2xl:scale-125"
+                    style={{
+                      filter:
+                        "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(900%) hue-rotate(200deg) brightness(80%) contrast(100%)",
+                    }}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    src={videoSrc}
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                )}
               </div>
             </div>
           </div>

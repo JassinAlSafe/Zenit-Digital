@@ -5,8 +5,12 @@ import FlipText from "./FlipText";
 
 const CallToActionSection = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // Set isClient to true after component mounts on client
+    setIsClient(true);
+
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
@@ -194,13 +198,14 @@ const CallToActionSection = () => {
               LOCAL TIME
             </p>
             <p className="text-black font-mono text-lg font-medium">
-              {currentTime.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: false,
-              })}
-              , SWE
+              {isClient
+                ? currentTime.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: false,
+                  }) + ", SWE"
+                : "--:--:--, SWE"}
             </p>
           </div>
         </div>
