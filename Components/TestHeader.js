@@ -87,20 +87,21 @@ const TestHeader = ({ onAnimationStart }) => {
       data-navbar-text="var(--custom-blue)"
       id="/"
     >
-      <div className="w-full overflow-hidden mt-10 md:mt-10 lg:mt-10">
+      <div className="w-full overflow-hidden xs:mt-2 mt-10 md:mt-10 lg:mt-10">
         <div className="container mx-auto px-4 py-16 md:py-24 relative">
           <div className="flex flex-col items-center text-center">
             <div className="w-full 2xl:w-full lg:w-3/4 z-20 relative">
               <h1 className="text-6xl 2xl:text-[13rem] lg:text-9xl md:text-6xl font-medium  lg:font-medium lg:leading-none leading-none mb-6 text-custom-blue">
                 <span className="word">We</span>{" "}
                 <span className="word">turn</span>{" "}
-                <span className="word">dreams</span>{" "}
-                <span className="word">into</span>
+                <br />
+                <span className="word italic ">dreams</span>{" "}
+                <span className="word">into</span>{" "}
                 <br />
                 <span className="word">Digital</span>{" "}
                 <span className="word">Reality</span>
               </h1>
-              <p className="subtext text-lg lg:text-xl lg:font-light mb-8 text-custom-blue max-w-xl mx-auto">
+              <p className="subtext text-lg xs:text-sm lg:text-xl lg:font-light mb-8 text-custom-blue max-w-xl mx-auto">
                 Looking to build your next big idea? We craft custom software to
                 help startups and businesses grow with style and speed.
               </p>

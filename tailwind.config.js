@@ -1,11 +1,15 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx}", // For Next.js App Directory
-    "./Components/**/*.{js,ts,jsx,tsx}", // For Components Directory
-    "./pages/**/*.{js,ts,jsx,tsx}", // If you're using Pages Directory
+    "./app/**/*.{js,ts,jsx,tsx}",      // Next.js App Directory
+    "./Components/**/*.{js,ts,jsx,tsx}", // Your custom Components
+    "./pages/**/*.{js,ts,jsx,tsx}",      // Pages Directory (if using)
   ],
   theme: {
     extend: {
+      screens: {
+        xs: { max: "400px" }, // Custom small breakpoint
+      },
       colors: {
         "custom-blue": "#00002E",
         "custom-pink": "#A494F3",
@@ -17,19 +21,13 @@ module.exports = {
           50: "#f9fafb",
           75: "#f2f4f7",
           200: "#e5e7eb",
-          300: "#333333", // Dark gray line
-          400: "#0e0e0e", // Nearly black background
+          300: "#333333",
+          400: "#0e0e0e",
         },
         accent: {
-          400: "#eaeaea", // Off-white text
+          400: "#eaeaea",
           500: "#f59e0b",
         },
-      },
-      fontSize: {
-        "super-large": "20rem",
-        "base-large": ["18px", { lineHeight: "28px" }],
-        "heading-2": ["32px", { lineHeight: "40px", fontWeight: "600" }],
-        "heading-4": ["20px", { lineHeight: "28px", fontWeight: "500" }],
       },
       spacing: {
         "space-lg": "32px",
@@ -40,9 +38,21 @@ module.exports = {
         "space-3xs": "4px",
         fluid: "2rem",
       },
+      fontSize: {
+        "super-large": "20rem",
+        "base-large": ["18px", { lineHeight: "28px" }],
+        "heading-2": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+        "heading-4": ["20px", { lineHeight: "28px", fontWeight: "500" }],
+      },
+      fontWeight: {
+        normal: "400",
+        medium: "500",
+        semibold: "600",
+        bold: "700",
+      },
       fontFamily: {
-        mono: ['"Fira Code"', "monospace"],
         sans: ["Inter", "sans-serif"],
+        mono: ["Fira Code", "monospace"],
       },
     },
   },
