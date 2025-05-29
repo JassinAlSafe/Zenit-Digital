@@ -47,10 +47,11 @@ const XtreamEsportArenaPage = () => {
   return (
     <div
       className="min-h-screen"
-      data-bg="var(--custom-blue)"
+      style={{ backgroundColor: "white" }}
+      data-bg="white"
       data-text="var(--custom-pink)"
       data-button-bg="var(--custom-pink)"
-      data-button-text="var(--custom-blue)"
+      data-button-text="white"
       data-nav-text="var(--custom-pink)"
     >
       {/* Hero Section */}
