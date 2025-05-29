@@ -47,17 +47,21 @@ const ShelfWisePage = () => {
   return (
     <div
       className="min-h-screen"
-      data-bg="var(--custom-blue)"
-      data-text="var(--custom-pink)"
-      data-button-bg="var(--custom-pink)"
-      data-button-text="var(--custom-blue)"
-      data-nav-text="var(--custom-pink)"
+      style={{ backgroundColor: "white" }}
+      data-bg="white"
+      data-text="#CB6516"
+      data-button-bg="#CB6516"
+      data-button-text="white"
+      data-nav-text="#CB6516"
     >
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-8 md:px-16 lg:px-20 2xl:px-32">
         {/* Breadcrumb Navigation */}
         <div className="max-w-7xl mx-auto mb-12">
-          <nav className="flex items-center space-x-2 text-lg text-custom-pink opacity-70">
+          <nav
+            className="flex items-center space-x-2 text-lg opacity-70"
+            style={{ color: "#CB6516" }}
+          >
             <Link href="/" className="hover:opacity-100 transition-opacity">
               Home
             </Link>
@@ -75,21 +79,24 @@ const ShelfWisePage = () => {
         <div className="max-w-7xl mx-auto">
           {/* Project Title */}
           <div className="mb-8">
-            <h1 className="text-6xl md:text-8xl lg:text-9xl 2xl:text-[12rem] font-bold text-custom-pink leading-none">
-              {Array.from("SHELF").map((letter, index) => (
+            <h1
+              className="text-6xl md:text-8xl lg:text-9xl 2xl:text-[12rem] font-bold leading-none"
+              style={{ color: "#CB6516" }}
+            >
+              {Array.from("SHELFWISE").map((letter, index) => (
                 <span key={index} className="hero-letter inline-block">
                   {letter}
                 </span>
               ))}
             </h1>
-            <h2 className="text-4xl md:text-6xl lg:text-7xl 2xl:text-8xl font-bold text-custom-pink leading-none mt-4">
-              WISE
-            </h2>
           </div>
 
           {/* Project Subtitle */}
           <div className="mb-12">
-            <p className="text-xl md:text-2xl lg:text-3xl text-custom-pink font-light max-w-3xl">
+            <p
+              className="text-xl md:text-2xl lg:text-3xl font-light max-w-3xl"
+              style={{ color: "#CB6516" }}
+            >
               An intelligent inventory management system that transforms how
               businesses track, manage, and optimize their stock levels with
               AI-powered insights.
@@ -98,13 +105,22 @@ const ShelfWisePage = () => {
 
           {/* Project Tags */}
           <div className="flex flex-wrap gap-3 mb-16">
-            <span className="px-6 py-3 border-2 border-custom-pink text-custom-pink rounded-full text-lg font-medium">
+            <span
+              className="px-6 py-3 border-2 rounded-full text-lg font-medium"
+              style={{ borderColor: "#CB6516", color: "#CB6516" }}
+            >
               UI/UX Design
             </span>
-            <span className="px-6 py-3 border-2 border-custom-pink text-custom-pink rounded-full text-lg font-medium">
+            <span
+              className="px-6 py-3 border-2 rounded-full text-lg font-medium"
+              style={{ borderColor: "#CB6516", color: "#CB6516" }}
+            >
               Fullstack Development
             </span>
-            <span className="px-6 py-3 border-2 border-custom-pink text-custom-pink rounded-full text-lg font-medium">
+            <span
+              className="px-6 py-3 border-2 rounded-full text-lg font-medium"
+              style={{ borderColor: "#CB6516", color: "#CB6516" }}
+            >
               Database Design
             </span>
           </div>
@@ -130,18 +146,27 @@ const ShelfWisePage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             <div>
-              <h3 className="text-5xl md:text-6xl font-bold text-custom-pink mb-8">
+              <h3
+                className="text-5xl md:text-6xl font-bold mb-8"
+                style={{ color: "#CB6516" }}
+              >
                 The Challenge
               </h3>
             </div>
             <div>
-              <p className="text-xl md:text-2xl text-custom-pink font-light leading-relaxed mb-8">
+              <p
+                className="text-xl md:text-2xl font-light leading-relaxed mb-8"
+                style={{ color: "#CB6516" }}
+              >
                 Small to medium businesses struggled with outdated inventory
                 systems that led to overstocking, stockouts, and inefficient
                 resource allocation, costing them revenue and customer
                 satisfaction.
               </p>
-              <p className="text-lg md:text-xl text-custom-pink font-light leading-relaxed">
+              <p
+                className="text-lg md:text-xl font-light leading-relaxed"
+                style={{ color: "#CB6516" }}
+              >
                 Manual tracking methods and legacy software couldn't provide
                 real-time insights or predictive analytics needed for modern
                 inventory optimization.
@@ -155,10 +180,16 @@ const ShelfWisePage = () => {
       <section className="px-8 md:px-16 lg:px-20 2xl:px-32 py-20 fade-in">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
-            <h3 className="text-5xl md:text-6xl font-bold text-custom-pink mb-8">
+            <h3
+              className="text-5xl md:text-6xl font-bold mb-8"
+              style={{ color: "#CB6516" }}
+            >
               Smart Solution
             </h3>
-            <p className="text-xl md:text-2xl text-custom-pink font-light leading-relaxed max-w-4xl">
+            <p
+              className="text-xl md:text-2xl font-light leading-relaxed max-w-4xl"
+              style={{ color: "#CB6516" }}
+            >
               ShelfWise combines intuitive design with powerful analytics,
               offering businesses a comprehensive platform for inventory
               tracking, automated reordering, and predictive demand forecasting.
@@ -170,20 +201,32 @@ const ShelfWisePage = () => {
       {/* Key Features */}
       <section className="px-8 md:px-16 lg:px-20 2xl:px-32 py-20 fade-in">
         <div className="max-w-7xl mx-auto">
-          <h4 className="text-3xl md:text-4xl font-bold text-custom-pink mb-16 text-center">
+          <h4
+            className="text-3xl md:text-4xl font-bold mb-16 text-center"
+            style={{ color: "#CB6516" }}
+          >
             Powerful Features
           </h4>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             {/* Feature 1 */}
             <div className="text-center">
-              <div className="w-16 h-16 bg-custom-pink rounded-full flex items-center justify-center mx-auto mb-6">
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+                style={{ backgroundColor: "#CB6516" }}
+              >
                 <span className="text-2xl text-custom-blue font-bold">01</span>
               </div>
-              <h5 className="text-2xl font-bold text-custom-pink mb-4">
+              <h5
+                className="text-2xl font-bold mb-4"
+                style={{ color: "#CB6516" }}
+              >
                 Real-time Tracking
               </h5>
-              <p className="text-lg text-custom-pink font-light leading-relaxed">
+              <p
+                className="text-lg font-light leading-relaxed"
+                style={{ color: "#CB6516" }}
+              >
                 Live inventory updates with barcode scanning and automated stock
                 level monitoring across multiple locations.
               </p>
@@ -191,13 +234,22 @@ const ShelfWisePage = () => {
 
             {/* Feature 2 */}
             <div className="text-center">
-              <div className="w-16 h-16 bg-custom-pink rounded-full flex items-center justify-center mx-auto mb-6">
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+                style={{ backgroundColor: "#CB6516" }}
+              >
                 <span className="text-2xl text-custom-blue font-bold">02</span>
               </div>
-              <h5 className="text-2xl font-bold text-custom-pink mb-4">
+              <h5
+                className="text-2xl font-bold mb-4"
+                style={{ color: "#CB6516" }}
+              >
                 Predictive Analytics
               </h5>
-              <p className="text-lg text-custom-pink font-light leading-relaxed">
+              <p
+                className="text-lg font-light leading-relaxed"
+                style={{ color: "#CB6516" }}
+              >
                 AI-powered demand forecasting and automated reorder points to
                 prevent stockouts and reduce excess inventory.
               </p>
@@ -205,13 +257,22 @@ const ShelfWisePage = () => {
 
             {/* Feature 3 */}
             <div className="text-center">
-              <div className="w-16 h-16 bg-custom-pink rounded-full flex items-center justify-center mx-auto mb-6">
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+                style={{ backgroundColor: "#CB6516" }}
+              >
                 <span className="text-2xl text-custom-blue font-bold">03</span>
               </div>
-              <h5 className="text-2xl font-bold text-custom-pink mb-4">
+              <h5
+                className="text-2xl font-bold mb-4"
+                style={{ color: "#CB6516" }}
+              >
                 Smart Reporting
               </h5>
-              <p className="text-lg text-custom-pink font-light leading-relaxed">
+              <p
+                className="text-lg font-light leading-relaxed"
+                style={{ color: "#CB6516" }}
+              >
                 Comprehensive dashboards with customizable reports and KPI
                 tracking for data-driven decision making.
               </p>
@@ -224,10 +285,16 @@ const ShelfWisePage = () => {
       <section className="px-8 md:px-16 lg:px-20 2xl:px-32 py-20 fade-in">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h3 className="text-5xl md:text-6xl font-bold text-custom-pink mb-8">
+            <h3
+              className="text-5xl md:text-6xl font-bold mb-8"
+              style={{ color: "#CB6516" }}
+            >
               The Results
             </h3>
-            <p className="text-xl md:text-2xl text-custom-pink font-light leading-relaxed max-w-4xl mx-auto">
+            <p
+              className="text-xl md:text-2xl font-light leading-relaxed max-w-4xl mx-auto"
+              style={{ color: "#CB6516" }}
+            >
               ShelfWise delivered significant improvements in inventory
               efficiency and cost reduction for businesses of all sizes.
             </p>
@@ -235,26 +302,35 @@ const ShelfWisePage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
             <div>
-              <div className="text-6xl md:text-7xl font-bold text-custom-pink mb-4">
+              <div
+                className="text-6xl md:text-7xl font-bold mb-4"
+                style={{ color: "#CB6516" }}
+              >
                 45%
               </div>
-              <p className="text-xl text-custom-pink font-light">
+              <p className="text-xl font-light" style={{ color: "#CB6516" }}>
                 Reduction in Stockouts
               </p>
             </div>
             <div>
-              <div className="text-6xl md:text-7xl font-bold text-custom-pink mb-4">
+              <div
+                className="text-6xl md:text-7xl font-bold mb-4"
+                style={{ color: "#CB6516" }}
+              >
                 30%
               </div>
-              <p className="text-xl text-custom-pink font-light">
+              <p className="text-xl font-light" style={{ color: "#CB6516" }}>
                 Lower Inventory Costs
               </p>
             </div>
             <div>
-              <div className="text-6xl md:text-7xl font-bold text-custom-pink mb-4">
+              <div
+                className="text-6xl md:text-7xl font-bold mb-4"
+                style={{ color: "#CB6516" }}
+              >
                 60%
               </div>
-              <p className="text-xl text-custom-pink font-light">
+              <p className="text-xl font-light" style={{ color: "#CB6516" }}>
                 Time Savings
               </p>
             </div>
@@ -266,19 +342,35 @@ const ShelfWisePage = () => {
       <section className="px-8 md:px-16 lg:px-20 2xl:px-32 py-20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
-            <h4 className="text-3xl md:text-4xl font-bold text-custom-pink mb-8">
+            <h4
+              className="text-3xl md:text-4xl font-bold mb-8"
+              style={{ color: "#CB6516" }}
+            >
               Explore More Work
             </h4>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link
                 href="/work/swedish-data-center"
-                className="px-8 py-4 border-2 border-custom-pink text-custom-pink rounded-full hover:bg-custom-pink hover:text-custom-blue transition-all duration-300 text-lg font-medium"
+                className="px-8 py-4 border-2 rounded-full hover:text-custom-blue transition-all duration-300 text-lg font-medium"
+                style={{
+                  borderColor: "#CB6516",
+                  color: "#CB6516",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = "#CB6516";
+                  e.target.style.color = "var(--custom-blue)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = "transparent";
+                  e.target.style.color = "#CB6516";
+                }}
               >
                 Next: Swedish Data Center →
               </Link>
               <Link
                 href="/#work"
-                className="px-8 py-4 bg-custom-pink text-custom-blue rounded-full hover:bg-opacity-80 transition-all duration-300 text-lg font-medium"
+                className="px-8 py-4 text-custom-blue rounded-full hover:bg-opacity-80 transition-all duration-300 text-lg font-medium"
+                style={{ backgroundColor: "#CB6516" }}
               >
                 View All Projects
               </Link>
