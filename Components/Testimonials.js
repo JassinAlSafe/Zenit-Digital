@@ -14,7 +14,7 @@ const Testimonials = () => {
     const webmSources = {
       airplane: "/airplane.webm",
       flower: "/Flower_02.webm",
-      globe: "/globe.webm",
+      globe: "/globe_03.webm",
     };
 
     if (webmSources[baseName]) {

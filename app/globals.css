@@ -10,6 +10,11 @@
   --custom-green: #09282a;
   --custom-lightGreen: #0fb190;
 
+  /* Accessible color variants for better contrast */
+  --custom-lightGreen-dark: #0a8a6b; /* Darker version for better contrast on light backgrounds */
+  --custom-lightGreen-accessible: #067a5a; /* Even darker for WCAG AA compliance */
+  --custom-green-light: #0d3a3d; /* Lighter version of green for better contrast with white text */
+
   /* Secondary colors */
   --secondary-50: #f9fafb;
   --secondary-75: #f2f4f7;
@@ -98,6 +103,19 @@ input[type="submit"] *,
 
 .custom-lightGreen {
   color: var(--custom-lightGreen);
+}
+
+/* Accessible color variants */
+.text-custom-lightGreen-dark {
+  color: var(--custom-lightGreen-dark);
+}
+
+.text-custom-lightGreen-accessible {
+  color: var(--custom-lightGreen-accessible);
+}
+
+.bg-custom-green-light {
+  background-color: var(--custom-green-light);
 }
 
 html {

@@ -54,7 +54,8 @@ function Test() {
         {/* Left Section */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center">
           <h1 className="text-4xl lg:text-7xl font-medium mb-4 sm:mb-6 text-custom-green 2xl:text-8xl">
-            Want to <span className="text-custom-lightGreen">Grow</span> your
+            Want to{" "}
+            <span className="text-custom-lightGreen-accessible">Grow</span> your
             digital presence? We&apos;re here to make it happen!
           </h1>
           <p className="text-custom-green lg:text-lg 2xl:text-2xl  mt-2 sm:mt-4">
