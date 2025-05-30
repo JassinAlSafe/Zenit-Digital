@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
 import MagneticButton from "./MagneticButton";
@@ -10,23 +10,6 @@ const TestHeader = ({ onAnimationStart }) => {
   // Create refs for the video elements
   const mobileVideoRef = useRef(null);
   const desktopVideoRef = useRef(null);
-
-  // State to store the video source
-  const [videoSrc, setVideoSrc] = useState("");
-
-  // Function to detect Safari browser
-  const isSafari = () => {
-    if (typeof window === "undefined") return false;
-    const userAgent = window.navigator.userAgent;
-    const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(userAgent);
-    return isSafariBrowser;
-  };
-
-  useEffect(() => {
-    // Set video source based on browser
-    const videoFormat = isSafari() ? "/airplane.mov" : "/airplane.webm";
-    setVideoSrc(videoFormat);
-  }, []);
 
   useEffect(() => {
     // Hide everything initially
@@ -109,7 +92,7 @@ const TestHeader = ({ onAnimationStart }) => {
     return () => {
       tl.kill();
     };
-  }, [onAnimationStart, videoSrc]); // Add videoSrc as dependency
+  }, [onAnimationStart]);
 
   return (
     <section
@@ -165,10 +148,31 @@ const TestHeader = ({ onAnimationStart }) => {
 
             {/* Video for small screens (below md breakpoint) */}
             <div className="w-full block md:hidden z-10 relative">
-              {videoSrc && (
+              <video
+                ref={mobileVideoRef}
+                className="w-full h-auto object-contain"
+                style={{
+                  filter:
+                    "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(900%) hue-rotate(200deg) brightness(80%) contrast(100%)",
+                }}
+                autoPlay
+                muted
+                loop
+                playsInline
+              >
+                <source src="/airplane.webm" type="video/webm" />
+                <source src="/airplane.mov" type="video/quicktime" />
+                <source src="/airplane.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
+            {/* Video for medium and large screens */}
+            <div className="absolute right-0 mt-36 2xl:mt-60 top-24 w-1/2 h-full hidden md:block z-5 pointer-events-none">
+              <div className="relative w-full h-full flex items-center justify-end">
                 <video
-                  ref={mobileVideoRef}
-                  className="w-full h-auto object-contain"
+                  ref={desktopVideoRef}
+                  className="w-full h-auto object-contain 2xl:scale-125"
                   style={{
                     filter:
                       "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(900%) hue-rotate(200deg) brightness(80%) contrast(100%)",
@@ -177,33 +181,12 @@ const TestHeader = ({ onAnimationStart }) => {
                   muted
                   loop
                   playsInline
-                  src={videoSrc}
                 >
+                  <source src="/airplane.webm" type="video/webm" />
+                  <source src="/airplane.mov" type="video/quicktime" />
+                  <source src="/airplane.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
-              )}
-            </div>
-
-            {/* Video for medium and large screens */}
-            <div className="absolute right-0 mt-36 2xl:mt-60 top-24 w-1/2 h-full hidden md:block z-5 pointer-events-none">
-              <div className="relative w-full h-full flex items-center justify-end">
-                {videoSrc && (
-                  <video
-                    ref={desktopVideoRef}
-                    className="w-full h-auto object-contain 2xl:scale-125"
-                    style={{
-                      filter:
-                        "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(900%) hue-rotate(200deg) brightness(80%) contrast(100%)",
-                    }}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    src={videoSrc}
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                )}
               </div>
             </div>
           </div>

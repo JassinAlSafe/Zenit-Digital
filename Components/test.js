@@ -92,7 +92,8 @@ function Test() {
             loop
             // Remove autoPlay attribute, we'll control this with JavaScript
           >
-            <source src="flower.mp4" type="video/mp4" />
+            <source src="/Flower_02.webm" type="video/webm" />
+            <source src="/flower.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>

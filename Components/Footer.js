@@ -163,6 +163,7 @@ const Footer = () => {
                 playsInline
                 className="w-full h-full object-cover"
               >
+                <source src="/globe.webm" type="video/webm" />
                 <source src="/globe.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
