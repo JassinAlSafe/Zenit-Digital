@@ -106,9 +106,7 @@ const Footer = () => {
         data-nav-text="var(--custom-green)"
       >
         <div className="flex flex-col justify-center items-center min-h-screen bg-custom-lightGreen py-20 relative mx-auto max-w-7xl rounded-sm">
-          <p className="text-custom-green mb-4 font-medium">
-            - Change starts here -
-          </p>
+          <p className="text-white mb-4 font-medium">- Change starts here -</p>
 
           <h1 className="text-6xl md:text-8xl lg:text-9xl 2xl:text-[10rem] font-bold mb-12 text-center text-custom-green leading-tight">
             <div className="overflow-hidden">
