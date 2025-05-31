@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
@@ -9,6 +9,23 @@ const Footer = () => {
   // Create refs to store our animation instances
   const footerScrollTriggers = useRef([]);
   const footerTweens = useRef([]);
+  
+  // State to store the video source
+  const [videoSrc, setVideoSrc] = useState("");
+
+  // Function to detect Safari browser
+  const isSafari = () => {
+    if (typeof window === "undefined") return false;
+    const userAgent = window.navigator.userAgent;
+    const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(userAgent);
+    return isSafariBrowser;
+  };
+
+  useEffect(() => {
+    // Set video source based on browser
+    const videoFormat = isSafari() ? "/globe.mov" : "/globe.webm";
+    setVideoSrc(videoFormat);
+  }, []);
 
   useEffect(() => {
     // Ensure this runs only on client side
@@ -162,9 +179,8 @@ const Footer = () => {
                 muted
                 playsInline
                 className="w-full h-full object-cover"
+                src={videoSrc}
               >
-                <source src="/globe_03.webm" type="video/webm" />
-                <source src="/globe.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>

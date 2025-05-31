@@ -1,11 +1,28 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 function Test() {
   const videoRef = useRef(null);
+  
+  // State to store the video source
+  const [videoSrc, setVideoSrc] = useState("");
+
+  // Function to detect Safari browser
+  const isSafari = () => {
+    if (typeof window === "undefined") return false;
+    const userAgent = window.navigator.userAgent;
+    const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(userAgent);
+    return isSafariBrowser;
+  };
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    // Set video source based on browser
+    const videoFormat = isSafari() ? "flower.mov" : "flower.webm";
+    setVideoSrc(videoFormat);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && videoRef.current) {
       // Set up Intersection Observer to detect when video is visible
       const observer = new IntersectionObserver(
         (entries) => {
@@ -27,9 +44,7 @@ function Test() {
       ); // Trigger when at least 10% of the video is visible
 
       // Start observing the video element
-      if (videoRef.current) {
-        observer.observe(videoRef.current);
-      }
+      observer.observe(videoRef.current);
 
       // Clean up observer on unmount
       return () => {
@@ -38,7 +53,7 @@ function Test() {
         }
       };
     }
-  }, []);
+  }, [videoSrc]); // Add videoSrc as dependency to re-run when video source changes
 
   return (
     <section
@@ -91,10 +106,9 @@ function Test() {
             playsInline
             muted
             loop
+            src={videoSrc}
             // Remove autoPlay attribute, we'll control this with JavaScript
           >
-            <source src="/Flower_02.webm" type="video/webm" />
-            <source src="/flower.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
