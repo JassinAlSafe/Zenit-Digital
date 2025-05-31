@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
+import MagneticButton from "./MagneticButton";
 
 const TestHeader = ({ onAnimationStart }) => {
   // Create refs for the video elements
@@ -121,7 +122,7 @@ const TestHeader = ({ onAnimationStart }) => {
               </p>
 
               <Link href="/booking">
-                <button className="cta-button bg-custom-blue text-custom-pink hover:bg-[#2C2C75] font-medium py-3 px-6 rounded-full inline-flex items-center">
+              <MagneticButton className="cta-button bg-custom-blue text-custom-pink hover:bg-[#2C2C75] font-medium py-3 px-6 rounded-full inline-flex items-center">
                   Contact Us
                   <svg
                     className="w-4 h-4 ml-2"
@@ -136,7 +137,7 @@ const TestHeader = ({ onAnimationStart }) => {
                       d="M9 5l7 7-7 7"
                     ></path>
                   </svg>
-                </button>
+                </MagneticButton>
               </Link>
             </div>
 
