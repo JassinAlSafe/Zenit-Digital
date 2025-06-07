@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Group5Image from "../assets/Group5.png";
 import Group78Image from "../assets/Group78-2.png";
-import Framer3Image from "../assets/Frame 3.png";
+import Framer3Image from "../assets/Frame3.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -60,7 +60,7 @@ const SelectedWorks = () => {
       title: "Xtream E-sport Arena",
       description: "Gaming arena",
       links: ["Design", "Web Development"],
-      route: "/work/xtream-esport-arena",
+      // route: "/work/xtream-esport-arena",
     },
     {
       id: 2,
@@ -68,15 +68,15 @@ const SelectedWorks = () => {
       title: "ShelfWise",
       description: "Inventory Management System",
       links: ["Design", "Fullstack Development"],
-      route: "/work/shelfwise",
+      // route: "/work/shelfwise",
     },
     {
       id: 3,
       image: Framer3Image,
-      title: "SWEDISH DATA CENTER",
-      description: "",
-      links: ["Design", "Webnode"],
-      route: "/work/swedish-data-center",
+      title: "Swedish Data Center",
+      description: "Data infrastructure hub",
+      links: ["Design", "Web Development"],
+      // route: "/work/swedish-data-center",
     },
   ];
 
@@ -124,7 +124,7 @@ const SelectedWorks = () => {
               <div
                 key={project.id}
                 className="scroll-item space-y-6 border-custom-pink pb-8 cursor-pointer transition-transform hover:scale-[1.02] duration-300"
-                onClick={() => handleProjectClick(project.route)}
+                // onClick={() => handleProjectClick(project.route)}
               >
                 {/* Image */}
                 {typeof project.image === "string" ? (
