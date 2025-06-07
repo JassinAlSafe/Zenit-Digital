@@ -11,6 +11,9 @@ const TestHeader = ({ onAnimationStart }) => {
   
   // State to store the video source
   const [videoSrc, setVideoSrc] = useState("");
+  
+  // State to detect Windows for platform-specific adjustments
+  const [isWindows, setIsWindows] = useState(false);
 
   // Function to detect Safari browser
   const isSafari = () => {
@@ -20,10 +23,19 @@ const TestHeader = ({ onAnimationStart }) => {
     return isSafariBrowser;
   };
 
+  // Function to detect Windows
+  const detectWindows = () => {
+    if (typeof window === "undefined") return false;
+    return window.navigator.platform.toLowerCase().includes('win');
+  };
+
   useEffect(() => {
     // Set video source based on browser
     const videoFormat = isSafari() ? "/airplane.mov" : "/airplane.webm";
     setVideoSrc(videoFormat);
+    
+    // Detect Windows for platform-specific styling
+    setIsWindows(detectWindows());
   }, []);
 
   useEffect(() => {
@@ -92,37 +104,72 @@ const TestHeader = ({ onAnimationStart }) => {
     };
   }, [onAnimationStart]);
 
+  // Platform-specific class adjustments
+  const getPlatformClasses = () => {
+    if (isWindows) {
+      return {
+        // Windows-specific adjustments - slightly smaller text and adjusted spacing
+        title: "text-5xl 2xl:text-[11rem] xs:text-3xl lg:text-8xl md:text-5xl font-medium lg:font-medium lg:leading-none leading-none mb-4 text-custom-blue",
+        subtitle: "subtext text-base xs:text-sm lg:text-lg lg:font-light mb-6 text-custom-blue max-w-lg mx-auto",
+        container: "container mx-auto px-3 py-12 md:py-20 relative",
+        section: "relative h-screen w-full flex items-center justify-center overflow-hidden",
+        wrapper: "w-full overflow-hidden xs:mt-1 mt-8 md:mt-8 lg:mt-8",
+        videoDesktop: "absolute right-0 mt-32 2xl:mt-52 top-20 w-1/2 h-full hidden md:block",
+        videoDesktopInner: "w-full h-auto object-contain 2xl:scale-110"
+      };
+    } else {
+      // macOS classes (original)
+      return {
+        title: "text-6xl 2xl:text-[13rem] xs:text-4xl lg:text-9xl md:text-6xl font-medium lg:font-medium lg:leading-none leading-none mb-6 text-custom-blue",
+        subtitle: "subtext text-lg xs:text-sm lg:text-xl lg:font-light mb-8 text-custom-blue max-w-xl mx-auto",
+        container: "container mx-auto px-4 py-16 md:py-24 relative",
+        section: "relative h-screen w-full flex items-center justify-center",
+        wrapper: "w-full overflow-hidden xs:mt-2 mt-10 md:mt-10 lg:mt-10",
+        videoDesktop: "absolute right-0 mt-36 2xl:mt-60 top-24 w-1/2 h-full hidden md:block",
+        videoDesktopInner: "w-full h-auto object-contain 2xl:scale-125"
+      };
+    }
+  };
+
+  const classes = getPlatformClasses();
+
   return (
     <section
-      className="relative h-screen w-full flex items-center justify-center"
+      className={classes.section}
       data-bg="white"
       data-text="var(--custom-blue)"
       data-button-bg="var(--custom-blue)"
       data-button-text="white"
       data-navbar-text="var(--custom-blue)"
       id="/"
+      style={{
+        // CSS-based platform detection as backup
+        fontSize: isWindows ? '0.95em' : '1em',
+        WebkitFontSmoothing: 'antialiased',
+        MozOsxFontSmoothing: 'grayscale'
+      }}
     >
-      <div className="w-full overflow-hidden xs:mt-2 mt-10 md:mt-10 lg:mt-10">
-        <div className="container mx-auto px-4 py-16 md:py-24 relative">
+      <div className={classes.wrapper}>
+        <div className={classes.container}>
           <div className="flex flex-col items-center text-center">
             <div className="w-full 2xl:w-full lg:w-3/4 z-10">
-              <h1 className="text-6xl 2xl:text-[13rem] xs:text-4xl lg:text-9xl md:text-6xl font-medium  lg:font-medium   lg:leading-none leading-none mb-6 text-custom-blue">
+              <h1 className={classes.title}>
                 <span className="word">We</span>{" "}
                 <span className="word">turn</span>{" "}
                 <br />
-                <span className="word italic ">dreams</span>{" "}
+                <span className="word italic">dreams</span>{" "}
                 <span className="word">into</span>{" "}
                 <br />
                 <span className="word">Digital</span>{" "}
                 <span className="word">Reality</span>
               </h1>
-              <p className="subtext text-lg xs:text-sm lg:text-xl lg:font-light mb-8 text-custom-blue max-w-xl mx-auto">
+              <p className={classes.subtitle}>
                 Looking to build your next big idea? We craft custom software to
                 help startups and businesses grow with style and speed.
               </p>
 
               <Link href="/booking">
-              <MagneticButton className="cta-button bg-custom-blue text-custom-pink hover:bg-[#2C2C75] font-medium py-3 px-6 rounded-full inline-flex items-center">
+                <MagneticButton className="cta-button bg-custom-blue text-custom-pink hover:bg-[#2C2C75] font-medium py-3 px-6 rounded-full inline-flex items-center">
                   Contact Us
                   <svg
                     className="w-4 h-4 ml-2"
@@ -149,6 +196,7 @@ const TestHeader = ({ onAnimationStart }) => {
                 style={{
                   filter:
                     "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(900%) hue-rotate(200deg) brightness(80%) contrast(100%)",
+                  maxHeight: isWindows ? '60vh' : '70vh' // Adjust video height for Windows
                 }}
                 autoPlay
                 muted
@@ -161,14 +209,15 @@ const TestHeader = ({ onAnimationStart }) => {
             </div>
 
             {/* Video for medium and large screens */}
-            <div className="absolute right-0 mt-36 2xl:mt-60 top-24 w-1/2 h-full hidden md:block">
+            <div className={classes.videoDesktop}>
               <div className="relative w-full h-full flex items-center justify-end">
                 <video
                   ref={desktopVideoRef}
-                  className="w-full h-auto object-contain 2xl:scale-125"
+                  className={classes.videoDesktopInner}
                   style={{
                     filter:
                       "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(900%) hue-rotate(200deg) brightness(80%) contrast(100%)",
+                    maxHeight: isWindows ? '75vh' : '85vh' // Constrain video height on Windows
                   }}
                   autoPlay
                   muted

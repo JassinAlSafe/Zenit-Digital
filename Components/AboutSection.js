@@ -1,11 +1,25 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const AboutSection = () => {
+  // State to detect Windows for platform-specific adjustments
+  const [isWindows, setIsWindows] = useState(false);
+
+  // Function to detect Windows
+  const detectWindows = () => {
+    if (typeof window === "undefined") return false;
+    return window.navigator.platform.toLowerCase().includes('win');
+  };
+
+  useEffect(() => {
+    // Detect Windows for platform-specific styling
+    setIsWindows(detectWindows());
+  }, []);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const aboutText = document.querySelector(".about-text");
@@ -68,6 +82,17 @@ const AboutSection = () => {
     }
   }, []);
 
+  // Get platform-specific text classes
+  const getTextClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing - reduced to prevent overflow
+      return "about-text 2xl:text-[8.5rem] text-4xl text-white md:text-7xl lg:text-7xl font-normal text-left";
+    } else {
+      // macOS classes (original)
+      return "about-text 2xl:text-[10rem] text-5xl text-white md:text-8xl lg:text-8xl font-normal text-left";
+    }
+  };
+
   return (
     <>
       {/* Scroll Indicator */}
@@ -108,7 +133,7 @@ const AboutSection = () => {
         data-navbar-text="var(--custom-pink)"
       >
         <div className="container 2xl:max-w-[90%] mx-auto px-4 2xl:px-0 text-center">
-          <h2 className="about-text 2xl:text-[10rem]  text-5xl text-white md:text-8xl lg:text-8xl font-normal text-left ">
+          <h2 className={getTextClasses()}>
             We create elevating digital solutions that empower startups through
             innovative software and purposeful design.
           </h2>
