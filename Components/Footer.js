@@ -193,7 +193,7 @@ const Footer = () => {
           </div>
 
           {/* For Further Inquiries */}
-          <div className="absolute bottom-8 right-8 text-right hidden md:block">
+          <div className="absolute bottom-8 right-8 text-right">
             <h4 className="text-sm 2xl:text-xl mb-1">FOR FURTHER INQUIRIES</h4>
             <p className="text-sm flex items-center justify-en 2xl:text-lg">
               <span className="mr-1">→</span> hello@zenitdigital.se
