@@ -120,7 +120,7 @@ const TestHeader = ({ onAnimationStart }) => {
     } else {
       // macOS classes (original)
       return {
-        title: "text-6xl 2xl:text-[13rem] xs:text-[44px] lg:text-9xl md:text-6xl font-medium lg:font-medium lg:leading-none leading-none mb-6 text-custom-blue",
+        title: "text-6xl 2xl:text-[13rem] xs:text-[45px] lg:text-9xl md:text-6xl font-medium lg:font-medium lg:leading-none leading-none mb-6 text-custom-blue",
         subtitle: "subtext text-lg xs:text-sm lg:text-xl lg:font-light mb-8 text-custom-blue max-w-xl mx-auto",
         container: "container mx-auto px-4 py-16 md:py-24 relative",
         section: "relative h-screen w-full flex items-center justify-center",
