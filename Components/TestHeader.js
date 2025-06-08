@@ -113,14 +113,14 @@ const TestHeader = ({ onAnimationStart }) => {
         subtitle: "subtext text-base xs:text-sm lg:text-lg lg:font-light mb-6 text-custom-blue max-w-lg mx-auto",
         container: "container mx-auto px-3 py-12 md:py-20 relative",
         section: "relative h-screen w-full flex items-center justify-center overflow-hidden",
-        wrapper: "w-full overflow-hidden xs:mt-1 mt-8 md:mt-8 lg:mt-8",
+        wrapper: "w-full overflow-hidden xs:mt-1 mt-10 md:mt-8 lg:mt-8",
         videoDesktop: "absolute right-0 mt-32 2xl:mt-52 top-20 w-1/2 h-full hidden md:block",
         videoDesktopInner: "w-full h-auto object-contain 2xl:scale-110"
       };
     } else {
       // macOS classes (original)
       return {
-        title: "text-6xl 2xl:text-[13rem] xs:text-4xl lg:text-9xl md:text-6xl font-medium lg:font-medium lg:leading-none leading-none mb-6 text-custom-blue",
+        title: "text-6xl 2xl:text-[13rem] xs:text-[44px] lg:text-9xl md:text-6xl font-medium lg:font-medium lg:leading-none leading-none mb-6 text-custom-blue",
         subtitle: "subtext text-lg xs:text-sm lg:text-xl lg:font-light mb-8 text-custom-blue max-w-xl mx-auto",
         container: "container mx-auto px-4 py-16 md:py-24 relative",
         section: "relative h-screen w-full flex items-center justify-center",
