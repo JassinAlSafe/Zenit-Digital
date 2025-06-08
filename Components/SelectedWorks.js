@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Group5Image from "../assets/Group5.png";
 import Group78Image from "../assets/Group78-2.png";
-import Framer3Image from "../assets/Frame3.png";
+import Framer3Image from "../assets/Frame 3.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
