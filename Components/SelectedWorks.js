@@ -3,16 +3,41 @@ import React, { useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import Group5Image from "../assets/Group5.png";
 import Group78Image from "../assets/Group78-2.png";
 import Framer3Image from "../assets/Frame 3.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const projects = [
+  {
+    id: 1,
+    image: Group5Image,
+    title: "Xtream E-sport Arena",
+    description: "Gaming arena",
+    links: ["Design", "Web Development"],
+    // route: "/work/xtream-esport-arena",
+  },
+  {
+    id: 2,
+    image: Group78Image,
+    title: "ShelfWise",
+    description: "Inventory Management System",
+    links: ["Design", "Fullstack Development"],
+    // route: "/work/shelfwise",
+  },
+  {
+    id: 3,
+    image: Framer3Image,
+    title: "Swedish Data Center",
+    description: "Data infrastructure hub",
+    links: ["Design", "Web Development"],
+    // route: "/work/swedish-data-center",
+  },
+];
+
 const SelectedWorks = () => {
   const [currentImage, setCurrentImage] = useState(1);
-  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -53,36 +78,6 @@ const SelectedWorks = () => {
     }
   }, []);
 
-  const projects = [
-    {
-      id: 1,
-      image: Group5Image,
-      title: "Xtream E-sport Arena",
-      description: "Gaming arena",
-      links: ["Design", "Web Development"],
-      // route: "/work/xtream-esport-arena",
-    },
-    {
-      id: 2,
-      image: Group78Image,
-      title: "ShelfWise",
-      description: "Inventory Management System",
-      links: ["Design", "Fullstack Development"],
-      // route: "/work/shelfwise",
-    },
-    {
-      id: 3,
-      image: Framer3Image,
-      title: "Swedish Data Center",
-      description: "Data infrastructure hub",
-      links: ["Design", "Web Development"],
-      // route: "/work/swedish-data-center",
-    },
-  ];
-
-  const handleProjectClick = (route) => {
-    router.push(route);
-  };
 
   return (
     <section

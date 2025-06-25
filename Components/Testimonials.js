@@ -99,7 +99,7 @@ const Testimonials = () => {
               </h2>
               <div className="mt-6 text-lg opacity-70 font-extraLight">
                 See what our clients have to say about their experience working
-                with us and the results they've achieved.
+                with us and the results they&apos;ve achieved.
               </div>
             </div>
 
@@ -186,7 +186,7 @@ const Testimonials = () => {
                   className="flex transition-all duration-500 ease-in-out h-full"
                   style={{ transform: `translateX(${translateX}px)` }}
                 >
-                  {testimonials.map((testimonial, index) => (
+                  {testimonials.map((testimonial) => (
                     <div
                       key={testimonial.id}
                       className="!h-full flex-shrink-0"
