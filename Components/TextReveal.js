@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, memo } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -17,7 +17,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * @param {number} [props.staggerDelay] - Delay between each letter animation (default: 0.04)
  * @param {number} [props.duration] - Duration of the animation (default: 1)
  */
-const TextReveal = ({
+const TextReveal = memo(({
   text,
   className = "",
   textClassName = "",
@@ -100,6 +100,8 @@ const TextReveal = ({
       </TextTag>
     </div>
   );
-};
+});
+
+TextReveal.displayName = 'TextReveal';
 
 export default TextReveal;

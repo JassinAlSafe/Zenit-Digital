@@ -7,17 +7,16 @@ function Test() {
   // State to store the video source
   const [videoSrc, setVideoSrc] = useState("");
 
-  // Function to detect Safari browser
-  const isSafari = () => {
+  // Function to detect WebM support
+  const supportsWebM = () => {
     if (typeof window === "undefined") return false;
-    const userAgent = window.navigator.userAgent;
-    const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(userAgent);
-    return isSafariBrowser;
+    const video = document.createElement('video');
+    return video.canPlayType('video/webm; codecs="vp8, vorbis"') !== '';
   };
 
   useEffect(() => {
-    // Set video source based on browser
-    const videoFormat = isSafari() ? "flower.mov" : "flower.webm";
+    // Set video source based on WebM support
+    const videoFormat = supportsWebM() ? "flower.webm" : "flower.mov";
     setVideoSrc(videoFormat);
   }, []);
 
@@ -44,12 +43,13 @@ function Test() {
       ); // Trigger when at least 10% of the video is visible
 
       // Start observing the video element
-      observer.observe(videoRef.current);
+      const videoElement = videoRef.current;
+      observer.observe(videoElement);
 
       // Clean up observer on unmount
       return () => {
-        if (videoRef.current) {
-          observer.unobserve(videoRef.current);
+        if (videoElement) {
+          observer.unobserve(videoElement);
         }
       };
     }

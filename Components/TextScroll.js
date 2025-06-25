@@ -9,6 +9,11 @@ const TextScroll = () => {
   const bottomTextContainerRef = useRef(null);
 
   useEffect(() => {
+    // Capture ref values at the beginning for stable references
+    const topElement = topTextContainerRef.current;
+    const middleElement = middleTextContainerRef.current;
+    const bottomElement = bottomTextContainerRef.current;
+
     // Function to create scrolling text effect
     const createScrollingEffect = (container, direction) => {
       if (!container) return;
@@ -36,16 +41,12 @@ const TextScroll = () => {
     };
 
     // Make sure all refs are available
-    if (
-      topTextContainerRef.current &&
-      middleTextContainerRef.current &&
-      bottomTextContainerRef.current
-    ) {
+    if (topElement && middleElement && bottomElement) {
       // Add a small delay to ensure the component has fully rendered and widths are calculated correctly
       setTimeout(() => {
-        createScrollingEffect(topTextContainerRef.current, "left");
-        createScrollingEffect(middleTextContainerRef.current, "right");
-        createScrollingEffect(bottomTextContainerRef.current, "left");
+        createScrollingEffect(topElement, "left");
+        createScrollingEffect(middleElement, "right");
+        createScrollingEffect(bottomElement, "left");
       }, 100);
     }
 
@@ -53,16 +54,12 @@ const TextScroll = () => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         // Clear existing animations
-        gsap.killTweensOf([
-          topTextContainerRef.current,
-          middleTextContainerRef.current,
-          bottomTextContainerRef.current,
-        ]);
+        gsap.killTweensOf([topElement, middleElement, bottomElement]);
 
         // Restart animations
-        createScrollingEffect(topTextContainerRef.current, "left");
-        createScrollingEffect(middleTextContainerRef.current, "right");
-        createScrollingEffect(bottomTextContainerRef.current, "left");
+        createScrollingEffect(topElement, "left");
+        createScrollingEffect(middleElement, "right");
+        createScrollingEffect(bottomElement, "left");
       }
     };
 
@@ -71,11 +68,7 @@ const TextScroll = () => {
     // Cleanup
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      gsap.killTweensOf([
-        topTextContainerRef.current,
-        middleTextContainerRef.current,
-        bottomTextContainerRef.current,
-      ]);
+      gsap.killTweensOf([topElement, middleElement, bottomElement]);
     };
   }, []);
 

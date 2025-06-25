@@ -8,78 +8,9 @@ import logo2 from "../assets/logo2.png";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import FlipText from "./FlipText";
+import TextReveal from "./TextReveal";
 
 gsap.registerPlugin(ScrollTrigger);
-
-// TextReveal Component for animated text (keep your existing code)
-const TextReveal = ({
-  text,
-  className = "",
-  textClassName = "",
-  tag = "div",
-  splitLines = false,
-  staggerDelay = 0.04,
-  duration = 1,
-  onComplete = () => {},
-}) => {
-  // Your existing TextReveal component code
-  const containerRef = useRef(null);
-  const TextTag = tag;
-
-  // Split text into lines if requested
-  const lines = splitLines
-    ? text.split(" ").reduce((acc, word) => {
-        if (acc.length === 0) return [word];
-        const lastLine = acc[acc.length - 1].split(" ");
-        if (lastLine.length > 3) {
-          return [...acc, word];
-        } else {
-          acc[acc.length - 1] += " " + word;
-          return acc;
-        }
-      }, [])
-    : [text];
-
-  useEffect(() => {
-    // Get all letter elements
-    const container = containerRef.current;
-    if (!container) return;
-
-    const letters = container.querySelectorAll(".reveal-letter");
-
-    // Initial setup - hide letters below their position
-    gsap.set(letters, { y: 60, opacity: 0 });
-
-    // Animate letters
-    gsap.to(letters, {
-      y: 0,
-      opacity: 1,
-      duration: duration,
-      stagger: staggerDelay,
-      ease: "power3.out",
-      onComplete: onComplete,
-    });
-  }, [text, duration, staggerDelay, onComplete]);
-
-  return (
-    <div ref={containerRef} className={className}>
-      <TextTag className={textClassName}>
-        {lines.map((line, lineIndex) => (
-          <div key={`line-${lineIndex}`} className="overflow-hidden">
-            {Array.from(line).map((letter, letterIndex) => (
-              <span
-                key={`letter-${lineIndex}-${letterIndex}`}
-                className="reveal-letter inline-block"
-              >
-                {letter === " " ? "\u00A0" : letter}
-              </span>
-            ))}
-          </div>
-        ))}
-      </TextTag>
-    </div>
-  );
-};
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

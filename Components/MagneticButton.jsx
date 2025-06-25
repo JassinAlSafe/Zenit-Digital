@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, memo } from "react";
 import { gsap } from "gsap";
 
-const MagneticButton = ({
+const MagneticButton = memo(({
   children,
   className = "",
   onClick,
@@ -83,6 +83,8 @@ const MagneticButton = ({
   }
 
   return buttonContent;
-};
+});
+
+MagneticButton.displayName = 'MagneticButton';
 
 export default MagneticButton;

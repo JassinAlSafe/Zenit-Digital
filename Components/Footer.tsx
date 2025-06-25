@@ -13,17 +13,16 @@ const Footer: React.FC = () => {
   // State to store the video source
   const [videoSrc, setVideoSrc] = useState<string>("");
 
-  // Function to detect Safari browser
-  const isSafari = (): boolean => {
+  // Function to detect WebM support
+  const supportsWebM = (): boolean => {
     if (typeof window === "undefined") return false;
-    const userAgent = window.navigator.userAgent;
-    const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(userAgent);
-    return isSafariBrowser;
+    const video = document.createElement('video');
+    return video.canPlayType('video/webm; codecs="vp8, vorbis"') !== '';
   };
 
   useEffect(() => {
-    // Set video source based on browser
-    const videoFormat = isSafari() ? "/globe.mov" : "/globe.webm";
+    // Set video source based on WebM support
+    const videoFormat = supportsWebM() ? "/globe.webm" : "/globe.mov";
     setVideoSrc(videoFormat);
   }, []);
 
