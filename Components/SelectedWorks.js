@@ -1,13 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useEffect, useState, useRef } from "react";
+import { gsap, ScrollTrigger, initializeGSAP, ANIMATION_CONFIG } from "../utils/gsap";
 import Image from "next/image";
 import Group5Image from "../assets/Group5.png";
 import Group78Image from "../assets/Group78-2.png";
 import Framer3Image from "../assets/Frame 3.png";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
   {
@@ -38,25 +35,31 @@ const projects = [
 
 const SelectedWorks = () => {
   const [currentImage, setCurrentImage] = useState(1);
+  const sectionRef = useRef(null);
+  const titleRef = useRef(null);
+  const projectRefs = useRef([]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const titleLetters = document.querySelectorAll(".title-letter");
+    // Ensure GSAP is initialized
+    initializeGSAP();
+    
+    if (typeof window !== "undefined" && titleRef.current && sectionRef.current) {
+      const titleLetters = titleRef.current.querySelectorAll(".title-letter");
 
       // IMPORTANT: Remove all GSAP setup for the section itself
       // This will now be handled by the parent container
 
       // Title animation only
       if (titleLetters.length > 0) {
-        gsap.set(titleLetters, { y: 160 });
+        gsap.set(titleLetters, { y: ANIMATION_CONFIG.offsets.letterReveal });
         gsap.to(titleLetters, {
           y: 0,
-          duration: 1,
-          stagger: 0.04,
-          ease: "power3.out",
+          duration: ANIMATION_CONFIG.durations.normal,
+          stagger: ANIMATION_CONFIG.durations.letterStagger,
+          ease: ANIMATION_CONFIG.ease.power3,
           scrollTrigger: {
-            trigger: ".selected-works-section",
-            start: "top 80%",
+            trigger: sectionRef.current,
+            start: ANIMATION_CONFIG.scrollTrigger.start,
             toggleActions: "play none none none",
           },
         });
@@ -64,12 +67,12 @@ const SelectedWorks = () => {
 
       // Update current image based on scroll position
       projects.forEach((project, index) => {
-        const projectElement = document.querySelectorAll(".scroll-item")[index];
+        const projectElement = projectRefs.current[index];
         if (projectElement) {
           ScrollTrigger.create({
             trigger: projectElement,
-            start: "top center",
-            end: "bottom center",
+            start: ANIMATION_CONFIG.scrollTrigger.centerStart,
+            end: ANIMATION_CONFIG.scrollTrigger.centerEnd,
             onEnter: () => setCurrentImage(index + 1),
             onEnterBack: () => setCurrentImage(index + 1),
           });
@@ -81,6 +84,7 @@ const SelectedWorks = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="work"
       className="selected-works-section opacity-100 pt-40"
       data-bg="var(--custom-blue)"
@@ -92,7 +96,7 @@ const SelectedWorks = () => {
       {/* Title Section */}
       <div className="title-container relative left-4 md:left-8 lg:left-8 2xl:left-20 z-10">
         <div className="overflow-hidden inline-block">
-          <h1 className="text-7xl 2xl:text-[10rem] md:text-9xl lg:text-9xl xs:text-6xl font-bold text-custom-pink">
+          <h1 ref={titleRef} className="text-7xl 2xl:text-[10rem] md:text-9xl lg:text-9xl xs:text-6xl font-bold text-custom-pink">
             {Array.from("SELECTED WORKS").map((letter, index) => (
               <span key={index} className="title-letter inline-block">
                 {letter === " " ? "\u00A0" : letter}
@@ -115,9 +119,10 @@ const SelectedWorks = () => {
         {/* Right Scrolling Images with Details - Full width on mobile */}
         <div className="image-section w-full md:w-1/2">
           <div className="images space-y-20 px-8 md:px-6 lg:px-6 md:pr-16 pb-20">
-            {projects.map((project) => (
+            {projects.map((project, index) => (
               <div
                 key={project.id}
+                ref={(el) => (projectRefs.current[index] = el)}
                 className="scroll-item space-y-6 border-custom-pink pb-8 cursor-pointer transition-transform hover:scale-[1.02] duration-300"
                 // onClick={() => handleProjectClick(project.route)}
               >
