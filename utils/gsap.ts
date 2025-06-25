@@ -1,31 +1,17 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type { AnimationConfig, GSAPCleanupOptions } from "../types/components";
 
-// Register GSAP plugins once globally
-let isGSAPInitialized = false;
-
-export const initializeGSAP = () => {
-  if (!isGSAPInitialized && typeof window !== "undefined") {
+// GSAP setup utility - should be called in each component's useEffect
+export const setupGSAP = () => {
+  if (typeof window !== "undefined") {
+    // Register plugins in each component (per GSAP best practices)
     gsap.registerPlugin(ScrollTrigger);
-    
-    // Set global GSAP defaults
-    gsap.defaults({
-      ease: "power3.out",
-      duration: 1,
-    });
-    
-    // Configure ScrollTrigger defaults
-    ScrollTrigger.defaults({
-      toggleActions: "play none none none",
-      start: "top 80%",
-    });
-    
-    isGSAPInitialized = true;
   }
 };
 
 // Animation constants used throughout the app
-export const ANIMATION_CONFIG = {
+export const ANIMATION_CONFIG: AnimationConfig = {
   durations: {
     fast: 0.3,
     normal: 1,
@@ -51,13 +37,20 @@ export const ANIMATION_CONFIG = {
   },
 } as const;
 
-// Utility function for proper GSAP cleanup
-export const cleanupGSAP = (
-  triggers: ScrollTrigger[] = [],
-  tweens: gsap.core.Tween[] = []
-) => {
+// Utility function for proper GSAP cleanup (per React best practices)
+export const cleanupGSAP = (options: GSAPCleanupOptions = {}) => {
+  const { triggers = [], tweens = [] } = options;
+  // Kill ScrollTriggers first
   triggers.forEach(trigger => trigger?.kill());
+  // Then kill tweens
   tweens.forEach(tween => tween?.kill());
+};
+
+// Helper to create ScrollTrigger with automatic cleanup tracking
+export const createScrollTrigger = (config: ScrollTrigger.Vars, triggersArray: ScrollTrigger[]) => {
+  const trigger = ScrollTrigger.create(config);
+  triggersArray.push(trigger);
+  return trigger;
 };
 
 // Export for direct use

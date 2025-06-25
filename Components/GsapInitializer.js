@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
-import { initializeGSAP } from "../utils/gsap";
 
 export default function GsapInitializer() {
   useEffect(() => {
-    // Initialize GSAP with centralized configuration
-    initializeGSAP();
+    // GSAP components will register plugins individually per best practices
+    // This component can handle global GSAP configurations if needed
+    if (typeof window !== "undefined") {
+      // Set any global GSAP configurations here if needed
+      console.log("GSAP environment ready");
+    }
   }, []);
 
   return null;

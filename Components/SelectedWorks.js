@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { gsap, ScrollTrigger, initializeGSAP, ANIMATION_CONFIG } from "../utils/gsap";
+import { gsap, ScrollTrigger, setupGSAP, ANIMATION_CONFIG, createScrollTrigger } from "../utils/gsap";
 import Image from "next/image";
 import Group5Image from "../assets/Group5.png";
 import Group78Image from "../assets/Group78-2.png";
@@ -40,8 +40,11 @@ const SelectedWorks = () => {
   const projectRefs = useRef([]);
 
   useEffect(() => {
-    // Ensure GSAP is initialized
-    initializeGSAP();
+    // Setup GSAP in this component (per GSAP best practices)
+    setupGSAP();
+    
+    // Track ScrollTriggers for cleanup
+    const scrollTriggers = [];
     
     if (typeof window !== "undefined" && titleRef.current && sectionRef.current) {
       const titleLetters = titleRef.current.querySelectorAll(".title-letter");
@@ -69,16 +72,21 @@ const SelectedWorks = () => {
       projects.forEach((project, index) => {
         const projectElement = projectRefs.current[index];
         if (projectElement) {
-          ScrollTrigger.create({
+          createScrollTrigger({
             trigger: projectElement,
             start: ANIMATION_CONFIG.scrollTrigger.centerStart,
             end: ANIMATION_CONFIG.scrollTrigger.centerEnd,
             onEnter: () => setCurrentImage(index + 1),
             onEnterBack: () => setCurrentImage(index + 1),
-          });
+          }, scrollTriggers);
         }
       });
     }
+    
+    // Cleanup function per React best practices
+    return () => {
+      scrollTriggers.forEach(trigger => trigger.kill());
+    };
   }, []);
 
 

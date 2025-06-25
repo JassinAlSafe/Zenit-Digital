@@ -5,7 +5,7 @@ function Test() {
   const videoRef = useRef(null);
   
   // State to store the video source
-  const [videoSrc, setVideoSrc] = useState("");
+  const [videoSrc, setVideoSrc] = useState("flower.mov");
 
   // Function to detect WebM support
   const supportsWebM = () => {

@@ -10,7 +10,7 @@ const TestHeader = ({ onAnimationStart }) => {
   const desktopVideoRef = useRef(null);
   
   // State to store the video source
-  const [videoSrc, setVideoSrc] = useState("");
+  const [videoSrc, setVideoSrc] = useState("/airplane.mov");
   
   // State to detect Windows for platform-specific adjustments
   const [isWindows, setIsWindows] = useState(false);
@@ -53,8 +53,8 @@ const TestHeader = ({ onAnimationStart }) => {
 
     // Create a single timeline for all animations
     const tl = gsap.timeline({
-      onStart: () => {
-        // Notify parent component that animation has started
+      onComplete: () => {
+        // Notify parent component that animation has completed
         if (onAnimationStart && typeof onAnimationStart === "function") {
           onAnimationStart();
         }

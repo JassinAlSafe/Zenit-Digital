@@ -1,30 +1,25 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import MagneticButton from "./MagneticButton";
+import { usePlatform } from "../hooks/usePlatform";
 
 const Footer: React.FC = () => {
   // Create refs to store our animation instances
   const footerScrollTriggers = useRef<ScrollTrigger[]>([]);
   const footerTweens = useRef<gsap.core.Tween[]>([]);
   
-  // State to store the video source
-  const [videoSrc, setVideoSrc] = useState<string>("");
+  // Get platform info and derive video source
+  const { supportsWebM, isHydrated } = usePlatform();
+  const videoSrc = useMemo(() => {
+    // During SSR and before hydration, always use fallback
+    if (!isHydrated) return "/globe.mov";
+    // After hydration, use detected format
+    return supportsWebM ? "/globe.webm" : "/globe.mov";
+  }, [supportsWebM, isHydrated]);
 
-  // Function to detect WebM support
-  const supportsWebM = (): boolean => {
-    if (typeof window === "undefined") return false;
-    const video = document.createElement('video');
-    return video.canPlayType('video/webm; codecs="vp8, vorbis"') !== '';
-  };
-
-  useEffect(() => {
-    // Set video source based on WebM support
-    const videoFormat = supportsWebM() ? "/globe.webm" : "/globe.mov";
-    setVideoSrc(videoFormat);
-  }, []);
 
   useEffect(() => {
     // Ensure this runs only on client side
@@ -172,16 +167,18 @@ const Footer: React.FC = () => {
           {/* Working Globally Section - with MP4 video replacing the globe emoji */}
           <div className="absolute bottom-8 left-8 flex justify-end items-center">
             <div className="w-12 h-12 border bg-custom-green border-custom-lightGreen rounded-full flex items-center justify-center mr-4 overflow-hidden">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full object-cover"
-                src={videoSrc}
-              >
-                Your browser does not support the video tag.
-              </video>
+              {videoSrc && (
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                  src={videoSrc}
+                >
+                  Your browser does not support the video tag.
+                </video>
+              )}
             </div>
             <div>
               <p className="text-sm  2xl:text-xl text-custom-green">

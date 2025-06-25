@@ -1,9 +1,17 @@
 "use client";
 
-import React, { useRef, useEffect, memo } from "react";
+import React, { useRef, useEffect, memo, ReactNode, ButtonHTMLAttributes } from "react";
 import { gsap } from "gsap";
 
-const MagneticButton = memo(({
+interface MagneticButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
+  children: ReactNode;
+  className?: string;
+  onClick?: () => void;
+  href?: string;
+  magneticStrength?: number;
+}
+
+const MagneticButton = memo<MagneticButtonProps>(({
   children,
   className = "",
   onClick,
@@ -11,7 +19,7 @@ const MagneticButton = memo(({
   magneticStrength = 0.4,
   ...props
 }) => {
-  const buttonRef = useRef(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const button = buttonRef.current;
