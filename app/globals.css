@@ -10,6 +10,10 @@
   --custom-green: #09282a;
   --custom-lightGreen: #0fb190;
 
+  /* Darker variants for hover effects */
+  --custom-dark-blue: #000020;
+  --custom-dark-pink: #8a7ce8;
+
   /* Accessible color variants for better contrast */
   --custom-lightGreen-dark: #0a8a6b; /* Darker version for better contrast on light backgrounds */
   --custom-lightGreen-accessible: #067a5a; /* Even darker for WCAG AA compliance */
@@ -173,4 +177,23 @@ button {
 .animated-text {
   overflow: hidden;
   display: inline-block;
+}
+
+/* Custom pulse animation for CTA button */
+@keyframes gentle-pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.desktop-button {
+  animation: gentle-pulse 3s ease-in-out infinite;
+}
+
+.desktop-button:hover {
+  animation: none; /* Stop pulsing on hover for cleaner interaction */
 }

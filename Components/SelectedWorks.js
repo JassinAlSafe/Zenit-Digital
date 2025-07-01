@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { gsap, ScrollTrigger, setupGSAP, ANIMATION_CONFIG, createScrollTrigger } from "../utils/gsap";
+import { gsap, setupGSAP, ANIMATION_CONFIG, createScrollTrigger } from "../utils/gsap";
 import Image from "next/image";
 import Group5Image from "../assets/Group5.png";
 import Group78Image from "../assets/Group78-2.png";

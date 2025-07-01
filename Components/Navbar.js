@@ -33,30 +33,66 @@ const Navbar = () => {
   const navigateTo = (item) => {
     console.log(`Navigating to: ${item}`);
 
-    // Handle Contact differently - navigate to booking page
+    // Handle Contact - navigate to booking page
     if (item.toLowerCase() === "contact") {
       if (isMenuOpen) {
         toggleMenu();
-        // Use a timeout to allow the menu to close before navigating
-        setTimeout(() => {
-          router.push("/booking");
-        }, 800);
+        setTimeout(() => router.push("/booking"), 800);
       } else {
         router.push("/booking");
       }
       return;
     }
 
-    // For other items, use scroll navigation
+    // Handle Services - check if we're on homepage or need to navigate
+    if (item.toLowerCase() === "services") {
+      const currentPath = window.location.pathname;
+      const servicesSection = document.getElementById("services");
+
+      // If we're on homepage and services section exists, scroll to it
+      if (currentPath === "/" && servicesSection) {
+        if (isMenuOpen) {
+          toggleMenu();
+          setTimeout(() => scrollToElement("services"), 800);
+        } else {
+          scrollToElement("services");
+        }
+      } else {
+        // Otherwise navigate to services page
+        if (isMenuOpen) {
+          toggleMenu();
+          setTimeout(() => router.push("/services"), 800);
+        } else {
+          router.push("/services");
+        }
+      }
+      return;
+    }
+
+    // For other items, use scroll navigation (only works on homepage)
+    const currentPath = window.location.pathname;
+    if (currentPath !== "/") {
+      // If not on homepage, navigate home first then scroll
+      if (isMenuOpen) {
+        toggleMenu();
+        setTimeout(() => {
+          router.push(
+            `/#${item.toLowerCase() === "work" ? "work" : item.toLowerCase()}`
+          );
+        }, 800);
+      } else {
+        router.push(
+          `/#${item.toLowerCase() === "work" ? "work" : item.toLowerCase()}`
+        );
+      }
+      return;
+    }
+
     const sectionId =
       item.toLowerCase() === "work" ? "work" : item.toLowerCase();
-
     if (isMenuOpen) {
       toggleMenu();
-      // Use a timeout to allow the menu to close before scrolling
-      setTimeout(() => {
-        scrollToElement(sectionId);
-      }, 800);
+      setTimeout(() => scrollToElement(sectionId), 800);
     } else {
       scrollToElement(sectionId);
     }
@@ -173,6 +209,7 @@ const Navbar = () => {
     };
   };
 
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const navbar = document.querySelector(".navbar");
@@ -205,6 +242,94 @@ const Navbar = () => {
         duration: 1.5,
         ease: "elastic.out(1, 0.3)",
       });
+
+      // Enhanced Desktop Button Animation
+      if (desktopButton) {
+        gsap.set(desktopButton, {
+          scale: 0,
+          opacity: 0,
+        });
+        gsap.to(desktopButton, {
+          scale: 1,
+          opacity: 1,
+          delay: 1.4,
+          duration: 1.2,
+          ease: "elastic.out(1, 0.3)",
+        });
+      }
+
+      // Setup enhanced button hover animations
+      const buttonContainer = document.querySelector(".lets-talk-container");
+      let buttonCleanup = null;
+      
+      if (buttonContainer) {
+        const handleMouseEnter = () => {
+          // Animate the container for lift and scale
+          gsap.to(buttonContainer, {
+            scale: 1.08,
+            y: -3,
+            duration: 0.4,
+            ease: "power2.out",
+          });
+          
+          // Enhanced shadow effect
+          gsap.to(buttonContainer, {
+            boxShadow: "0 12px 30px rgba(0, 0, 0, 0.3)",
+            duration: 0.4,
+            ease: "power2.out",
+          });
+
+          // Subtle rotation wiggle
+          gsap.to(buttonContainer, {
+            rotation: 2,
+            duration: 0.3,
+            ease: "power2.out",
+            yoyo: true,
+            repeat: 1,
+          });
+
+          // Color darkening for the FlipText inside
+          const flipTextElement = buttonContainer.querySelector(".desktop-button");
+          if (flipTextElement) {
+            const currentButtonBg = getComputedStyle(flipTextElement).backgroundColor;
+            if (currentButtonBg.includes("rgb(15, 177, 144)") || flipTextElement.style.backgroundColor?.includes("custom-blue")) {
+              flipTextElement.style.backgroundColor = "var(--custom-dark-blue)";
+            } else if (flipTextElement.style.backgroundColor?.includes("custom-pink")) {
+              flipTextElement.style.backgroundColor = "var(--custom-dark-pink)";
+            } else {
+              flipTextElement.style.filter = "brightness(0.9)";
+            }
+          }
+        };
+
+        const handleMouseLeave = () => {
+          // Return to normal state
+          gsap.to(buttonContainer, {
+            scale: 1,
+            y: 0,
+            rotation: 0,
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+            duration: 0.4,
+            ease: "power2.out",
+          });
+
+          // Reset color for the FlipText inside
+          const flipTextElement = buttonContainer.querySelector(".desktop-button");
+          if (flipTextElement) {
+            // Get the current navStyles buttonBgColor
+            flipTextElement.style.backgroundColor = flipTextElement.getAttribute("data-original-bg") || "var(--custom-blue)";
+            flipTextElement.style.filter = "none";
+          }
+        };
+
+        buttonContainer.addEventListener("mouseenter", handleMouseEnter);
+        buttonContainer.addEventListener("mouseleave", handleMouseLeave);
+
+        buttonCleanup = () => {
+          buttonContainer.removeEventListener("mouseenter", handleMouseEnter);
+          buttonContainer.removeEventListener("mouseleave", handleMouseLeave);
+        };
+      }
 
       // ScrollTrigger for Navbar and Button Color Change
       sections.forEach((section, index) => {
@@ -248,6 +373,7 @@ const Navbar = () => {
             if (desktopButton) {
               desktopButton.style.backgroundColor = buttonBgColor;
               desktopButton.style.color = buttonTextColor;
+              desktopButton.setAttribute("data-original-bg", buttonBgColor);
             }
           },
           onLeaveBack: () => {
@@ -291,11 +417,17 @@ const Navbar = () => {
               if (desktopButton) {
                 desktopButton.style.backgroundColor = prevButtonBgColor;
                 desktopButton.style.color = prevButtonTextColor;
+                desktopButton.setAttribute("data-original-bg", prevButtonBgColor);
               }
             }
           },
         });
       });
+
+      // Return cleanup function
+      return () => {
+        if (buttonCleanup) buttonCleanup();
+      };
     }
   }, []);
 
@@ -366,30 +498,76 @@ const Navbar = () => {
         {/* Centered Nav Links - Desktop Only */}
         <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 z-50">
           <ul className="flex gap-10">
-            <li className="hover:text-custom-blue cursor-pointer">
+            <li
+              className="cursor-pointer transition-colors duration-300"
+              style={{
+                "--hover-color":
+                  navStyles.navbarTextColor?.includes("white") ||
+                  navStyles.navbarTextColor?.includes("light")
+                    ? "var(--custom-pink)"
+                    : "var(--custom-blue)",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color =
+                  navStyles.navbarTextColor?.includes("white") ||
+                  navStyles.navbarTextColor?.includes("light")
+                    ? "var(--custom-pink)"
+                    : "var(--custom-blue)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color =
+                  navStyles.navbarTextColor || navStyles.textColor;
+              }}
+            >
               <FlipText
                 onClick={() => navigateTo("about")}
-                className="border-none bg-transparent p-0 m-0 text-inherit font-inherit hover:text-custom-blue cursor-pointer"
+                className="border-none bg-transparent p-0 m-0 text-inherit font-inherit cursor-pointer"
                 animationType="slide"
                 duration={0.3}
               >
                 About
               </FlipText>
             </li>
-            <li className="hover:text-custom-blue cursor-pointer">
+            <li
+              className="cursor-pointer transition-colors duration-300"
+              onMouseEnter={(e) => {
+                e.target.style.color =
+                  navStyles.navbarTextColor?.includes("white") ||
+                  navStyles.navbarTextColor?.includes("light")
+                    ? "var(--custom-pink)"
+                    : "var(--custom-blue)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color =
+                  navStyles.navbarTextColor || navStyles.textColor;
+              }}
+            >
               <FlipText
                 onClick={() => navigateTo("work")}
-                className="border-none bg-transparent p-0 m-0 text-inherit font-inherit hover:text-custom-blue cursor-pointer"
+                className="border-none bg-transparent p-0 m-0 text-inherit font-inherit cursor-pointer"
                 animationType="slide"
                 duration={0.3}
               >
                 Cases
               </FlipText>
             </li>
-            <li className="hover:text-custom-blue cursor-pointer">
+            <li
+              className="cursor-pointer transition-colors duration-300"
+              onMouseEnter={(e) => {
+                e.target.style.color =
+                  navStyles.navbarTextColor?.includes("white") ||
+                  navStyles.navbarTextColor?.includes("light")
+                    ? "var(--custom-pink)"
+                    : "var(--custom-blue)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color =
+                  navStyles.navbarTextColor || navStyles.textColor;
+              }}
+            >
               <FlipText
                 onClick={() => navigateTo("services")}
-                className="border-none bg-transparent p-0 m-0 text-inherit font-inherit hover:text-custom-blue cursor-pointer"
+                className="border-none bg-transparent p-0 m-0 text-inherit font-inherit cursor-pointer"
                 animationType="slide"
                 duration={0.3}
               >
@@ -401,15 +579,29 @@ const Navbar = () => {
 
         {/* Button - Right */}
         <div className="hidden md:flex items-center ml-auto z-50 ">
-          <Link href="/booking">
-            <FlipText
-              className="desktop-button px-6 py-2 text-white rounded-2xl hover:bg-gray-800 transition-colors duration-500"
-              animationType="slide"
-              duration={0.3}
-            >
-              Let&apos;s Talk
-            </FlipText>
-          </Link>
+          <div
+            className="lets-talk-container"
+            style={{
+              transformOrigin: "center",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+              borderRadius: "16px",
+            }}
+          >
+            <Link href="/booking">
+              <FlipText
+                className="desktop-button px-6 py-2 text-white rounded-2xl transition-colors duration-300 cursor-pointer"
+                animationType="slide"
+                duration={0.3}
+                style={{
+                  backgroundColor: navStyles.buttonBgColor,
+                  color: navStyles.buttonTextColor,
+                  display: "block",
+                }}
+              >
+                Let&apos;s Talk
+              </FlipText>
+            </Link>
+          </div>
         </div>
       </nav>
 

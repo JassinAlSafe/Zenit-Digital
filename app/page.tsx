@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AboutSection from "../Components/AboutSection";
@@ -18,7 +18,6 @@ export default function Page() {
   const { 
     isLoading, 
     isContentReady, 
-    isHidden, 
     startContentAnimation, 
     hideLoadingScreen 
   } = useLoadingState();
@@ -203,7 +202,7 @@ export default function Page() {
       // Clean up GSAP context
       ctx.revert();
     };
-  }, [isContentReady]);
+  }, [isContentReady, hideLoadingScreen]);
 
   // When contentReady changes to true, hide the loading screen
   useEffect(() => {
