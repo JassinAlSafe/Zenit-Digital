@@ -141,38 +141,11 @@ export default function Page() {
         }, "-=0.3"); // Overlap with opacity fade
     };
 
-    // Setup scroll triggers
-    const sections = document.querySelectorAll(
-      "section:not(.selected-works-section):not(.services-section)"
-    );
-
+    // Note: ScrollTrigger color management has been consolidated into Navbar.js
+    // for better performance and to avoid conflicts between multiple systems.
+    // Body background colors are now handled by the unified ScrollTrigger in Navbar.js
+    
     const scrollTriggers: ScrollTrigger[] = [];
-
-    sections.forEach((section, index) => {
-      const bgColor = section.getAttribute("data-bg") || "white";
-      const textColor = section.getAttribute("data-text") || "black";
-
-      const trigger = ScrollTrigger.create({
-        trigger: section,
-        start: "top center",
-        end: "bottom center",
-        onEnter: () => {
-          document.body.style.backgroundColor = bgColor;
-          document.body.style.color = textColor;
-        },
-        onLeaveBack: () => {
-          const prevSection = sections[index - 1];
-          const prevBgColor = prevSection?.getAttribute("data-bg") || "white";
-          const prevTextColor =
-            prevSection?.getAttribute("data-text") || "black";
-
-          document.body.style.backgroundColor = prevBgColor;
-          document.body.style.color = prevTextColor;
-        },
-      });
-
-      scrollTriggers.push(trigger);
-    });
 
     // Event listener for document load complete (fallback)
     const handleLoad = () => {

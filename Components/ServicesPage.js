@@ -8,7 +8,8 @@ import Hero from "./Services/Hero";
 import ServiceCard from "./Services/ServiceCard";
 import TeamBentoGrid from "./Services/TeamBentoGrid";
 import ProcessSteps from "./Services/ProcessSteps";
-import CTA from "./Services/CTA";
+import ContactSection from "./Services/ContactSection";
+import ServicesFooter from "./Services/ServicesFooter";
 
 export default function ServicesPage() {
   const containerRef = useRef(null);
@@ -47,14 +48,17 @@ export default function ServicesPage() {
         </div>
       </div>
 
-      {/* Team Bento Grid Section */}
-      <TeamBentoGrid teamMembers={teamMembers} teamRefs={teamRef} />
-
       {/* Process Section */}
       <ProcessSteps processSteps={processSteps} processRefs={processRef} />
 
-      {/* CTA Section */}
-      <CTA />
+      {/* Team Bento Grid Section */}
+      <TeamBentoGrid teamMembers={teamMembers} teamRefs={teamRef} />
+
+      {/* Contact Section */}
+      <ContactSection />
+
+      {/* Services Footer */}
+      <ServicesFooter />
     </section>
   );
 }

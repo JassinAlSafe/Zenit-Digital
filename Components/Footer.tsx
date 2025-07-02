@@ -114,7 +114,7 @@ const Footer: React.FC = () => {
         data-text="black"
         data-button-bg="var(--custom-green)"
         data-button-text="var(--custom-lightGreen)"
-        data-nav-text="var(--custom-green)"
+        data-navbar-text="black"
       >
         <div className="flex flex-col justify-center items-center min-h-screen bg-custom-lightGreen py-20 relative mx-auto max-w-7xl rounded-sm">
           <p className="text-white mb-4 font-medium">- Change starts here -</p>

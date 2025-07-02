@@ -209,7 +209,6 @@ const Navbar = () => {
     };
   };
 
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const navbar = document.querySelector(".navbar");
@@ -261,7 +260,7 @@ const Navbar = () => {
       // Setup enhanced button hover animations
       const buttonContainer = document.querySelector(".lets-talk-container");
       let buttonCleanup = null;
-      
+
       if (buttonContainer) {
         const handleMouseEnter = () => {
           // Animate the container for lift and scale
@@ -271,7 +270,7 @@ const Navbar = () => {
             duration: 0.4,
             ease: "power2.out",
           });
-          
+
           // Enhanced shadow effect
           gsap.to(buttonContainer, {
             boxShadow: "0 12px 30px rgba(0, 0, 0, 0.3)",
@@ -289,12 +288,19 @@ const Navbar = () => {
           });
 
           // Color darkening for the FlipText inside
-          const flipTextElement = buttonContainer.querySelector(".desktop-button");
+          const flipTextElement =
+            buttonContainer.querySelector(".desktop-button");
           if (flipTextElement) {
-            const currentButtonBg = getComputedStyle(flipTextElement).backgroundColor;
-            if (currentButtonBg.includes("rgb(15, 177, 144)") || flipTextElement.style.backgroundColor?.includes("custom-blue")) {
+            const currentButtonBg =
+              getComputedStyle(flipTextElement).backgroundColor;
+            if (
+              currentButtonBg.includes("rgb(15, 177, 144)") ||
+              flipTextElement.style.backgroundColor?.includes("custom-blue")
+            ) {
               flipTextElement.style.backgroundColor = "var(--custom-dark-blue)";
-            } else if (flipTextElement.style.backgroundColor?.includes("custom-pink")) {
+            } else if (
+              flipTextElement.style.backgroundColor?.includes("custom-pink")
+            ) {
               flipTextElement.style.backgroundColor = "var(--custom-dark-pink)";
             } else {
               flipTextElement.style.filter = "brightness(0.9)";
@@ -314,10 +320,13 @@ const Navbar = () => {
           });
 
           // Reset color for the FlipText inside
-          const flipTextElement = buttonContainer.querySelector(".desktop-button");
+          const flipTextElement =
+            buttonContainer.querySelector(".desktop-button");
           if (flipTextElement) {
             // Get the current navStyles buttonBgColor
-            flipTextElement.style.backgroundColor = flipTextElement.getAttribute("data-original-bg") || "var(--custom-blue)";
+            flipTextElement.style.backgroundColor =
+              flipTextElement.getAttribute("data-original-bg") ||
+              "var(--custom-blue)";
             flipTextElement.style.filter = "none";
           }
         };
@@ -331,7 +340,10 @@ const Navbar = () => {
         };
       }
 
-      // ScrollTrigger for Navbar and Button Color Change
+      // Unified ScrollTrigger for Navbar and Body Color Changes
+      // This consolidates multiple ScrollTrigger systems for better performance
+      const scrollTriggers = [];
+
       sections.forEach((section, index) => {
         const bgColor = section.getAttribute("data-bg") || "white";
         const textColor = section.getAttribute("data-text") || "black";
@@ -340,18 +352,40 @@ const Navbar = () => {
         const buttonTextColor =
           section.getAttribute("data-button-text") || "white";
         const navbarTextColor =
-          section.getAttribute("data-navbar-text") || textColor; // Add specific navbar text color
+          section.getAttribute("data-navbar-text") || textColor;
 
         const { menuBgColor, menuTextColor } = getMenuColors(
           bgColor,
           textColor
         );
 
-        ScrollTrigger.create({
+        // Check if this section needs special stacked behavior
+        const isSelectedWorksSection = section.classList.contains("selected-works-section");
+        const isServicesSection = section.classList.contains("services-section");
+        
+        // Use different trigger points for different section types
+        let startPoint, endPoint;
+        
+        if (isSelectedWorksSection) {
+          // Selected Works should use standard trigger points to maintain purple header throughout
+          startPoint = "top center";
+          endPoint = "bottom center";
+        } else if (isServicesSection) {
+          // Services section should only trigger when it's actually visible to prevent interference
+          startPoint = "top 30%";  // Much later trigger to avoid interference with Selected Works
+          endPoint = "bottom 70%";
+        } else {
+          // Standard sections use center points
+          startPoint = "top center";
+          endPoint = "bottom center";
+        }
+
+        const trigger = ScrollTrigger.create({
           trigger: section,
-          start: "top center",
-          end: "bottom center",
+          start: startPoint,
+          end: endPoint,
           onEnter: () => {
+            // Update navbar colors
             setNavStyles({
               bgColor,
               textColor,
@@ -362,6 +396,7 @@ const Navbar = () => {
               navbarTextColor,
             });
 
+            // Update navbar elements
             if (navbar) {
               navbar.style.backgroundColor = bgColor;
               navbar.style.color = navbarTextColor;
@@ -374,6 +409,12 @@ const Navbar = () => {
               desktopButton.style.backgroundColor = buttonBgColor;
               desktopButton.style.color = buttonTextColor;
               desktopButton.setAttribute("data-original-bg", buttonBgColor);
+            }
+
+            // Update body background and text colors (consolidating from page.tsx)
+            if (document.body) {
+              document.body.style.backgroundColor = bgColor;
+              document.body.style.color = textColor;
             }
           },
           onLeaveBack: () => {
@@ -396,6 +437,7 @@ const Navbar = () => {
                 menuTextColor: prevMenuTextColor,
               } = getMenuColors(prevBgColor, prevTextColor);
 
+              // Update navbar colors
               setNavStyles({
                 bgColor: prevBgColor,
                 textColor: prevTextColor,
@@ -406,6 +448,7 @@ const Navbar = () => {
                 navbarTextColor: prevNavTextColor,
               });
 
+              // Update navbar elements
               if (navbar) {
                 navbar.style.backgroundColor = prevBgColor;
                 navbar.style.color = prevNavTextColor;
@@ -417,16 +460,37 @@ const Navbar = () => {
               if (desktopButton) {
                 desktopButton.style.backgroundColor = prevButtonBgColor;
                 desktopButton.style.color = prevButtonTextColor;
-                desktopButton.setAttribute("data-original-bg", prevButtonBgColor);
+                desktopButton.setAttribute(
+                  "data-original-bg",
+                  prevButtonBgColor
+                );
+              }
+
+              // Update body background and text colors
+              if (document.body) {
+                document.body.style.backgroundColor = prevBgColor;
+                document.body.style.color = prevTextColor;
               }
             }
           },
+          // Add onEnterBack for stacked sections for smoother reverse scrolling
+          onEnterBack: (isSelectedWorksSection || isServicesSection) ? () => {
+            // Update body colors when scrolling back into stacked sections
+            if (document.body) {
+              document.body.style.backgroundColor = bgColor;
+              document.body.style.color = textColor;
+            }
+          } : undefined,
         });
+
+        scrollTriggers.push(trigger);
       });
 
       // Return cleanup function
       return () => {
         if (buttonCleanup) buttonCleanup();
+        // Clean up all ScrollTriggers
+        scrollTriggers.forEach(trigger => trigger.kill());
       };
     }
   }, []);

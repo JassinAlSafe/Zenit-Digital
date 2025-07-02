@@ -49,7 +49,7 @@ export default function ServicesSection() {
       data-text="var(--custom-green)"
       data-button-bg="var(--custom-green)"
       data-button-text="var(--custom-lightGreen)"
-      data-nav-text="var(--custom-lightGreen)"
+      data-navbar-text="black"
     >
       <div className="flex w-full flex-col gap-y-space-lg md:gap-y-space-2xl mt-32 2xl:mt-80">
         {/* Title container with overflow hidden */}

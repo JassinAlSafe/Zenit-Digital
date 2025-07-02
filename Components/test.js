@@ -62,7 +62,7 @@ function Test() {
       data-text="var(--custom-green)"
       data-button-bg="var(--custom-green)"
       data-button-text="var(--custom-lightGreen)"
-      data-nav-text="var(--custom-lightGreen)"
+      data-navbar-text="black"
     >
       {/* Main Content */}
       <div className="flex flex-col lg:flex-row flex-1 px-6 sm:px-10 lg:px-16 pt-8 lg:pt-12 gap-8 bg-white">

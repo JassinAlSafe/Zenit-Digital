@@ -99,7 +99,7 @@ const SelectedWorks = () => {
       data-text="var(--custom-pink)"
       data-button-bg="var(--custom-pink)"
       data-button-text="var(--custom-blue)"
-      data-nav-text="var(--custom-pink)"
+      data-navbar-text="var(--custom-pink)"
     >
       {/* Title Section */}
       <div className="title-container relative left-4 md:left-8 lg:left-8 2xl:left-20 z-10">

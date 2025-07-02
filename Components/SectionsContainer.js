@@ -84,35 +84,9 @@ export default function StackedCardsContainer() {
         }
       }, 0.3);
       
-      // Simplified color management system
-      const colorTriggers = [
-        {
-          trigger: selectedWorksSection,
-          colors: { bg: "var(--custom-blue)", text: "var(--custom-pink)" }
-        },
-        {
-          trigger: servicesSection,
-          colors: { bg: "white", text: "var(--custom-green)" }
-        }
-      ];
-
-      colorTriggers.forEach(({ trigger, colors }) => {
-        if (trigger) {
-          ScrollTrigger.create({
-            trigger,
-            start: "top 75%",
-            end: "bottom 25%",
-            onEnter: () => {
-              document.body.style.backgroundColor = colors.bg;
-              document.body.style.color = colors.text;
-            },
-            onEnterBack: () => {
-              document.body.style.backgroundColor = colors.bg;
-              document.body.style.color = colors.text;
-            }
-          });
-        }
-      });
+      // Note: Color management for stacked sections has been consolidated into Navbar.js
+      // for better performance and consistency. The unified ScrollTrigger in Navbar.js
+      // now handles both navbar and body color changes with proper trigger points.
       
       // Simplified navbar animation for medium and large screens
       if (window.innerWidth >= 768 && navbar) {
@@ -120,7 +94,7 @@ export default function StackedCardsContainer() {
         const firstProject = projects[0];
         const lastService = servicesSection.querySelector('.sticky:last-child');
         
-        if (firstProject && lastService) {
+        if (firstProject) {
           const toggleNavbar = (show) => {
             if (window.matchMedia("(min-width: 768px)").matches) {
               gsap.to(navbar, {
@@ -131,15 +105,21 @@ export default function StackedCardsContainer() {
             }
           };
           
-          // Hide navbar during projects and services sections
+          // Hide navbar when entering selected works section
           ScrollTrigger.create({
             trigger: firstProject,
             start: "top 50%",
-            end: () => lastService.offsetTop + lastService.offsetHeight,
             onEnter: () => toggleNavbar(false),
-            onLeave: () => toggleNavbar(true),
             onEnterBack: () => toggleNavbar(false),
             onLeaveBack: () => toggleNavbar(true)
+          });
+          
+          // Show navbar when entering services section
+          ScrollTrigger.create({
+            trigger: servicesSection,
+            start: "top 80%",
+            onEnter: () => toggleNavbar(true),
+            onLeaveBack: () => toggleNavbar(false)
           });
         }
       }
