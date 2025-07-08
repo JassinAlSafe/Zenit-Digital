@@ -1,17 +1,25 @@
 import React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
 
 const TestHeader = ({ onAnimationStart }) => {
-  // Create refs for the video elements
+  // Create refs for the video elements and sliding images
   const mobileVideoRef = useRef(null);
   const desktopVideoRef = useRef(null);
+  const leftImageRef = useRef(null);
+  const rightImageRef = useRef(null);
+  
+  // State for scroll position
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     // Hide everything initially
     gsap.set('.subtext, .cta-button', { autoAlpha: 0 });
     gsap.set([mobileVideoRef.current, desktopVideoRef.current], { autoAlpha: 0, scale: 0.9, x: 30 });
+    
+    // Hide sliding images initially
+    gsap.set([leftImageRef.current, rightImageRef.current], { autoAlpha: 0 });
 
     // Number of words in the title
     const words = document.querySelectorAll('.word');
@@ -53,73 +61,143 @@ const TestHeader = ({ onAnimationStart }) => {
           duration: 0.9,
           ease: "power2.out" 
         }, "+=0.1");
+        
+        // Add sliding images animation
+        tl.to([leftImageRef.current, rightImageRef.current], {
+          autoAlpha: 1,
+          duration: 0.6,
+          ease: "power2.out"
+        }, "-=0.3");
       }
     });
     
+    // Handle scroll for sliding images
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
     return () => {
       tl.kill();
+      window.removeEventListener('scroll', handleScroll);
     };
   }, [onAnimationStart]);
 
+  // Calculate slide distances based on scroll position
+  const slideDistance = Math.min(scrollY * 0.3, 200); // Max slide of 200px
+
   return (
-    <section
-      className="relative h-screen w-full flex items-center justify-center"
-      data-bg="white"
-      data-text="var(--custom-blue)"
-      data-button-bg="var(--custom-blue)"
-      data-button-text="white"
-      data-navbar-text="var(--custom-blue)"
-      id="/"
-    >
-      <div className="w-full overflow-hidden mt-28">
-        <div className="container mx-auto px-4 py-16 md:py-24 relative">
-          <div className="flex flex-col items-center text-center">
-            <div className="w-full 2xl:w-full lg:w-3/4 z-10">
-              <h1 className="text-6xl 2xl:text-[13rem] lg:text-9xl md:text-6xl font-medium lg:font-medium leading-none mb-6 text-custom-blue">
-                <span className="word">We</span> <span className="word">turn</span> <span className="word">dreams</span> <span className="word">into</span><br />
-                <span className="word">Digital</span> <span className="word">Reality</span>
-              </h1>
-              <p className="subtext text-md mb-8 text-custom-blue max-w-xl mx-auto">
-                Looking to build your next big idea? We craft custom software to help startups and businesses grow with style and speed.
-              </p>
+    <>
+      <style jsx>{`
+        .slide-image {
+          position: absolute;
+          width: 850px;
+          height: 750px;
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center;
+          transition: transform 0.1s ease-out;
+          z-index: 5;
+          opacity: 0.8;
+        }
 
-              <Link href="/booking">
-                <button
-                  className="cta-button bg-custom-blue text-custom-pink hover:bg-[#2C2C75] font-medium py-3 px-6 rounded-full inline-flex items-center"
-                >
-                  Contact Us
-                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </button>
-              </Link>
-            </div>
+     .slide-image-left {
+  top: 90%;
+  left: -300px;
+  transform: translateY(-90%);
+  background-image: url('/image 60.png'); /* Replace with your left image */
+}
 
-            {/* Video for small screens (below md breakpoint) */}
-            <div className="w-full block md:hidden">
-              <video
-                ref={mobileVideoRef}
-                className="w-full h-auto object-contain"
-                style={{
-                  filter:
-                    "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(900%) hue-rotate(200deg) brightness(80%) contrast(100%)",
-                }}
-                autoPlay
-                muted
-                loop
-                playsInline
-                src="/airplane.mp4"
-              >
-                Your browser does not support the video tag.
-              </video>
-            </div>
+.slide-image-right {
+   top: 90%;
+  right: -300px;
+  transform: translateY(-90%);
+  background-image: url('/group 95-2.png'); /* Replace with your right image */
+}
+   
 
-            {/* Video for medium and large screens */}
-            <div className="absolute right-0 mt-36 2xl:mt-60 top-24 w-1/2 h-full hidden md:block">
-              <div className="relative w-full h-full flex items-center justify-end">
+        /* Responsive Design for sliding images */
+        @media (max-width: 768px) {
+          .slide-image {
+            width: 400px;
+            height: 300px;
+          }
+
+          .slide-image-left {
+            left: -300px;
+          }
+
+          .slide-image-right {
+            right: -300px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .slide-image {
+            width: 400px;
+            height: 300px;
+          }
+
+          .slide-image::after {
+            font-size: 20px;
+          }
+        }
+      `}</style>
+
+      <section
+        className="relative h-screen w-full flex items-center justify-center mb-64"
+        data-bg="white"
+        data-text="var(--custom-blue)"
+        data-button-bg="var(--custom-blue)"
+        data-button-text="white"
+        data-navbar-text="var(--custom-blue)"
+        id="/"
+      >
+        {/* Sliding Images */}
+        <div 
+  ref={leftImageRef}
+  className="slide-image slide-image-left"
+  style={{
+    transform: `translateX(${slideDistance}px) translateY(-50%)`
+  }}
+/>
+<div 
+  ref={rightImageRef}
+  className="slide-image slide-image-right"
+  style={{
+    transform: `translateX(-${slideDistance}px) translateY(-50%)`
+  }}
+/>
+
+        <div className="w-full overflow-hidden  ">
+          <div className="container mx-auto px-4 py-16 md:py-24 relative ">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-full 2xl:w-full lg:w-3/4 z-10">
+                <h1 className="text-6xl 2xl:text-[10rem] lg:text-9xl md:text-6xl font-medium lg:font-medium leading-none mb-6 text-custom-blue">
+                  <span className="word">Together</span> <span className="word">We</span> <span className="word">Reach</span> <span className="word">Further</span>
+                </h1>
+                <p className="subtext font-normal 2xl:text-2xl text-2xl mb-8 text-custom-blue max-w-xl mx-auto ">
+                  Looking to build your next big idea? We craft custom software to help startups and businesses grow with style and speed.
+                </p>
+
+                <Link href="/booking">
+                  <button
+                    className="cta-button bg-custom-blue text-custom-pink hover:bg-[#2C2C75] font-medium py-3 px-6 rounded-full inline-flex items-center"
+                  >
+                    Explore
+                    <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </button>
+                </Link>
+              </div>
+
+              {/* Video for small screens (below md breakpoint) */}
+              <div className="w-full block md:hidden">
                 <video
-                  ref={desktopVideoRef}
-                  className="w-full h-auto object-contain 2xl:scale-125"
+                  ref={mobileVideoRef}
+                  className="w-full h-auto object-contain"
                   style={{
                     filter:
                       "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(900%) hue-rotate(200deg) brightness(80%) contrast(100%)",
@@ -133,11 +211,32 @@ const TestHeader = ({ onAnimationStart }) => {
                   Your browser does not support the video tag.
                 </video>
               </div>
+
+              {/* Video for medium and large screens */}
+              {/* <div className="absolute right-0 mt-36 2xl:mt-60 top-24 w-1/2 h-full hidden md:block">
+                <div className="relative w-full h-full flex items-center justify-end">
+                  <video
+                    ref={desktopVideoRef}
+                    className="w-full h-auto object-contain 2xl:scale-125"
+                    style={{
+                       filter:
+                        "brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(175deg) brightness(0.5) contrast(0.8)",
+                    }}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    src="/airplane.mp4"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </div> */}
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

@@ -1,90 +1,137 @@
-import React, { useEffect, useRef } from 'react';
-import Link from 'next/link';
+import React, { useRef } from 'react';
+import { ArrowRight, Zap, Palette, Wrench, BarChart3, ChevronLeft, ChevronRight } from 'lucide-react';
 
-function Test() {
-  const videoRef = useRef(null);
-  
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Set up Intersection Observer to detect when video is visible
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          // If video is in view
-          if (entry.isIntersecting) {
-            // Play the video
-            videoRef.current.play().catch(e => {
-              console.log('Auto-play was prevented:', e);
-              // Many browsers require user interaction before playing videos with sound
-            });
-          } else {
-            // Optionally pause when out of view
-            videoRef.current.pause();
-          }
-        });
-      }, { threshold: 0.1 }); // Trigger when at least 10% of the video is visible
-      
-      // Start observing the video element
-      if (videoRef.current) {
-        observer.observe(videoRef.current);
-      }
-      
-      // Clean up observer on unmount
-      return () => {
-        if (videoRef.current) {
-          observer.unobserve(videoRef.current);
-        }
-      };
+const Test = () => {
+  const scrollRef = useRef(null);
+
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -320, behavior: 'smooth' });
     }
-  }, []);
-  
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 320, behavior: 'smooth' });
+    }
+  };
+  const services = [
+    {
+      icon: <Zap className="w-6 h-6" />,
+      title: "Strategie",
+      description: "Op basis van jouw energiedata maken we de uitdagingen en mogelijkheden zichtbaar. Als jouw energiestrategie partner blijven we actief meedenken, want iedere energiestrategie is uniek en dynamisch."
+    },
+    {
+      icon: <Palette className="w-6 h-6" />,
+      title: "Ontwerp",
+      description: "Jouw data zorgt voor inzicht in de te nemen maatregelen. Tijdens het ontwerpproces ontvouwt zich een concrete oplossing. Gedetailleerd uitgewerkt én praktisch haalbaar."
+    },
+    {
+      icon: <Wrench className="w-6 h-6" />,
+      title: "Realisatie",
+      description: "Vakkundige monteurs zorgen voor een plan dat werkt, perfect volgens het ontwerp. Merkonfhankelijke en betrouwbare installaties van onder andere zonnepanelen en batterijen."
+    },
+    {
+      icon: <BarChart3 className="w-6 h-6" />,
+      title: "Monitoring",
+      description: "We houden jouw installatie in topvorm door actieve monitoring van data. Real-time monitoring en regelmatige controles zorgen voor maximale efficiëntie."
+    },
+    {
+      icon: <Zap className="w-6 h-6" />,
+      title: "Onderhoud",
+      description: "Regelmatig onderhoud houdt jouw energiesysteem in optimale conditie. Onze specialisten voeren preventieve controles uit en lossen eventuele problemen snel op."
+    },
+    {
+      icon: <BarChart3 className="w-6 h-6" />,
+      title: "Optimalisatie",
+      description: "Continue verbetering van jouw energieprestaties door data-analyse en technische aanpassingen. We zorgen ervoor dat je installatie altijd op maximale efficiëntie draait."
+    }
+  ];
+
   return (
-    <section
-      className="min-h-screen flex flex-col"
-      data-bg="white"
-      data-text="var(--custom-green)"
-      data-button-bg="var(--custom-green)"
-      data-button-text="var(--custom-lightGreen)"
-      data-nav-text="var(--custom-lightGreen)"
-    >
-      {/* Main Content */}
-      <div className="flex flex-col lg:flex-row flex-1 px-6 sm:px-10 lg:px-16 pt-8 lg:pt-12 gap-8 bg-white">
-        {/* Left Section */}
-        <div className="w-full lg:w-1/2 flex flex-col justify-center">
-          <h1 className="text-4xl lg:text-7xl font-medium mb-4 sm:mb-6 text-custom-green 2xl:text-8xl">
-            Want to <span className="text-custom-lightGreen">Grow</span> your digital presence? We&apos;re here to make it happen!
+    <div className="bg-white min-h-screen py-16">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Stylin, de partner voor strategische energieoplossingen.
           </h1>
-          <p className="text-custom-green lg:text-lg 2xl:text-2xl  mt-2 sm:mt-4">
-            Book a free 45-minute consultation and discover <br/> how we can help you elevate your digital presence!
-          </p>
-          <div className="mt-4 sm:mt-6">
-            <Link href="/booking">
-              <button className="bg-custom-green text-custom-lightGreen hover:bg-[#135050] px-6 sm:px-8 py-3 rounded-lg font-bold flex items-center">
-                Let&apos;s Talk
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </Link>
-          </div>
-        </div>
-        
-        {/* Right Section */}
-        <div className="w-full lg:w-1/2 relative flex items-center justify-center rounded-md bg-custom-green overflow-hidden mb-10">
-          <video
-            ref={videoRef}
-            className="w-full h-auto max-w-full sm:max-w-md lg:max-w-lg 2xl:scale-125"
-            playsInline
-            muted
-            loop
-            // Remove autoPlay attribute, we'll control this with JavaScript
-          >
-            <source src="flower.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
         </div>
       </div>
-    </section>
+
+      {/* Cards - Full Width Overflow */}
+      <div className="mb-12">
+        <div 
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto pb-4"
+          style={{ 
+            scrollbarWidth: 'none', 
+            msOverflowStyle: 'none',
+            paddingLeft: 'max(1rem, calc((100vw - 1280px) / 2 + 1rem))',
+            paddingRight: '1rem'
+          }}
+        >
+          <style dangerouslySetInnerHTML={{
+            __html: `
+              div::-webkit-scrollbar {
+                display: none;
+              }
+            `
+          }} />
+          {services.map((service, index) => (
+            <div key={index} className="rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 w-80 flex-shrink-0" style={{backgroundColor: '#F5F5F5'}}>
+              {/* Icon */}
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                <div className="text-blue-600">
+                  {service.icon}
+                </div>
+              </div>
+
+              {/* Content */}
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                {service.title}
+              </h3>
+              
+              <p className="text-gray-600 text-sm leading-relaxed mb-8">
+                {service.description}
+              </p>
+
+              {/* Arrow */}
+              <div className="flex justify-start">
+                <ArrowRight className="w-5 h-5 text-gray-900" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Bottom Section */}
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          {/* CTA Button */}
+          <button className="bg-white border border-gray-300 text-gray-900 px-6 py-3 rounded-full font-medium hover:bg-gray-50 transition-colors duration-200 mb-6 md:mb-0">
+            Kom meer te weten
+          </button>
+
+          {/* Navigation Arrows */}
+          <div className="flex space-x-2">
+            <button 
+              onClick={scrollLeft}
+              className="w-12 h-12 bg-custom-blue rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors duration-200"
+            >
+              <ChevronLeft className="w-5 h-5 text-custom-pink" />
+            </button>
+            <button 
+              onClick={scrollRight}
+              className="w-12 h-12 bg-custom-blue rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors duration-200"
+            >
+              <ChevronRight className="w-5 h-5 text-custom-pink" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
-}
+};
 
 export default Test;

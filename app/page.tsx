@@ -8,8 +8,9 @@ import Test from "../components/test";
 import Footer from "../components/Footer";
 import TextScroll from "../components/TextScroll";
 import Cookiebot from "../Components/Cookiebot";
-
+import Faq from "../components/Faq";
 import TestHeader from "../components/TestHeader";
+import PackagesAndBundles from "../components/PackagesAndBundles";
 // import Home from "../components/Home";
 import Image from "next/image";
 import loadiungLogo from "../assets/Frame.svg";
@@ -187,12 +188,13 @@ export default function Page() {
 
         {/* Replace individual sections with the stacked container */}
         <StackedCardsContainer />
-
-        <TextScroll />
+{/* 
+        {/* <TextScroll /> */}
         {/* <Testimonials /> */}
+        <PackagesAndBundles/>
         <Test />
-        {/* <Page2/> */}
-        <Footer />
+        {/* <Faq/> */}
+        <Footer /> 
       </div>
     </main>
   );

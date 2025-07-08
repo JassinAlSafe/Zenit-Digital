@@ -95,18 +95,18 @@ const Footer = () => {
     <>
       {/* "Let's Make It Happen" Section */}
       <section 
-        className="make-it-happen-section py-10 bg-custom-lightGreen"
+        className="make-it-happen-section py-10 bg-[#82A4FF] "
         data-bg="white"
         data-text="black"
         data-button-bg="var(--custom-green)"
         data-button-text="var(--custom-lightGreen)"
         data-nav-text="var(--custom-green)"
       >
-        <div className="flex flex-col justify-center items-center min-h-screen bg-custom-lightGreen py-20 relative mx-auto max-w-7xl rounded-sm">
+        <div className="flex flex-col justify-center items-center min-h-screen bg-[#82A4FF] py-20 relative mx-auto max-w-7xl rounded-sm">
           
           <p className="text-white mb-4">- Change starts here -</p>
           
-          <h1 className="text-6xl md:text-8xl lg:text-9xl 2xl:text-[10rem] font-bold mb-12 text-center text-custom-green leading-tight">
+          <h1 className="text-6xl md:text-8xl lg:text-9xl 2xl:text-[10rem] font-bold mb-12 text-center text-[#00002E] leading-tight">
             <div className="overflow-hidden">
               {Array.from("LET'S MAKE").map((letter, index) => (
                 <span key={`make-${index}`} className="footer-title-letter inline-block">
@@ -124,7 +124,7 @@ const Footer = () => {
           </h1>
 
           <Link href="/booking">
-          <button className="bg-custom-green hover:bg-[#135050] text-white rounded-full px-7 py-5 text-lg transition-colors flex items-center">
+          <button className="bg-[#00002E] hover:bg-[#135050] text-white rounded-full px-7 py-5 text-lg transition-colors flex items-center">
             BOOK A CALL <span className="ml-1">↗</span>
           </button>
           </Link>

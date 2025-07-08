@@ -7,10 +7,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "custom-blue": "#00002E",
-        "custom-pink": "#A494F3",
-        "custom-green": "#09282A",
-        "custom-lightGreen": "#0FB190",
+        "custom-blue": "#061B29",
+        "custom-pink": "#82A4FF",
+        "custom-green": "#061B29",
+        "custom-lightGreen": "#82A4FF",
         background: "var(--background)",
         foreground: "var(--foreground)",
         secondary: {
