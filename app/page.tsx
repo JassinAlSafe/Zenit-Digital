@@ -10,7 +10,7 @@ import TextScroll from "../Components/TextScroll";
 import Cookiebot from "../Components/Cookiebot";
 
 import TestHeader from "../Components/TestHeader";
-// import Home from "../Components/Home";
+import Strategy from "../Components/Strategy";
 import Image from "next/image";
 
 export default function Page() {
@@ -201,10 +201,10 @@ export default function Page() {
         {/* Replace individual sections with the stacked container */}
         <StackedCardsContainer />
 
-        <TextScroll />
+        {/* <TextScroll /> */}
         {/* <Testimonials /> */}
-        <Test />
-        {/* <Page2/> */}
+        {/* <Test /> */}
+        <Strategy/>
         <Footer />
       </div>
     </main>

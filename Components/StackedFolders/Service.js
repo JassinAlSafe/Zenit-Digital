@@ -35,10 +35,10 @@ export default function Service() {
       className="services-section  pt-44 bg-white"
       id="services"
       data-bg="white"
-      data-text="var(--custom-green)"
-      data-button-bg="var(--custom-green)"
-      data-button-text="var(--custom-lightGreen)"
-      data-nav-text="var(--custom-lightGreen)"
+      data-text="var(--custom-blue)"
+      data-button-bg="var(--custom-blue)"
+      data-button-text="var(--custom-pink)"
+      data-nav-text="var(--custom-pink)"
     >
       <div className="flex w-full flex-col gap-y-space-lg md:gap-y-space-2xl mt-32 2xl:mt-80">
         {/* Title container with overflow hidden */}

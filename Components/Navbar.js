@@ -383,7 +383,7 @@ const Navbar = () => {
   return (
     <>
       {/* Desktop Navbar */}
-      <nav className="navbar w-full flex items-center px-6 py-4 z-40 transition-colors cursor-pointer duration-500 bg-white md:fixed md:top-0 md:left-0 ">
+      <nav className="navbar w-full flex items-center lg:px-28 px-6 py-4 z-40 transition-colors cursor-pointer duration-500 bg-white lg:absolute md:fixed md:top-0 md:left-0 ">
         {/* Logo - Mobile center, desktop left */}
         <div className="flex flex-1 justify-center md:justify-start items-center gap-2 z-50">
           {/* Alternative logo images that switch based on the navbar color */}
@@ -472,7 +472,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center ml-auto z-50 ">
           <Link href="/booking">
             <FlipText
-              className="desktop-button px-6 py-2 text-white rounded-2xl hover:bg-gray-800 transition-colors duration-500"
+              className="desktop-button border border-1 border-custom-blue/20 px-6 py-2 text-white font-medium rounded-3xl hover:bg-gray-800 transition-colors duration-500"
               animationType="slide"
               duration={0.3}
             >

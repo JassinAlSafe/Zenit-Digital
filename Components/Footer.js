@@ -115,17 +115,17 @@ const Footer = () => {
     <>
       {/* "Let's Make It Happen" Section */}
       <section
-        className="make-it-happen-section py-10 bg-custom-lightGreen"
+        className="make-it-happen-section py-10 bg-custom-pink"
         data-bg="white"
         data-text="black"
-        data-button-bg="var(--custom-green)"
-        data-button-text="var(--custom-lightGreen)"
-        data-nav-text="var(--custom-green)"
+        data-button-bg="var(--custom-blue)"
+        data-button-text="var(--custom-pink)"
+        data-nav-text="var(--custom-blue)"
       >
-        <div className="flex flex-col justify-center items-center min-h-screen bg-custom-lightGreen py-20 relative mx-auto max-w-7xl rounded-sm">
+        <div className="flex flex-col justify-center items-center min-h-screen bg-custom-pink py-20 relative mx-auto max-w-7xl rounded-sm">
           <p className="text-white mb-4 font-medium">- Change starts here -</p>
 
-          <h1 className="text-6xl md:text-8xl lg:text-9xl 2xl:text-[10rem] font-bold mb-12 text-center text-custom-green leading-tight">
+          <h1 className="text-6xl md:text-8xl lg:text-9xl 2xl:text-[10rem] font-bold mb-12 text-center text-custom-blue leading-tight">
             <div className="overflow-hidden">
               {Array.from("LET'S MAKE").map((letter, index) => (
                 <span
@@ -150,7 +150,7 @@ const Footer = () => {
 
           <Link href="/booking">
             <MagneticButton
-              className="bg-custom-green hover:bg-[#135050] text-white rounded-full px-7 py-5 text-lg transition-colors flex items-center relative z-30"
+              className="bg-custom-blue hover:bg-custom-blue/100 text-white rounded-full px-7 py-5 text-lg transition-colors flex items-center relative z-30"
               magneticStrength={0.5}
             >
               BOOK A CALL
@@ -172,7 +172,7 @@ const Footer = () => {
 
           {/* Working Globally Section - with MP4 video replacing the globe emoji */}
           <div className="absolute bottom-8 left-8 flex justify-end items-center">
-            <div className="w-12 h-12 border bg-custom-green border-custom-lightGreen rounded-full flex items-center justify-center mr-4 overflow-hidden">
+            <div className="w-12 h-12 border bg-custom-blue border-custom-pink rounded-full flex items-center justify-center mr-4 overflow-hidden">
               <video
                 autoPlay
                 loop

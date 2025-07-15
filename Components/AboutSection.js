@@ -58,7 +58,7 @@ const AboutSection = () => {
 
             letters.forEach((letter, index) => {
               letter.style.color =
-                index <= highlightIndex ? "var(--custom-pink)" : "white";
+                index <= highlightIndex ? "var(--custom-pink)" : "#13496C";
             });
 
             // **Sync Circle Progress Exactly with Text**
@@ -86,10 +86,10 @@ const AboutSection = () => {
   const getTextClasses = () => {
     if (isWindows) {
       // Windows-specific text sizing - reduced to prevent overflow
-      return "about-text 2xl:text-[8.5rem] text-4xl text-white md:text-7xl lg:text-7xl font-normal text-left";
+      return "about-text 2xl:text-[8.5rem] text-4xl text-[#13496C] md:text-7xl lg:text-7xl font-normal text-left";
     } else {
       // macOS classes (original)
-      return "about-text 2xl:text-[10rem] text-5xl text-white md:text-8xl lg:text-8xl font-normal text-left";
+      return "about-text 2xl:text-[10rem] text-5xl text-[#13496C] md:text-8xl lg:text-8xl font-normal text-left";
     }
   };
 
@@ -127,12 +127,12 @@ const AboutSection = () => {
         id="about"
         className="about-section h-screen flex items-center justify-center "
         data-bg="var(--custom-blue)"
-        data-text="white"
+        data-text="#13496C"
         data-button-bg="var(--custom-pink)"
         data-button-text="var(--custom-blue)"
         data-navbar-text="var(--custom-pink)"
       >
-        <div className="container 2xl:max-w-[90%] mx-auto px-4 2xl:px-0 text-center">
+        <div className="container 2xl:max-w-[90%] mx-auto px-4 2xl:px-0 text-center text-[#13496C]">
           <h2 className={getTextClasses()}>
             We create elevating digital solutions that empower startups through
             innovative software and purposeful design.
