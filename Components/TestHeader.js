@@ -52,7 +52,6 @@ const TestHeader = ({ onAnimationStart }) => {
           ease: "power2.out"
         }, "-=0.4");
         
-        // Add airplane animation after paragraph and button have finished
        
         // Add sliding images animation
         tl.to([leftImageRef.current, rightImageRef.current], {
@@ -155,7 +154,6 @@ const TestHeader = ({ onAnimationStart }) => {
         id="/"
       >
         {/* Sliding Images */}
-      {/* Sliding Images */}
 <div 
   ref={leftImageRef}
   className="slide-image slide-image-left"
