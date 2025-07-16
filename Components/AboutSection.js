@@ -86,7 +86,7 @@ const AboutSection = () => {
   const getTextClasses = () => {
     if (isWindows) {
       // Windows-specific text sizing - reduced to prevent overflow
-      return "about-text 2xl:text-[8.5rem] text-4xl text-[#13496C] md:text-7xl lg:text-7xl font-normal text-left";
+      return "about-text 2xl:text-[8.5rem] px-4  text-4xl text-[#13496C] md:text-7xl lg:text-7xl font-normal text-left";
     } else {
       // macOS classes (original)
       return "about-text 2xl:text-[10rem] text-5xl text-[#13496C] md:text-8xl lg:text-8xl font-normal text-left";

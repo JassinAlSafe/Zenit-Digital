@@ -210,7 +210,7 @@ const TestHeader = ({ onAnimationStart }) => {
 
                 <Link href="/booking">
                   <button
-                    className="cta-button bg-custom-blue text-custom-pink hover:bg-[#2C2C75] font-medium py-3 px-6 rounded-full inline-flex items-center"
+                    className="cta-button bg-custom-blue text-custom-pink hover:bg-[#2C2C75] font-normal py-3 px-6 rounded-full inline-flex items-center"
                   >
                     Explore
                     <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
