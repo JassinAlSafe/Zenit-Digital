@@ -1,8 +1,11 @@
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useOS } from "../../utils/OsProvider"; // Import the OS hook
 
 export default function Service() {
+  const { isWindows, isDetected } = useOS(); // Use the OS hook
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       gsap.registerPlugin(ScrollTrigger);
@@ -30,9 +33,98 @@ export default function Service() {
     }
   }, []);
 
+  // Get platform-specific title classes
+  const getTitleClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing - reduced to prevent overflow
+      return "section-heading col-span-6 max-w-[18ch] text-6xl lg:text-8xl md:text-8xl 2xl:text-[8.5rem] mt-44 2xl:mt-72 font-bold text-custom-green";
+    } else {
+      // macOS classes (original)
+      return "section-heading col-span-6 max-w-[18ch] text-7xl lg:text-9xl md:text-9xl 2xl:text-[10rem] mt-44 2xl:mt-72 font-bold text-custom-green";
+    }
+  };
+
+  // Get platform-specific service number classes
+  const getServiceNumberClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing
+      return "col-span-2 text-xl hidden md:block lg:text-4xl md:text-4xl 2xl:text-7xl font-light text-gray-400 ml-10";
+    } else {
+      // macOS classes (original)
+      return "col-span-2 text-2xl hidden md:block lg:text-5xl md:text-5xl 2xl:text-8xl font-light text-gray-400 ml-10";
+    }
+  };
+
+  // Get platform-specific service title classes
+  const getServiceTitleClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing
+      return "text-2xl lg:text-4xl 2xl:text-7xl ml-5 lg:ml-0 md:text-5xl font-bold lg:font-medium text-custom-green";
+    } else {
+      // macOS classes (original)
+      return "text-3xl lg:text-5xl 2xl:text-8xl ml-5 lg:ml-0 md:text-6xl font-bold lg:font-medium text-custom-green";
+    }
+  };
+
+  // Get platform-specific description classes
+  const getDescriptionClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing
+      return "max-w-[40ch] ml-5 text-sm lg:text-lg font-normal leading-relaxed text-custom-green animated-text";
+    } else {
+      // macOS classes (original)
+      return "max-w-[40ch] ml-5 text-sm lg:text-xl font-normal leading-relaxed text-custom-green animated-text";
+    }
+  };
+
+  // Get platform-specific feature title classes
+  const getFeatureTitleClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing
+      return "text-base lg:text-xl font-normal text-custom-green";
+    } else {
+      // macOS classes (original)
+      return "text-lg lg:text-2xl font-normal text-custom-green";
+    }
+  };
+
+  // Wait for OS detection before rendering to prevent hydration mismatch
+  if (!isDetected) {
+    return (
+      <section
+        className="services-section pt-44 bg-white"
+        id="services"
+        data-bg="white"
+        data-text="var(--custom-blue)"
+        data-button-bg="var(--custom-blue)"
+        data-button-text="var(--custom-pink)"
+        data-nav-text="var(--custom-pink)"
+      >
+        <div className="flex w-full flex-col gap-y-space-lg md:gap-y-space-2xl mt-32 2xl:mt-80">
+          {/* Title container with default styling */}
+          <div className="title-container pl-4 md:pl-8 lg:pl-8">
+            <div className="overflow-hidden inline-block">
+              <h1 className="section-heading col-span-6 max-w-[18ch] text-7xl lg:text-9xl md:text-9xl 2xl:text-[10rem] mt-44 2xl:mt-72 font-bold text-custom-green">
+                {Array.from("SERVICES").map((letter, index) => (
+                  <span
+                    key={index}
+                    className="services-title-letter inline-block"
+                  >
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </h1>
+            </div>
+          </div>
+          {/* Rest of default content... */}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
-      className="services-section  pt-44 bg-white"
+      className="services-section pt-44 bg-white"
       id="services"
       data-bg="white"
       data-text="var(--custom-blue)"
@@ -44,7 +136,7 @@ export default function Service() {
         {/* Title container with overflow hidden */}
         <div className="title-container pl-4 md:pl-8 lg:pl-8">
           <div className="overflow-hidden inline-block">
-            <h1 className="section-heading col-span-6 max-w-[18ch] text-7xl lg:text-9xl md:text-9xl 2xl:text-[10rem] mt-44 2xl:mt-72 font-bold text-custom-green">
+            <h1 className={getTitleClasses()}>
               {Array.from("SERVICES").map((letter, index) => (
                 <span
                   key={index}
@@ -65,12 +157,12 @@ export default function Service() {
             style={{ top: "calc(20vh + 0em)", marginBottom: "14em" }}
           >
             <div className="flex grid-cols-12 items-center gap-x-space-xs text-left md:grid md:gap-x-fluid">
-              <span className="col-span-2 text-2xl hidden md:block lg:text-5xl md:text-5xl 2xl:text-8xl font-light text-gray-400 ml-10">
+              <span className={getServiceNumberClasses()}>
                 01
               </span>
               <div className="col-span-6 col-start-6 flex flex-col ">
                 <div className="flex items-center justify-between py-8">
-                  <h3 className="text-3xl lg:text-5xl 2xl:text-8xl ml-5 lg:ml-0 md:text-6xl font-bold lg:font-medium text-custom-green">
+                  <h3 className={getServiceTitleClasses()}>
                     Web Development
                   </h3>
                   {/* Globe Icon */}
@@ -82,7 +174,7 @@ export default function Service() {
               </div>
               <div className="grid-gap flex min-h-[30vh] flex-col pt-space-3xs md:grid md:min-h-[40vh] md:grid-cols-12">
                 <div className="col-span-7 col-start-6 flex flex-col gap-y-space-sm pt-space-sm">
-                  <p className="max-w-[40ch]  ml-5 text-sm lg:text-xl font-normal leading-relaxed text-custom-green animated-text">
+                  <p className={getDescriptionClasses()}>
                     We offer end-to-end web development services tailored to
                     your business needs. Our focus is on delivering
                     high-performance websites with clean, scalable code and a
@@ -95,7 +187,7 @@ export default function Service() {
                         <span className="text-base text-custom-green font-normal pr-6">
                           01
                         </span>
-                        <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
+                        <h4 className={getFeatureTitleClasses()}>
                           NextJs
                         </h4>
                       </div>
@@ -105,7 +197,7 @@ export default function Service() {
                         <span className="text-base text-custom-green font-normal pr-6">
                           02
                         </span>
-                        <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
+                        <h4 className={getFeatureTitleClasses()}>
                           CMS Integration
                         </h4>
                       </div>
@@ -115,7 +207,7 @@ export default function Service() {
                         <span className="text-base text-custom-green font-normal pr-6">
                           03
                         </span>
-                        <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
+                        <h4 className={getFeatureTitleClasses()}>
                           UI/UX Design
                         </h4>
                       </div>
@@ -125,7 +217,7 @@ export default function Service() {
                         <span className="text-base text-custom-green font-normal pr-6">
                           04
                         </span>
-                        <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
+                        <h4 className={getFeatureTitleClasses()}>
                           SEO
                         </h4>
                       </div>
@@ -140,12 +232,12 @@ export default function Service() {
               style={{ top: "calc(20vh + 5.75em)", marginBottom: "11em" }}
             >
               <div className="flex grid-cols-12 items-center justify-start gap-x-space-xs text-left md:grid md:gap-x-fluid">
-                <span className="col-span-2 text-2xl hidden md:block lg:text-5xl md:text-5xl 2xl:text-8xl font-light text-gray-400 ml-10">
+                <span className={getServiceNumberClasses()}>
                   02
                 </span>
                 <div className="col-span-6 col-start-6 flex flex-col">
                   <div className="flex items-center justify-between py-8">
-                    <h3 className="text-3xl lg:text-5xl 2xl:text-8xl ml-5 lg:ml-0 md:text-6xl font-bold lg:font-medium text-custom-green">
+                    <h3 className={getServiceTitleClasses()}>
                       Mobile App Development
                     </h3>
                     {/* Phone Icon */}
@@ -157,7 +249,7 @@ export default function Service() {
               </div>
               <div className="grid-gap flex min-h-[30vh] flex-col pt-space-3xs md:grid md:min-h-[40vh] md:grid-cols-12">
                 <div className="col-span-7 col-start-6 flex w-full flex-col gap-y-space-sm pt-space-sm">
-                  <p className="max-w-[40ch]  ml-5 text-sm lg:text-xl font-normal leading-relaxed text-custom-green animated-text">
+                  <p className={getDescriptionClasses()}>
                     A powerful mobile app can transform how users experience
                     your brand—right in the palm of their hand. We craft sleek,
                     high-performing apps with custom code and intuitive design,
@@ -170,7 +262,7 @@ export default function Service() {
                         <span className="text-base text-custom-green font-normal pr-6 ">
                           01
                         </span>
-                        <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
+                        <h4 className={getFeatureTitleClasses()}>
                           React Native & Expo
                         </h4>
                       </div>
@@ -180,7 +272,7 @@ export default function Service() {
                         <span className="text-base text-custom-green font-normal pr-6">
                           02
                         </span>
-                        <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
+                        <h4 className={getFeatureTitleClasses()}>
                           UI/UX Design
                         </h4>
                       </div>
@@ -190,7 +282,7 @@ export default function Service() {
                         <span className="text-base text-custom-green font-normal pr-6">
                           03
                         </span>
-                        <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
+                        <h4 className={getFeatureTitleClasses()}>
                           IOS & Android
                         </h4>
                       </div>
@@ -205,12 +297,12 @@ export default function Service() {
               style={{ top: "calc(20vh + 5.75em)"}}
             >
               <div className="flex grid-cols-12 items-center justify-start gap-x-space-xs text-left md:grid md:gap-x-fluid">
-                <span className="col-span-2 text-2xl hidden md:block lg:text-5xl md:text-5xl 2xl:text-8xl font-light text-gray-400 ml-10">
+                <span className={getServiceNumberClasses()}>
                   03
                 </span>
                 <div className="col-span-6 col-start-6 flex flex-col">
                   <div className="flex items-center justify-between py-8">
-                    <h3 className="text-3xl lg:text-5xl 2xl:text-8xl ml-5 lg:ml-0 md:text-6xl font-bold lg:font-medium text-custom-green">
+                    <h3 className={getServiceTitleClasses()}>
                       Fullstack Development
                     </h3>
                     {/* Tools/Wrench Icon */}
@@ -223,7 +315,7 @@ export default function Service() {
               </div>
               <div className="grid-gap flex min-h-[30vh] flex-col pt-space-3xs md:grid md:min-h-[40vh] md:grid-cols-12">
                 <div className="col-span-7 col-start-6 flex w-full flex-col gap-y-space-sm pt-space-sm">
-                  <p className="max-w-[40ch] ml-5 text-sm lg:text-xl font-normal leading-relaxed text-custom-green animated-text">
+                  <p className={getDescriptionClasses()}>
                     From backend logic to front-end finesse, We build complete
                     digital solutions tailored to your unique challenges. Our
                     full-stack approach combines custom software development
@@ -237,7 +329,7 @@ export default function Service() {
                         <span className="text-base text-custom-green font-normal pr-6">
                           01
                         </span>
-                        <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
+                        <h4 className={getFeatureTitleClasses()}>
                           NextJS
                         </h4>
                       </div>
@@ -247,7 +339,7 @@ export default function Service() {
                         <span className="text-base text-custom-green font-normal pr-6">
                           02
                         </span>
-                        <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
+                        <h4 className={getFeatureTitleClasses()}>
                           Node.Js
                         </h4>
                       </div>
@@ -257,7 +349,7 @@ export default function Service() {
                         <span className="text-base text-custom-green font-normal pr-6">
                           03
                         </span>
-                        <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
+                        <h4 className={getFeatureTitleClasses()}>
                           UI/UX Design
                         </h4>
                       </div>
@@ -267,7 +359,7 @@ export default function Service() {
                         <span className="text-base text-custom-green font-normal pr-6">
                           04
                         </span>
-                        <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
+                        <h4 className={getFeatureTitleClasses()}>
                           Supabase
                         </h4>
                       </div>

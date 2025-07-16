@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import MagneticButton from "./MagneticButton";
+import { useOS } from "../utils/OsProvider"; // Import the OS hook
 
 const Footer = () => {
   // Create refs to store our animation instances
@@ -12,6 +13,8 @@ const Footer = () => {
   
   // State to store the video source
   const [videoSrc, setVideoSrc] = useState("");
+  
+  const { isWindows, isDetected } = useOS(); // Use the OS hook
 
   // Function to detect Safari browser
   const isSafari = () => {
@@ -111,6 +114,146 @@ const Footer = () => {
     };
   }, []);
 
+  // Get platform-specific title classes
+  const getTitleClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing - reduced to prevent overflow
+      return "text-5xl md:text-7xl lg:text-8xl 2xl:text-[8.5rem] font-bold mb-12 text-center text-custom-blue leading-tight";
+    } else {
+      // macOS classes (original)
+      return "text-6xl md:text-8xl lg:text-9xl 2xl:text-[10rem] font-bold mb-12 text-center text-custom-blue leading-tight";
+    }
+  };
+
+  // Get platform-specific subtitle classes
+  const getSubtitleClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing
+      return "text-sm 2xl:text-lg text-custom-green";
+    } else {
+      // macOS classes (original)
+      return "text-sm 2xl:text-xl text-custom-green";
+    }
+  };
+
+  // Get platform-specific inquiry title classes
+  const getInquiryTitleClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing
+      return "text-sm 2xl:text-lg mb-1";
+    } else {
+      // macOS classes (original)
+      return "text-sm 2xl:text-xl mb-1";
+    }
+  };
+
+  // Get platform-specific inquiry text classes
+  const getInquiryTextClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing
+      return "text-sm flex items-center justify-en 2xl:text-base";
+    } else {
+      // macOS classes (original)
+      return "text-sm flex items-center justify-en 2xl:text-lg";
+    }
+  };
+
+  // Wait for OS detection before rendering to prevent hydration mismatch
+  if (!isDetected) {
+    return (
+      <>
+        {/* "Let's Make It Happen" Section with default styling */}
+        <section
+          className="make-it-happen-section py-10 bg-custom-pink"
+          data-bg="white"
+          data-text="black"
+          data-button-bg="var(--custom-blue)"
+          data-button-text="var(--custom-pink)"
+          data-nav-text="var(--custom-blue)"
+        >
+          <div className="flex flex-col justify-center items-center min-h-screen bg-custom-pink py-20 relative mx-auto max-w-7xl rounded-sm">
+            <p className="text-white mb-4 font-medium">- Change starts here -</p>
+
+            <h1 className="text-6xl md:text-8xl lg:text-9xl 2xl:text-[10rem] font-bold mb-12 text-center text-custom-blue leading-tight">
+              <div className="overflow-hidden">
+                {Array.from("LET'S MAKE").map((letter, index) => (
+                  <span
+                    key={`make-${index}`}
+                    className="footer-title-letter inline-block"
+                  >
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </div>
+              <div className="overflow-hidden">
+                {Array.from("IT HAPPEN").map((letter, index) => (
+                  <span
+                    key={`happen-${index}`}
+                    className="footer-title-letter inline-block"
+                  >
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </div>
+            </h1>
+
+            <Link href="/booking">
+              <MagneticButton
+                className="bg-custom-blue hover:bg-custom-blue/100 text-white rounded-full px-7 py-5 text-lg transition-colors flex items-center relative z-30"
+                magneticStrength={0.5}
+              >
+                BOOK A CALL
+                <svg
+                  className="w-4 h-4 ml-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  ></path>
+                </svg>
+              </MagneticButton>
+            </Link>
+
+            {/* Working Globally Section - with default styling */}
+            <div className="absolute bottom-8 left-8 flex justify-end items-center">
+              <div className="w-12 h-12 border bg-custom-blue border-custom-pink rounded-full flex items-center justify-center mr-4 overflow-hidden">
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                  src={videoSrc}
+                >
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div>
+                <p className="text-sm 2xl:text-xl text-custom-green">
+                  Working Globally
+                </p>
+                <p className="text-sm font-normal text-white">Based in Sweden</p>
+              </div>
+            </div>
+
+            {/* For Further Inquiries with default styling */}
+            <div className="absolute bottom-8 right-8 text-right hidden md:block">
+              <h4 className="text-sm 2xl:text-xl mb-1">FOR FURTHER INQUIRIES</h4>
+              <p className="text-sm flex items-center justify-en 2xl:text-lg">
+                <span className="mr-1">→</span> hello@zenitdigital.se
+              </p>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
+
   return (
     <>
       {/* "Let's Make It Happen" Section */}
@@ -125,7 +268,7 @@ const Footer = () => {
         <div className="flex flex-col justify-center items-center min-h-screen bg-custom-pink py-20 relative mx-auto max-w-7xl rounded-sm">
           <p className="text-white mb-4 font-medium">- Change starts here -</p>
 
-          <h1 className="text-6xl md:text-8xl lg:text-9xl 2xl:text-[10rem] font-bold mb-12 text-center text-custom-blue leading-tight">
+          <h1 className={getTitleClasses()}>
             <div className="overflow-hidden">
               {Array.from("LET'S MAKE").map((letter, index) => (
                 <span
@@ -185,7 +328,7 @@ const Footer = () => {
               </video>
             </div>
             <div>
-              <p className="text-sm  2xl:text-xl text-custom-green">
+              <p className={getSubtitleClasses()}>
                 Working Globally
               </p>
               <p className="text-sm font-normal text-white">Based in Sweden</p>
@@ -194,8 +337,8 @@ const Footer = () => {
 
           {/* For Further Inquiries */}
           <div className="absolute bottom-8 right-8 text-right hidden md:block">
-            <h4 className="text-sm 2xl:text-xl mb-1">FOR FURTHER INQUIRIES</h4>
-            <p className="text-sm flex items-center justify-en 2xl:text-lg">
+            <h4 className={getInquiryTitleClasses()}>FOR FURTHER INQUIRIES</h4>
+            <p className={getInquiryTextClasses()}>
               <span className="mr-1">→</span> hello@zenitdigital.se
             </p>
           </div>
