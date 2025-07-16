@@ -12,6 +12,20 @@ const TestHeader = ({ onAnimationStart }) => {
   
   // State for scroll position
   const [scrollY, setScrollY] = useState(0);
+  
+  // State to detect Windows for platform-specific adjustments
+  const [isWindows, setIsWindows] = useState(false);
+
+  // Function to detect Windows
+  const detectWindows = () => {
+    if (typeof window === "undefined") return false;
+    return window.navigator.platform.toLowerCase().includes('win');
+  };
+
+  useEffect(() => {
+    // Detect Windows for platform-specific styling
+    setIsWindows(detectWindows());
+  }, []);
 
   useEffect(() => {
     // Hide everything initially
@@ -77,6 +91,28 @@ const TestHeader = ({ onAnimationStart }) => {
 
   // Calculate slide distances based on scroll position
   const slideDistance = Math.min(scrollY * 0.3, 200); // Max slide of 200px
+
+  // Get platform-specific title classes
+  const getTitleClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing - reduced to prevent overflow
+      return "text-4xl 2xl:text-[11rem] lg:text-7xl md:text-5xl font-medium lg:font-medium leading-none mb-6 text-custom-blue";
+    } else {
+      // macOS classes (original)
+      return "text-5xl 2xl:text-[13rem] lg:text-8xl md:text-6xl font-medium lg:font-medium leading-none mb-6 text-custom-blue";
+    }
+  };
+
+  // Get platform-specific subtitle classes
+  const getSubtitleClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing
+      return "subtext font-light 2xl:text-xl text-lg mb-8 text-gray-500 max-w-xl mx-auto";
+    } else {
+      // macOS classes (original)
+      return "subtext font-light 2xl:text-2xl text-xl mb-8 text-gray-500 max-w-xl mx-auto";
+    }
+  };
 
   return (
     <>
@@ -178,7 +214,7 @@ const TestHeader = ({ onAnimationStart }) => {
   target="_blank"
   className="flex items-center justify-center w-max rounded-full border bg-neutral-300/20 backdrop-blur-lg px-2 py-1 gap-1 shadow-3xl shadow-background/40 cursor-pointer select-none "
 >
-  <div className="text-neutral-400 text-xs font-normal px-1 flex items-center justify-center">
+  <div className="text-neutral-400 text-xs font-normal pr-1 pl-0 flex items-center justify-center">
     <p className="mr-2">
       <button className="bg-custom-pink text-custom-blue text-xs px-2 py-1 rounded-xl">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -197,10 +233,10 @@ const TestHeader = ({ onAnimationStart }) => {
   <div className="container mx-auto px-4 relative">
   <div className="flex flex-col items-center text-center">
               <div className="w-full lg:py-6  2xl:w-full lg:w-3/4 z-10">
-              <h1 className="text-5xl 2xl:text-[13rem] lg:text-8xl md:text-6xl font-medium lg:font-medium leading-none mb-6 text-custom-blue">
+              <h1 className={getTitleClasses()}>
                   <span className="word">Together</span> <span className="word">We</span> <br/> <span className="word ">Reach</span> <span className="word">Further</span>
                 </h1>
-                <p className=" subtext font-light 2xl:text-2xl text-xl mb-8 text-gray-500 max-w-xl mx-auto ">
+                <p className={getSubtitleClasses()}>
                   Looking to build your next big idea? We craft custom software to help 
                   <span className="font-bold text-gray-700">   startups </span>
                   and businesses grow with style and speed.

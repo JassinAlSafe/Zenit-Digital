@@ -61,7 +61,7 @@ export default function Service() {
           <div className="mt-12 flex flex-col">
             {/* Web Development Card */}
             <div
-            className="sticky top-0 border-t border-t-gray-800"
+            className="sticky top-0 border-t border-t-gray-300"
             style={{ top: "calc(20vh + 0em)", marginBottom: "14em" }}
           >
             <div className="flex grid-cols-12 items-center gap-x-space-xs text-left md:grid md:gap-x-fluid">
@@ -90,7 +90,7 @@ export default function Service() {
                   </p>
 
                   <div className=" space-y-0  ml-5 text-sm">
-                    <div className="border-t border-gray-800 py-4 lg:py-6">
+                    <div className="border-t border-gray-300 py-4 lg:py-6">
                       <div className="flex items-center">
                         <span className="text-base text-custom-green font-normal pr-6">
                           01
@@ -100,7 +100,7 @@ export default function Service() {
                         </h4>
                       </div>
                     </div>
-                    <div className="border-t border-gray-800 py-4 lg:py-6">
+                    <div className="border-t border-gray-300 py-4 lg:py-6">
                       <div className="flex items-center">
                         <span className="text-base text-custom-green font-normal pr-6">
                           02
@@ -110,7 +110,7 @@ export default function Service() {
                         </h4>
                       </div>
                     </div>
-                    <div className="border-t border-gray-800 py-4 lg:py-6">
+                    <div className="border-t border-gray-300 py-4 lg:py-6">
                       <div className="flex items-center">
                         <span className="text-base text-custom-green font-normal pr-6">
                           03
@@ -120,7 +120,7 @@ export default function Service() {
                         </h4>
                       </div>
                     </div>
-                    <div className="border-t border-gray-800 py-4 lg:py-6">
+                    <div className="border-t border-gray-300 py-4 lg:py-6">
                       <div className="flex items-center">
                         <span className="text-base text-custom-green font-normal pr-6">
                           04
@@ -136,7 +136,7 @@ export default function Service() {
             </div>
 
             <div
-              className="sticky top-0 border-t border-t-gray-800 bg-white"
+              className="sticky top-0 border-t border-t-gray-300 bg-white"
               style={{ top: "calc(20vh + 5.75em)", marginBottom: "11em" }}
             >
               <div className="flex grid-cols-12 items-center justify-start gap-x-space-xs text-left md:grid md:gap-x-fluid">
@@ -165,7 +165,7 @@ export default function Service() {
                   </p>
 
                   <div className=" space-y-0  ml-5">
-                    <div className="border-t border-gray-800 py-4 lg:py-6 ">
+                    <div className="border-t border-gray-300 py-4 lg:py-6 ">
                       <div className="flex items-center ">
                         <span className="text-base text-custom-green font-normal pr-6 ">
                           01
@@ -175,7 +175,7 @@ export default function Service() {
                         </h4>
                       </div>
                     </div>
-                    <div className="border-t border-gray-800 py-4 lg:py-6">
+                    <div className="border-t border-gray-300 py-4 lg:py-6">
                       <div className="flex items-center">
                         <span className="text-base text-custom-green font-normal pr-6">
                           02
@@ -185,7 +185,7 @@ export default function Service() {
                         </h4>
                       </div>
                     </div>
-                    <div className="border-t border-gray-800 py-4 lg:py-6">
+                    <div className="border-t border-gray-300 py-4 lg:py-6">
                       <div className="flex items-center">
                         <span className="text-base text-custom-green font-normal pr-6">
                           03
@@ -201,7 +201,7 @@ export default function Service() {
             </div>
 
             <div
-              className="sticky top-0 border-t border-t-gray-800 bg-white mb-[1em] md:mb-[-2em]"
+              className="sticky top-0 border-t border-t-gray-300 bg-white mb-[1em] md:mb-[-2em]"
               style={{ top: "calc(20vh + 5.75em)"}}
             >
               <div className="flex grid-cols-12 items-center justify-start gap-x-space-xs text-left md:grid md:gap-x-fluid">
@@ -232,7 +232,7 @@ export default function Service() {
                   </p>
 
                   <div className=" space-y-0  ml-5">
-                    <div className="border-t border-gray-800 py-4 lg:py-6">
+                    <div className="border-t border-gray-300 py-4 lg:py-6">
                       <div className="flex items-center">
                         <span className="text-base text-custom-green font-normal pr-6">
                           01
@@ -242,7 +242,7 @@ export default function Service() {
                         </h4>
                       </div>
                     </div>
-                    <div className="border-t border-gray-800 py-4  lg:py-6">
+                    <div className="border-t border-gray-300 py-4  lg:py-6">
                       <div className="flex items-center">
                         <span className="text-base text-custom-green font-normal pr-6">
                           02
@@ -252,7 +252,7 @@ export default function Service() {
                         </h4>
                       </div>
                     </div>
-                    <div className="border-t border-gray-800 py-4  lg:py-6">
+                    <div className="border-t border-gray-300 py-4  lg:py-6">
                       <div className="flex items-center">
                         <span className="text-base text-custom-green font-normal pr-6">
                           03
@@ -262,10 +262,10 @@ export default function Service() {
                         </h4>
                       </div>
                     </div>
-                    <div className="border-t border-gray-800 py-4 lg:py-6">
+                    <div className="border-t border-gray-300 py-4 lg:py-6">
                       <div className="flex items-center">
                         <span className="text-base text-custom-green font-normal pr-6">
-                          03
+                          04
                         </span>
                         <h4 className="text-lg lg:text-2xl font-normal text-custom-green">
                           Supabase

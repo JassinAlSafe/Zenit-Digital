@@ -1,6 +1,7 @@
 import Script from "next/script";
 import "./globals.css";
 import { CursorProvider } from "../utils/CursorContext";
+import {OSProvider }from "../utils/OsProvider"; // Ensure this is the correct path to your OSProvider
 import ClientCursorWrapper from "../Components/ClientCursorWrapper";
 import NavbarWrapper from "../Components/NavbarWrapper";
 import { Fonts } from "../Components/Fonts";
@@ -30,17 +31,19 @@ export default function RootLayout({
         )}
       </head>
       <body>
-        <FontProvider>
-          <NavigationHandler />
-          <Fonts />
-          <EnvironmentInfo />
-          <GsapInitializer />
-          <CursorProvider>
-            <NavbarWrapper />
-            {children}
-            <ClientCursorWrapper />
-          </CursorProvider>
-        </FontProvider>
+        <OSProvider>
+          <FontProvider>
+            <NavigationHandler />
+            <Fonts />
+            <EnvironmentInfo />
+            <GsapInitializer />
+            <CursorProvider>
+              <NavbarWrapper />
+              {children}
+              <ClientCursorWrapper />
+            </CursorProvider>
+          </FontProvider>
+        </OSProvider>
       </body>
     </html>
   );
