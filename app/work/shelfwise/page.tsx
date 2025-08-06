@@ -52,7 +52,7 @@ const ShelfWisePage = () => {
       data-text="#CB6516"
       data-button-bg="#CB6516"
       data-button-text="white"
-      data-nav-text="#CB6516"
+      data-navbar-text="#CB6516"
     >
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-8 md:px-16 lg:px-20 2xl:px-32">
@@ -167,7 +167,7 @@ const ShelfWisePage = () => {
                 className="text-lg md:text-xl font-light leading-relaxed"
                 style={{ color: "#CB6516" }}
               >
-                Manual tracking methods and legacy software couldn't provide
+                Manual tracking methods and legacy software couldn&apos;t provide
                 real-time insights or predictive analytics needed for modern
                 inventory optimization.
               </p>

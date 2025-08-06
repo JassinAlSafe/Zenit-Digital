@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useEffect, useState, useRef } from "react";
+import { gsap, setupGSAP, ANIMATION_CONFIG, createScrollTrigger } from "../utils/gsap";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useOS } from "../utils/OsProvider"; // Import the OS hook
@@ -9,31 +8,65 @@ import Group5Image from "../assets/Group5.png";
 import Group78Image from "../assets/Group78-2.png";
 import Framer3Image from "../assets/Frame 3.png";
 
-gsap.registerPlugin(ScrollTrigger);
+const projects = [
+  {
+    id: 1,
+    image: Group5Image,
+    title: "Xtream E-sport Arena",
+    description: "Gaming arena",
+    links: ["Design", "Web Development"],
+    // route: "/work/xtream-esport-arena",
+  },
+  {
+    id: 2,
+    image: Group78Image,
+    title: "ShelfWise",
+    description: "Inventory Management System",
+    links: ["Design", "Fullstack Development"],
+    // route: "/work/shelfwise",
+  },
+  {
+    id: 3,
+    image: Framer3Image,
+    title: "Swedish Data Center",
+    description: "Data infrastructure hub",
+    links: ["Design", "Web Development"],
+    // route: "/work/swedish-data-center",
+  },
+];
 
 const SelectedWorks = () => {
   const [currentImage, setCurrentImage] = useState(1);
   const router = useRouter();
   const { isWindows, isDetected } = useOS(); // Use the OS hook
+  const sectionRef = useRef(null);
+  const titleRef = useRef(null);
+  const projectRefs = useRef([]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const titleLetters = document.querySelectorAll(".title-letter");
+    // Setup GSAP in this component (per GSAP best practices)
+    setupGSAP();
+    
+    // Track ScrollTriggers for cleanup
+    const scrollTriggers = [];
+    
+    if (typeof window !== "undefined" && titleRef.current && sectionRef.current) {
+      const titleLetters = titleRef.current.querySelectorAll(".title-letter");
 
       // IMPORTANT: Remove all GSAP setup for the section itself
       // This will now be handled by the parent container
 
       // Title animation only
       if (titleLetters.length > 0) {
-        gsap.set(titleLetters, { y: 160 });
+        gsap.set(titleLetters, { y: ANIMATION_CONFIG.offsets.letterReveal });
         gsap.to(titleLetters, {
           y: 0,
-          duration: 1,
-          stagger: 0.04,
-          ease: "power3.out",
+          duration: ANIMATION_CONFIG.durations.normal,
+          stagger: ANIMATION_CONFIG.durations.letterStagger,
+          ease: ANIMATION_CONFIG.ease.power3,
           scrollTrigger: {
-            trigger: ".selected-works-section",
-            start: "top 80%",
+            trigger: sectionRef.current,
+            start: ANIMATION_CONFIG.scrollTrigger.start,
             toggleActions: "play none none none",
           },
         });
@@ -41,50 +74,25 @@ const SelectedWorks = () => {
 
       // Update current image based on scroll position
       projects.forEach((project, index) => {
-        const projectElement = document.querySelectorAll(".scroll-item")[index];
+        const projectElement = projectRefs.current[index];
         if (projectElement) {
-          ScrollTrigger.create({
+          createScrollTrigger({
             trigger: projectElement,
-            start: "top center",
-            end: "bottom center",
+            start: ANIMATION_CONFIG.scrollTrigger.centerStart,
+            end: ANIMATION_CONFIG.scrollTrigger.centerEnd,
             onEnter: () => setCurrentImage(index + 1),
             onEnterBack: () => setCurrentImage(index + 1),
-          });
+          }, scrollTriggers);
         }
       });
     }
+    
+    // Cleanup function per React best practices
+    return () => {
+      scrollTriggers.forEach(trigger => trigger.kill());
+    };
   }, []);
 
-  const projects = [
-    {
-      id: 1,
-      image: Group5Image,
-      title: "Xtream E-sport Arena",
-      description: "Gaming arena",
-      links: ["Design", "Web Development"],
-      // route: "/work/xtream-esport-arena",
-    },
-    {
-      id: 2,
-      image: Group78Image,
-      title: "ShelfWise",
-      description: "Inventory Management System",
-      links: ["Design", "Fullstack Development"],
-      // route: "/work/shelfwise",
-    },
-    {
-      id: 3,
-      image: Framer3Image,
-      title: "Swedish Data Center",
-      description: "Data infrastructure hub",
-      links: ["Design", "Web Development"],
-      // route: "/work/swedish-data-center",
-    },
-  ];
-
-  const handleProjectClick = (route) => {
-    router.push(route);
-  };
 
   // Get platform-specific title classes
   const getTitleClasses = () => {
@@ -228,18 +236,19 @@ const SelectedWorks = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="work"
       className="selected-works-section opacity-100 pt-40"
       data-bg="var(--custom-blue)"
       data-text="var(--custom-pink)"
       data-button-bg="var(--custom-pink)"
       data-button-text="var(--custom-blue)"
-      data-nav-text="var(--custom-pink)"
+      data-navbar-text="var(--custom-pink)"
     >
       {/* Title Section */}
       <div className="title-container relative left-4 md:left-8 lg:left-8 2xl:left-20 z-10">
         <div className="overflow-hidden inline-block">
-          <h1 className={getTitleClasses()}>
+          <h1 ref={titleRef} className={getTitleClasses()}>
             {Array.from("SELECTED WORKS").map((letter, index) => (
               <span key={index} className="title-letter inline-block">
                 {letter === " " ? "\u00A0" : letter}
@@ -262,9 +271,10 @@ const SelectedWorks = () => {
         {/* Right Scrolling Images with Details - Full width on mobile */}
         <div className="image-section w-full md:w-1/2">
           <div className="images space-y-20 px-8 md:px-6 lg:px-6 md:pr-16 pb-20">
-            {projects.map((project) => (
+            {projects.map((project, index) => (
               <div
                 key={project.id}
+                ref={(el) => (projectRefs.current[index] = el)}
                 className="scroll-item space-y-6 border-custom-pink pb-8 cursor-pointer transition-transform hover:scale-[1.02] duration-300"
                 // onClick={() => handleProjectClick(project.route)}
               >

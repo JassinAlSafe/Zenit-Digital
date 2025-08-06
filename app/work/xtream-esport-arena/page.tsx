@@ -52,7 +52,7 @@ const XtreamEsportArenaPage = () => {
       data-text="var(--custom-pink)"
       data-button-bg="var(--custom-pink)"
       data-button-text="white"
-      data-nav-text="var(--custom-pink)"
+      data-navbar-text="var(--custom-pink)"
     >
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-8 md:px-16 lg:px-20 2xl:px-32">

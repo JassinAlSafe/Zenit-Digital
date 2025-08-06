@@ -87,7 +87,7 @@ const Testimonials = () => {
       data-text="var(--custom-green)"
       data-button-bg="white"
       data-button-text="var(--custom-green)"
-      data-nav-text="var(--custom-lightGreen)"
+      data-navbar-text="black"
     >
       <div className="pt-16 md:pt-16 pb-16 md:pb-16 space-y-12 md:space-y-24">
         <div className="container mx-auto flex w-full flex-col gap-6 gap-y-10 lg:flex-row xl:gap-[94px]">
@@ -99,7 +99,7 @@ const Testimonials = () => {
               </h2>
               <div className="mt-6 text-lg opacity-70 font-extraLight">
                 See what our clients have to say about their experience working
-                with us and the results they've achieved.
+                with us and the results they&apos;ve achieved.
               </div>
             </div>
 
@@ -186,7 +186,7 @@ const Testimonials = () => {
                   className="flex transition-all duration-500 ease-in-out h-full"
                   style={{ transform: `translateX(${translateX}px)` }}
                 >
-                  {testimonials.map((testimonial, index) => (
+                  {testimonials.map((testimonial) => (
                     <div
                       key={testimonial.id}
                       className="!h-full flex-shrink-0"

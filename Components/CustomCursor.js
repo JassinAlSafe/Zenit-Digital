@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import { gsap } from "gsap";
 import { useCursor } from "../utils/CursorContext";
 
-const CustomCursor = () => {
+const CustomCursor = memo(() => {
   const cursorRef = useRef(null);
   const followerRef = useRef(null);
   const { cursorType } = useCursor();
@@ -278,6 +278,8 @@ const CustomCursor = () => {
       ></div>
     </>
   );
-};
+});
+
+CustomCursor.displayName = 'CustomCursor';
 
 export default CustomCursor;

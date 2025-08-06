@@ -12,7 +12,6 @@ const CustomCursor = dynamic(() => import("./CustomCursor"), {
 
 export default function ClientCursorWrapper() {
   const [isClient, setIsClient] = useState(false);
-  const [hasMoved, setHasMoved] = useState(false);
 
   // Only render the cursor after client-side hydration to prevent flickering
   useEffect(() => {
@@ -25,20 +24,7 @@ export default function ClientCursorWrapper() {
     // Only enable cursor on non-touch devices
     if (!isTouchDevice) {
       setIsClient(true);
-
-      // Listen for the first mouse movement to prevent initial flashing
-      const handleFirstMove = () => {
-        setHasMoved(true);
-        window.removeEventListener("mousemove", handleFirstMove);
-      };
-
-      window.addEventListener("mousemove", handleFirstMove, { once: true });
     }
-
-    // Cleanup listener if component unmounts before first move
-    return () => {
-      window.removeEventListener("mousemove", setHasMoved);
-    };
   }, []);
 
   // Only render the cursor if:

@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AboutSection from "../Components/AboutSection";
 import StackedCardsContainer from "../Components/SectionsContainer";
+import PackagesSection from "../Components/Services/PackagesSection";
 import Test from "../Components/test";
 import Footer from "../Components/Footer";
 import TextScroll from "../Components/TextScroll";
@@ -11,19 +12,20 @@ import Cookiebot from "../Components/Cookiebot";
 
 import TestHeader from "../Components/TestHeader";
 import Strategy from "../Components/Strategy";
+import { useLoadingState } from "../hooks/useLoadingState";
+// import Home from "../Components/Home";
 import Image from "next/image";
 
 export default function Page() {
-  // Add loading state
-  const [loading, setLoading] = useState(true);
-  const [contentReady, setContentReady] = useState(false);
+  const { 
+    isLoading, 
+    isContentReady, 
+    startContentAnimation, 
+    hideLoadingScreen 
+  } = useLoadingState();
+  
   const pageContentRef = useRef(null);
   const loadingScreenRef = useRef(null);
-
-  // This function will be called by TestHeader when its animations start
-  const handleContentAnimationStart = () => {
-    setContentReady(true);
-  };
 
   // Add this useEffect to handle page refresh on back navigation
   useEffect(() => {
@@ -56,77 +58,75 @@ export default function Page() {
     // Register GSAP plugins inside useEffect to ensure it only runs client-side
     gsap.registerPlugin(ScrollTrigger);
 
-    // Initial loading animation - simplified to just show the logo
-    const tl = gsap.timeline();
-
-    // Create a function to hide the loading screen
-    const hideLoadingScreen = () => {
-      const exitTl = gsap.timeline({
-        onComplete: () => {
-          // Set loading to false once animation completes to remove from DOM
-          setLoading(false);
-        },
+    // Create GSAP context for proper cleanup
+    const ctx = gsap.context(() => {
+      // Initial loading animation - smooth logo entrance
+      const loadingTl = gsap.timeline();
+      
+      // Set initial states for GPU-accelerated animations
+      gsap.set(".loading-logo", { 
+        scale: 0.6, 
+        opacity: 0, 
+        rotation: -10,
+        transformOrigin: "center center"
       });
-
-      exitTl
-        .to(".loading-screen", {
-          opacity: 0,
-          duration: 0.5,
-          ease: "power2.inOut",
+      
+      gsap.set(".loading-progress", { 
+        opacity: 0, 
+        y: 20 
+      });
+      
+      // Smooth logo entrance animation
+      loadingTl
+        .to(".loading-logo", {
+          scale: 1,
+          opacity: 1,
+          rotation: 0,
+          duration: 1.2,
+          ease: "elastic.out(1, 0.6)",
         })
-        .to(".loading-screen", {
-          y: "-100%",
-          duration: 0.8,
-          ease: "power3.inOut",
-        });
-    };
-
-    // Setup scroll triggers
-    const sections = document.querySelectorAll(
-      "section:not(.selected-works-section):not(.services-section)"
-    );
-
-    const scrollTriggers: ScrollTrigger[] = [];
-
-    sections.forEach((section, index) => {
-      const bgColor = section.getAttribute("data-bg") || "white";
-      const textColor = section.getAttribute("data-text") || "black";
-
-      const trigger = ScrollTrigger.create({
-        trigger: section,
-        start: "top center",
-        end: "bottom center",
-        onEnter: () => {
-          document.body.style.backgroundColor = bgColor;
-          document.body.style.color = textColor;
-        },
-        onLeaveBack: () => {
-          const prevSection = sections[index - 1];
-          const prevBgColor = prevSection?.getAttribute("data-bg") || "white";
-          const prevTextColor =
-            prevSection?.getAttribute("data-text") || "black";
-
-          document.body.style.backgroundColor = prevBgColor;
-          document.body.style.color = prevTextColor;
-        },
-      });
-
-      scrollTriggers.push(trigger);
+        .to(".loading-progress", {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power2.out",
+        }, "-=0.4")
+        .to(".loading-progress-bar", {
+          x: "0%",
+          duration: 2,
+          ease: "power2.inOut",
+          repeat: -1,
+          yoyo: true,
+        }, "-=0.2")
+        .to(".loading-logo", {
+          scale: 1.05,
+          duration: 0.3,
+          ease: "power2.inOut",
+          yoyo: true,
+          repeat: -1,
+        }, "-=1.5");
     });
+
+    // Note: hideLoadingScreenWithAnimation is now defined outside useEffect
+
+    // Note: ScrollTrigger color management has been consolidated into Navbar.js
+    // for better performance and to avoid conflicts between multiple systems.
+    // Body background colors are now handled by the unified ScrollTrigger in Navbar.js
+    
+    const scrollTriggers: ScrollTrigger[] = [];
 
     // Event listener for document load complete (fallback)
     const handleLoad = () => {
       // Make sure all resources are loaded
       if (document.readyState === "complete") {
-        // If content isn't ready yet (TestHeader animation hasn't started),
-        // we'll still hide loading screen after a maximum wait time (4 seconds)
-        if (!contentReady) {
-          const timer = setTimeout(() => {
-            if (!contentReady) {
-              hideLoadingScreen();
+        // If content isn't ready yet (TestHeader animation hasn't completed),
+        // we'll still hide loading screen after a maximum wait time (6 seconds)
+        if (!isContentReady) {
+          setTimeout(() => {
+            if (!isContentReady) {
+              hideLoadingScreenWithAnimation();
             }
-          }, 4000);
-          return () => clearTimeout(timer);
+          }, 6000);
         }
       }
     };
@@ -140,41 +140,60 @@ export default function Page() {
       scrollTriggers.forEach((trigger) => {
         if (trigger) trigger.kill();
       });
-      // Kill the timeline if it exists
-      if (tl) tl.kill();
+      // Clean up GSAP context
+      ctx.revert();
     };
-  }, [contentReady]);
+  }, [isContentReady, hideLoadingScreen]);
+
+  // Define hideLoadingScreenWithAnimation function
+  const hideLoadingScreenWithAnimation = () => {
+    const exitTl = gsap.timeline({
+      onComplete: () => {
+        hideLoadingScreen();
+      },
+    });
+
+    // Smooth, sequenced exit animation
+    exitTl
+      .to(".loading-progress-bar", {
+        x: "100%",
+        duration: 0.3,
+        ease: "power2.inOut",
+      })
+      .to([".loading-progress", ".loading-logo"], {
+        scale: 0.8,
+        opacity: 0.7,
+        y: -10,
+        duration: 0.4,
+        ease: "power2.in",
+        stagger: 0.1,
+      }, "-=0.1")
+      .to(".loading-screen", {
+        opacity: 0,
+        duration: 0.6,
+        ease: "power2.inOut",
+      }, "-=0.2")
+      .to(".loading-screen", {
+        y: "-100%",
+        duration: 1,
+        ease: "power3.inOut",
+      }, "-=0.3");
+  };
 
   // When contentReady changes to true, hide the loading screen
   useEffect(() => {
-    if (contentReady && loading) {
-      const exitTl = gsap.timeline({
-        onComplete: () => {
-          setLoading(false);
-        },
-      });
-
-      exitTl
-        .to([".loading-screen", ".loading-content", ".loading-logo"], {
-          opacity: 0,
-          duration: 0.5,
-          ease: "power2.inOut",
-        })
-        .to(".loading-screen", {
-          y: "-100%",
-          duration: 0.8,
-          ease: "power3.inOut",
-        });
+    if (isContentReady && isLoading) {
+      hideLoadingScreenWithAnimation();
     }
-  }, [contentReady, loading]);
+  }, [isContentReady, isLoading, hideLoadingScreen]);
 
   return (
     <main>
       {/* Loading Screen with base64 encoded SVG for immediate display */}
-      {loading && (
+      {isLoading && (
         <div
           ref={loadingScreenRef}
-          className="loading-screen fixed top-0 left-0 w-full h-full bg-[#161616] z-50 flex items-center justify-center"
+          className="loading-screen fixed top-0 left-0 w-full h-full bg-[#161616] z-50 flex flex-col items-center justify-center"
         >
           {/* 
             This img tag uses a base64-encoded SVG that's embedded directly in the HTML
@@ -189,19 +208,36 @@ export default function Page() {
             priority
             style={{ width: "auto", height: "32px" }}
           />
+          
+          {/* Subtle loading indicator */}
+          <div className="loading-progress mt-8 w-24 h-[1px] bg-gray-700 relative overflow-hidden">
+            <div className="loading-progress-bar absolute top-0 left-0 h-full w-full bg-white transform -translate-x-full"></div>
+          </div>
         </div>
       )}
 
-      <div ref={pageContentRef} className={loading ? "invisible" : "visible"}>
+      <div ref={pageContentRef} className={isLoading ? "invisible" : "visible"}>
         <Cookiebot />
         {/* <HeaderLogo /> */}
-        <TestHeader onAnimationStart={handleContentAnimationStart} />
+        <TestHeader onAnimationStart={startContentAnimation} />
         <AboutSection />
 
         {/* Replace individual sections with the stacked container */}
         <StackedCardsContainer />
 
-        {/* <TextScroll /> */}
+        {/* Packages and Bundles Section */}
+        <section
+          className="bg-white"
+          data-bg="white"
+          data-text="black"
+          data-button-bg="var(--custom-blue)"
+          data-button-text="white"
+          data-navbar-text="black"
+        >
+          <PackagesSection />
+        </section>
+
+        <TextScroll />
         {/* <Testimonials /> */}
         {/* <Test /> */}
         <Strategy/>

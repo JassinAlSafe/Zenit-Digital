@@ -12,6 +12,8 @@ const TestHeader = ({ onAnimationStart }) => {
   
   // State for scroll position
   const [scrollY, setScrollY] = useState(0);
+  // State to store the video source
+  const [videoSrc, setVideoSrc] = useState("/airplane.mov");
   
   // State to detect Windows for platform-specific adjustments
   const [isWindows, setIsWindows] = useState(false);
@@ -41,9 +43,9 @@ const TestHeader = ({ onAnimationStart }) => {
     
     // Create a single timeline for all animations
     const tl = gsap.timeline({
-      onStart: () => {
-        // Notify parent component that animation has started
-        if (onAnimationStart && typeof onAnimationStart === 'function') {
+      onComplete: () => {
+        // Notify parent component that animation has completed
+        if (onAnimationStart && typeof onAnimationStart === "function") {
           onAnimationStart();
         }
       }

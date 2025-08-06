@@ -9,6 +9,7 @@ import EnvironmentInfo from "../Components/EnvironmentInfo";
 import GsapInitializer from "../Components/GsapInitializer";
 import { FontProvider } from "../Components/FontProvider";
 import NavigationHandler from "../Components/NavigationHandler";
+import BrowserCompatInit from "../Components/BrowserCompatInit";
 import { metadata, viewport } from "./metadata";
 
 export { metadata, viewport };
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body>
         <OSProvider>
           <FontProvider>
+            <BrowserCompatInit />
             <NavigationHandler />
             <Fonts />
             <EnvironmentInfo />

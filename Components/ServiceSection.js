@@ -3,7 +3,6 @@ import { useEffect, useRef } from "react";
 
 export default function ServiceSection({
   children,
-  index,
   title,
   subtitle = "",
   backgroundColor = "black",
@@ -24,13 +23,14 @@ export default function ServiceSection({
       { threshold: 0.3 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const element = sectionRef.current;
+    if (element) {
+      observer.observe(element);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (element) {
+        observer.unobserve(element);
       }
     };
   }, []);

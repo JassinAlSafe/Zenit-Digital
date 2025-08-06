@@ -1,34 +1,21 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import MagneticButton from "./MagneticButton";
 import { useOS } from "../utils/OsProvider"; // Import the OS hook
 
-const Footer = () => {
+const Footer: React.FC = () => {
   // Create refs to store our animation instances
-  const footerScrollTriggers = useRef([]);
-  const footerTweens = useRef([]);
-  
-  // State to store the video source
-  const [videoSrc, setVideoSrc] = useState("");
+  const footerScrollTriggers = useRef<ScrollTrigger[]>([]);
+  const footerTweens = useRef<gsap.core.Tween[]>([]);
   
   const { isWindows, isDetected } = useOS(); // Use the OS hook
+  
+  // Set video source (keep it simple for now)
+  const videoSrc = "/globe.mov";
 
-  // Function to detect Safari browser
-  const isSafari = () => {
-    if (typeof window === "undefined") return false;
-    const userAgent = window.navigator.userAgent;
-    const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(userAgent);
-    return isSafariBrowser;
-  };
-
-  useEffect(() => {
-    // Set video source based on browser
-    const videoFormat = isSafari() ? "/globe.mov" : "/globe.webm";
-    setVideoSrc(videoFormat);
-  }, []);
 
   useEffect(() => {
     // Ensure this runs only on client side
@@ -259,11 +246,11 @@ const Footer = () => {
       {/* "Let's Make It Happen" Section */}
       <section
         className="make-it-happen-section py-10 bg-custom-pink"
-        data-bg="white"
-        data-text="black"
+        data-bg="var(--custom-pink)"
+        data-text="var(--custom-blue)"
         data-button-bg="var(--custom-blue)"
-        data-button-text="var(--custom-pink)"
-        data-nav-text="var(--custom-blue)"
+        data-button-text="white"
+        data-navbar-text="var(--custom-blue)"
       >
         <div className="flex flex-col justify-center items-center min-h-screen bg-custom-pink py-20 relative mx-auto max-w-7xl rounded-sm">
           <p className="text-white mb-4 font-medium">- Change starts here -</p>
@@ -293,7 +280,7 @@ const Footer = () => {
 
           <Link href="/booking">
             <MagneticButton
-              className="bg-custom-blue hover:bg-custom-blue/100 text-white rounded-full px-7 py-5 text-lg transition-colors flex items-center relative z-30"
+              className="bg-custom-blue hover:bg-custom-dark-blue text-white rounded-full px-7 py-5 text-lg transition-colors flex items-center relative z-30"
               magneticStrength={0.5}
             >
               BOOK A CALL
@@ -315,7 +302,7 @@ const Footer = () => {
 
           {/* Working Globally Section - with MP4 video replacing the globe emoji */}
           <div className="absolute bottom-8 left-8 flex justify-end items-center">
-            <div className="w-12 h-12 border bg-custom-blue border-custom-pink rounded-full flex items-center justify-center mr-4 overflow-hidden">
+            <div className="w-12 h-12 border bg-custom-blue border-white rounded-full flex items-center justify-center mr-4 overflow-hidden">
               <video
                 autoPlay
                 loop
