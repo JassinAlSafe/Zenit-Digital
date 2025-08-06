@@ -109,17 +109,17 @@ const Footer: React.FC = () => {
     <>
       {/* "Let's Make It Happen" Section */}
       <section
-        className="make-it-happen-section py-10 bg-custom-lightGreen"
-        data-bg="white"
-        data-text="black"
-        data-button-bg="var(--custom-green)"
-        data-button-text="var(--custom-lightGreen)"
-        data-navbar-text="black"
+        className="make-it-happen-section py-10 bg-custom-pink"
+        data-bg="var(--custom-pink)"
+        data-text="var(--custom-blue)"
+        data-button-bg="var(--custom-blue)"
+        data-button-text="white"
+        data-navbar-text="var(--custom-blue)"
       >
-        <div className="flex flex-col justify-center items-center min-h-screen bg-custom-lightGreen py-20 relative mx-auto max-w-7xl rounded-sm">
+        <div className="flex flex-col justify-center items-center min-h-screen bg-custom-pink py-20 relative mx-auto max-w-7xl rounded-sm">
           <p className="text-white mb-4 font-medium">- Change starts here -</p>
 
-          <h1 className="text-6xl md:text-8xl lg:text-9xl 2xl:text-[10rem] font-bold mb-12 text-center text-custom-green leading-tight">
+          <h1 className="text-6xl md:text-8xl lg:text-9xl 2xl:text-[10rem] font-bold mb-12 text-center text-custom-blue leading-tight">
             <div className="overflow-hidden">
               {Array.from("LET'S MAKE").map((letter, index) => (
                 <span
@@ -144,7 +144,7 @@ const Footer: React.FC = () => {
 
           <Link href="/booking">
             <MagneticButton
-              className="bg-custom-green hover:bg-[#135050] text-white rounded-full px-7 py-5 text-lg transition-colors flex items-center relative z-30"
+              className="bg-custom-blue hover:bg-custom-dark-blue text-white rounded-full px-7 py-5 text-lg transition-colors flex items-center relative z-30"
               magneticStrength={0.5}
             >
               BOOK A CALL
@@ -166,7 +166,7 @@ const Footer: React.FC = () => {
 
           {/* Working Globally Section - with MP4 video replacing the globe emoji */}
           <div className="absolute bottom-8 left-8 flex justify-end items-center">
-            <div className="w-12 h-12 border bg-custom-green border-custom-lightGreen rounded-full flex items-center justify-center mr-4 overflow-hidden">
+            <div className="w-12 h-12 border bg-custom-blue border-white rounded-full flex items-center justify-center mr-4 overflow-hidden">
               {videoSrc && (
                 <video
                   autoPlay
@@ -181,7 +181,7 @@ const Footer: React.FC = () => {
               )}
             </div>
             <div>
-              <p className="text-sm  2xl:text-xl text-custom-green">
+              <p className="text-sm  2xl:text-xl text-custom-blue">
                 Working Globally
               </p>
               <p className="text-sm font-normal text-white">Based in Sweden</p>

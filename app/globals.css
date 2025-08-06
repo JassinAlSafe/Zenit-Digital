@@ -3,16 +3,16 @@
 @tailwind utilities;
 
 :root {
-  --background: #0e0e0e; /* dark background from screenshot */
+  --background: #061b29; /* Updated to new dark blue */
   --foreground: #eaeaea; /* off-white foreground text from screenshot */
-  --custom-blue: #00002e;
-  --custom-pink: #a494f3;
+  --custom-blue: #061b29; /* New dark blue */
+  --custom-pink: #82a4ff; /* New light blue accent */
   --custom-green: #09282a;
   --custom-lightGreen: #0fb190;
 
   /* Darker variants for hover effects */
-  --custom-dark-blue: #000020;
-  --custom-dark-pink: #8a7ce8;
+  --custom-dark-blue: #041221; /* Darker version of new blue */
+  --custom-dark-pink: #6b8fff; /* Darker version of new light blue */
 
   /* Accessible color variants for better contrast */
   --custom-lightGreen-dark: #0a8a6b; /* Darker version for better contrast on light backgrounds */
@@ -24,7 +24,7 @@
   --secondary-75: #f2f4f7;
   --secondary-200: #e5e7eb;
   --secondary-300: #333333;
-  --secondary-400: #0e0e0e;
+  --secondary-400: #061B29;
 
   /* Accent colors */
   --accent-400: #eaeaea;
@@ -33,7 +33,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0e0e0e; /* Updated to match the dark background */
+    --background: #061b29; /* Updated to new dark blue */
     --foreground: #eaeaea; /* Updated to match the off-white text */
   }
 }
@@ -45,6 +45,10 @@ body {
   background: var(--background);
   transition: background-color 0.5s ease, color 0.5s ease;
   cursor: none; /* Hide default cursor when our custom cursor is active */
+  overflow-x: hidden; /* Prevent horizontal overflow on large text elements */
+  max-width: 100vw; /* Ensure body never exceeds viewport width */
+  -webkit-font-smoothing: antialiased; /* Better font rendering on Safari/Chrome */
+  -moz-osx-font-smoothing: grayscale; /* Better font rendering on Firefox Mac */
 }
 
 /* Make sure all interactive elements have consistent cursor behavior */
@@ -125,6 +129,8 @@ input[type="submit"] *,
 html {
   scroll-behavior: smooth;
   height: 100%;
+  -webkit-text-size-adjust: 100%; /* Prevent text size adjust on iOS */
+  -ms-text-size-adjust: 100%; /* Prevent text size adjust on Windows Phone */
 }
 
 html,

@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AboutSection from "../Components/AboutSection";
 import StackedCardsContainer from "../Components/SectionsContainer";
+import PackagesSection from "../Components/Services/PackagesSection";
 import Test from "../Components/test";
 import Footer from "../Components/Footer";
 import TextScroll from "../Components/TextScroll";
@@ -221,6 +222,18 @@ export default function Page() {
 
         {/* Replace individual sections with the stacked container */}
         <StackedCardsContainer />
+
+        {/* Packages and Bundles Section */}
+        <section
+          className="bg-white"
+          data-bg="white"
+          data-text="black"
+          data-button-bg="var(--custom-blue)"
+          data-button-text="white"
+          data-navbar-text="black"
+        >
+          <PackagesSection />
+        </section>
 
         <TextScroll />
         {/* <Testimonials /> */}

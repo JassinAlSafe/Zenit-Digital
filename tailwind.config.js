@@ -11,8 +11,8 @@ module.exports = {
         xs: { max: "400px" }, // Custom small breakpoint
       },
       colors: {
-        "custom-blue": "#00002E",
-        "custom-pink": "#A494F3",
+        "custom-blue": "#061B29",
+        "custom-pink": "#82A4FF",
         "custom-green": "#09282A",
         "custom-lightGreen": "#0FB190",
         background: "var(--background)",
@@ -22,7 +22,7 @@ module.exports = {
           75: "#f2f4f7",
           200: "#e5e7eb",
           300: "#333333",
-          400: "#0e0e0e",
+          400: "#061B29",
         },
         accent: {
           400: "#eaeaea",
