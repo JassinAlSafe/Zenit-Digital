@@ -18,33 +18,33 @@ const Strategy = () => {
   const services = [
     {
       icon: <Zap className="w-6 h-6" />,
-      title: "Strategie",
-      description: "Op basis van jouw energiedata maken we de uitdagingen en mogelijkheden zichtbaar. Als jouw energiestrategie partner blijven we actief meedenken, want iedere energiestrategie is uniek en dynamisch."
+      title: "Strategy",
+      description: "We analyze your startup's vision and market position to create a comprehensive digital strategy. Every startup is unique, and we craft tailored approaches that align with your goals and industry dynamics."
     },
     {
       icon: <Palette className="w-6 h-6" />,
-      title: "Ontwerp",
-      description: "Jouw data zorgt voor inzicht in de te nemen maatregelen. Tijdens het ontwerpproces ontvouwt zich een concrete oplossing. Gedetailleerd uitgewerkt én praktisch haalbaar."
+      title: "Design",
+      description: "User-centered design that transforms your ideas into intuitive digital experiences. Our design process focuses on creating solutions that are both visually stunning and functionally excellent."
     },
     {
       icon: <Wrench className="w-6 h-6" />,
-      title: "Realisatie",
-      description: "Vakkundige monteurs zorgen voor een plan dat werkt, perfect volgens het ontwerp. Merkonfhankelijke en betrouwbare installaties van onder andere zonnepanelen en batterijen."
+      title: "Development",
+      description: "Expert developers bring your vision to life using cutting-edge technologies. We build scalable, secure, and high-performance applications that grow with your startup."
     },
     {
       icon: <BarChart3 className="w-6 h-6" />,
-      title: "Monitoring",
-      description: "We houden jouw installatie in topvorm door actieve monitoring van data. Real-time monitoring en regelmatige controles zorgen voor maximale efficiëntie."
+      title: "Launch",
+      description: "Strategic market entry with comprehensive launch support. We ensure your product reaches the right audience with maximum impact through targeted marketing and growth strategies."
     },
     {
       icon: <Zap className="w-6 h-6" />,
-      title: "Onderhoud",
-      description: "Regelmatig onderhoud houdt jouw energiesysteem in optimale conditie. Onze specialisten voeren preventieve controles uit en lossen eventuele problemen snel op."
+      title: "Scale",
+      description: "Post-launch optimization and scaling strategies to accelerate your growth. We monitor performance, gather user feedback, and implement improvements to maximize your success."
     },
     {
       icon: <BarChart3 className="w-6 h-6" />,
-      title: "Optimalisatie",
-      description: "Continue verbetering van jouw energieprestaties door data-analyse en technische aanpassingen. We zorgen ervoor dat je installatie altijd op maximale efficiëntie draait."
+      title: "Support",
+      description: "Ongoing technical support and strategic guidance as your startup evolves. We're your long-term partner, ensuring your digital solutions continue to drive business growth."
     }
   ];
 
@@ -52,10 +52,20 @@ const Strategy = () => {
     <div className="bg-white min-h-screen py-16">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Our Strategy
-          </h1>
+        <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-16 mb-16">
+          {/* Title */}
+          <div className="lg:w-1/2">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light text-gray-900 leading-tight">
+              Our Strategy
+            </h1>
+          </div>
+
+          {/* Description */}
+          <div className="lg:w-1/2 lg:-mt-2 xl:-mt-1">
+            <p className="text-lg md:text-xl lg:text-2xl text-gray-700 leading-relaxed">
+              Our proven methodology takes your startup from concept to market through strategic planning and expert execution
+            </p>
+          </div>
         </div>
       </div>
 
@@ -110,7 +120,7 @@ const Strategy = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           {/* CTA Button */}
           <button className="bg-white border border-gray-300 text-gray-900 px-6 py-3 rounded-full font-medium hover:bg-gray-50 transition-colors duration-200 mb-6 md:mb-0">
-            Kom meer te weten
+            Learn More
           </button>
 
           {/* Navigation Arrows */}

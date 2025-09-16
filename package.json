@@ -12,6 +12,7 @@
     "clear-cache": "rm -rf .next && npm cache clean --force"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@heroicons/react": "^2.2.0",
     "@sendgrid/mail": "^8.1.5",
     "@tailwindcss/typography": "^0.5.16",
@@ -21,7 +22,8 @@
     "lucide-react": "^0.508.0",
     "next": "15.0.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "smoothscroll-polyfill": "^0.4.4"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",

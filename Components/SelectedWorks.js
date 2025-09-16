@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { gsap, setupGSAP, ANIMATION_CONFIG, createScrollTrigger } from "../utils/gsap";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useOS } from "../utils/OsProvider"; // Import the OS hook
@@ -44,51 +45,72 @@ const SelectedWorks = () => {
   const projectRefs = useRef([]);
 
   useEffect(() => {
-    // Setup GSAP in this component (per GSAP best practices)
-    setupGSAP();
+    // Register GSAP plugins
+    if (typeof window !== "undefined") {
+      gsap.registerPlugin(ScrollTrigger);
+    }
     
     // Track ScrollTriggers for cleanup
     const scrollTriggers = [];
     
-    if (typeof window !== "undefined" && titleRef.current && sectionRef.current) {
-      const titleLetters = titleRef.current.querySelectorAll(".title-letter");
+    // Add a small delay to ensure DOM elements are fully rendered
+    const setupAnimations = () => {
+      if (typeof window !== "undefined" && titleRef.current && sectionRef.current) {
+        const titleLetters = titleRef.current.querySelectorAll(".title-letter");
 
-      // IMPORTANT: Remove all GSAP setup for the section itself
-      // This will now be handled by the parent container
+        // Title animation only
+        if (titleLetters.length > 0) {
+          gsap.set(titleLetters, { y: 160 });
+          gsap.to(titleLetters, {
+            y: 0,
+            duration: 1,
+            stagger: 0.04,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 80%",
+              toggleActions: "play none none none",
+            },
+          });
+        }
 
-      // Title animation only
-      if (titleLetters.length > 0) {
-        gsap.set(titleLetters, { y: ANIMATION_CONFIG.offsets.letterReveal });
-        gsap.to(titleLetters, {
-          y: 0,
-          duration: ANIMATION_CONFIG.durations.normal,
-          stagger: ANIMATION_CONFIG.durations.letterStagger,
-          ease: ANIMATION_CONFIG.ease.power3,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: ANIMATION_CONFIG.scrollTrigger.start,
-            toggleActions: "play none none none",
-          },
+        // Update current image based on scroll position - using standard ScrollTrigger
+        projects.forEach((project, index) => {
+          const projectElement = projectRefs.current[index];
+          console.log(`Setting up trigger for project ${index + 1}`, projectElement);
+          if (projectElement) {
+            const trigger = ScrollTrigger.create({
+              trigger: projectElement,
+              start: "top 60%",
+              end: "bottom 40%", 
+              onEnter: () => {
+                console.log(`✅ Entering project ${index + 1}`);
+                setCurrentImage(index + 1);
+              },
+              onEnterBack: () => {
+                console.log(`⬆️ Entering back project ${index + 1}`);
+                setCurrentImage(index + 1);
+              },
+              onLeave: () => {
+                console.log(`❌ Leaving project ${index + 1}`);
+              },
+              onLeaveBack: () => {
+                console.log(`⬇️ Leaving back project ${index + 1}`);
+              },
+              markers: false, // Set to true for debugging
+            });
+            scrollTriggers.push(trigger);
+          }
         });
       }
+    };
 
-      // Update current image based on scroll position
-      projects.forEach((project, index) => {
-        const projectElement = projectRefs.current[index];
-        if (projectElement) {
-          createScrollTrigger({
-            trigger: projectElement,
-            start: ANIMATION_CONFIG.scrollTrigger.centerStart,
-            end: ANIMATION_CONFIG.scrollTrigger.centerEnd,
-            onEnter: () => setCurrentImage(index + 1),
-            onEnterBack: () => setCurrentImage(index + 1),
-          }, scrollTriggers);
-        }
-      });
-    }
+    // Setup animations after a small delay to ensure DOM is ready
+    const timeoutId = setTimeout(setupAnimations, 100);
     
     // Cleanup function per React best practices
     return () => {
+      clearTimeout(timeoutId);
       scrollTriggers.forEach(trigger => trigger.kill());
     };
   }, []);

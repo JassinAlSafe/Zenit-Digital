@@ -3,6 +3,7 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Link from "next/link";
 import Image from "next/image";
 
 const PackagesSection = () => {
@@ -73,11 +74,15 @@ const PackagesSection = () => {
 
         imagesRef.current.forEach((image, index) => {
           if (image) {
-            imagesTl.from(
+            // Set initial state - hidden for animation
+            gsap.set(image, { y: 50, opacity: 0 });
+            
+            // Animate images in with stagger
+            imagesTl.to(
               image,
               {
-                y: 60,
-                opacity: 0,
+                y: 0,
+                opacity: 1,
                 duration: 0.8,
                 ease: "power3.out",
               },
@@ -103,9 +108,9 @@ const PackagesSection = () => {
       className="packages-section px-4 md:px-8 max-w-7xl mx-auto py-24 md:py-32 bg-white"
     >
       {/* Header Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-16 md:mb-24">
+      <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-16 mb-16 md:mb-24">
         {/* Title */}
-        <div ref={titleRef} className="flex items-start">
+        <div ref={titleRef} className="lg:w-1/2">
           <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light text-black leading-tight">
             Our Packages and
             <br />
@@ -114,7 +119,7 @@ const PackagesSection = () => {
         </div>
 
         {/* Description */}
-        <div ref={descriptionRef} className="flex items-center">
+        <div ref={descriptionRef} className="lg:w-1/2 lg:-mt-2 xl:-mt-1">
           <p className="text-lg md:text-xl lg:text-2xl text-gray-700 leading-relaxed">
             These packages are made tailored to your startup needs from
             sketching an idea to realising the MVP
@@ -129,7 +134,7 @@ const PackagesSection = () => {
           {/* Mobile App Showcase */}
           <div
             ref={(el) => (imagesRef.current[0] = el)}
-            className="relative aspect-[4/3] bg-gradient-to-br from-blue-400 via-purple-500 to-blue-600 rounded-2xl md:rounded-3xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300"
+            className="relative aspect-[4/3] bg-gradient-to-br from-blue-400 via-purple-500 to-blue-600 rounded-2xl md:rounded-3xl overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
             <Image
@@ -141,12 +146,21 @@ const PackagesSection = () => {
             />
             <div className="absolute bottom-6 left-6 right-6">
               <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                <h3 className="text-white font-semibold text-lg mb-1">
+                <h3 className="text-white font-semibold text-lg mb-2">
                   Mobile Development
                 </h3>
-                <p className="text-white/90 text-sm">
-                  Native & Cross-Platform Apps
+                <p className="text-white/90 text-sm mb-3">
+                  Native & Cross-Platform Apps for iOS and Android
                 </p>
+                <Link 
+                  href="/services/product-design"
+                  className="inline-flex items-center bg-white/30 hover:bg-white/40 backdrop-blur-sm text-white text-sm font-medium px-3 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+                >
+                  Learn More
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
               </div>
             </div>
           </div>
@@ -154,7 +168,7 @@ const PackagesSection = () => {
           {/* Web Application Showcase */}
           <div
             ref={(el) => (imagesRef.current[1] = el)}
-            className="relative aspect-[4/3] bg-gray-100 rounded-2xl md:rounded-3xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300"
+            className="relative aspect-[4/3] bg-gray-100 rounded-2xl md:rounded-3xl overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent"></div>
             <Image
@@ -166,10 +180,21 @@ const PackagesSection = () => {
             />
             <div className="absolute bottom-6 left-6 right-6">
               <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <h3 className="text-gray-900 font-semibold text-lg mb-1">
+                <h3 className="text-gray-900 font-semibold text-lg mb-2">
                   Web Development
                 </h3>
-                <p className="text-gray-700 text-sm">Modern Web Applications</p>
+                <p className="text-gray-700 text-sm mb-3">
+                  Modern Web Applications & Progressive Web Apps
+                </p>
+                <Link 
+                  href="/services/product-design"
+                  className="inline-flex items-center bg-gray-900/80 hover:bg-gray-900 backdrop-blur-sm text-white text-sm font-medium px-3 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+                >
+                  Learn More
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
               </div>
             </div>
           </div>
@@ -178,7 +203,7 @@ const PackagesSection = () => {
         {/* Bottom Row - Full Width Image */}
         <div
           ref={(el) => (imagesRef.current[2] = el)}
-          className="relative aspect-[16/9] md:aspect-[21/9] bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 rounded-2xl md:rounded-3xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300"
+          className="relative aspect-[16/9] md:aspect-[21/9] bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 rounded-2xl md:rounded-3xl overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300"
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           <Image
@@ -188,14 +213,23 @@ const PackagesSection = () => {
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             sizes="100vw"
           />
-          <div className="absolute bottom-6 left-6 right-6">
+          <div className="absolute bottom-6 left-6 right-6 md:bottom-8 md:left-8 md:right-8">
             <div className="bg-white/15 backdrop-blur-sm rounded-xl p-6 border border-white/10">
               <h3 className="text-white font-semibold text-xl md:text-2xl mb-2">
                 Full-Stack Solutions
               </h3>
-              <p className="text-white/90 text-base md:text-lg">
+              <p className="text-white/90 text-base md:text-lg mb-4">
                 Complete digital ecosystems across all platforms and devices
               </p>
+              <Link 
+                href="/services/full-stack-development"
+                className="inline-flex items-center bg-white/30 hover:bg-white/40 backdrop-blur-sm text-white text-sm md:text-base font-medium px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+              >
+                Learn More
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
             </div>
           </div>
         </div>
