@@ -2,6 +2,27 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { AnimationConfig, GSAPCleanupOptions } from "../types/components";
 
+// Global GSAP configuration - call once in your app
+export const configureGSAP = () => {
+  if (typeof window !== "undefined") {
+    // Configure GSAP's non-tween-related settings
+    gsap.config({
+      autoSleep: 60,
+      force3D: true,
+      nullTargetWarn: false,
+      trialWarn: false,
+      units: { left: "%", top: "%", rotation: "rad" }
+    });
+
+    // Set GSAP's global tween defaults
+    gsap.defaults({
+      duration: 1,
+      ease: "power2.out",
+      overwrite: "auto"
+    });
+  }
+};
+
 // GSAP setup utility - should be called in each component's useEffect
 export const setupGSAP = () => {
   if (typeof window !== "undefined") {
@@ -51,6 +72,56 @@ export const createScrollTrigger = (config: ScrollTrigger.Vars, triggersArray: S
   const trigger = ScrollTrigger.create(config);
   triggersArray.push(trigger);
   return trigger;
+};
+
+// Register custom GSAP effects for reuse
+export const registerCustomEffects = () => {
+  if (typeof window !== "undefined") {
+    // Custom fade effect with stagger
+    gsap.registerEffect({
+      name: "fadeReveal",
+      effect: (targets: any, config: any) => {
+        return gsap.to(targets, {
+          opacity: config.opacity || 1,
+          y: 0,
+          duration: config.duration || 1,
+          stagger: config.stagger || 0.1,
+          ease: config.ease || "power2.out",
+          overwrite: "auto",
+          force3D: true
+        });
+      },
+      defaults: { duration: 1, opacity: 1, stagger: 0.1 },
+      extendTimeline: true
+    });
+
+    // Custom magnetic effect
+    gsap.registerEffect({
+      name: "magneticHover",
+      effect: (targets: any, config: any) => {
+        return gsap.to(targets, {
+          x: config.x || 0,
+          y: config.y || 0,
+          scale: config.scale || 1.1,
+          duration: config.duration || 0.4,
+          ease: config.ease || "power2.out",
+          overwrite: "auto",
+          force3D: true
+        });
+      },
+      defaults: { duration: 0.4, scale: 1.1 },
+      extendTimeline: true
+    });
+  }
+};
+
+// Master GSAP initialization - call once in your app root
+export const initializeGSAP = () => {
+  if (typeof window !== "undefined") {
+    configureGSAP();
+    registerCustomEffects();
+    setupGSAP();
+  }
 };
 
 // Export for direct use

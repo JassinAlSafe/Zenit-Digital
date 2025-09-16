@@ -68,8 +68,18 @@ const TextReveal = memo(({
         gsap.to(letters, {
           y: 0,
           duration: duration,
-          stagger: staggerDelay,
+          delay: 0,
           ease: "power3.out",
+          stagger: staggerDelay,
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false,
+          onStart: () => {
+            // Animation started callback
+          },
+          onUpdate: function() {
+            // Progress tracking available here if needed
+          },
           onComplete: onComplete
         });
       },

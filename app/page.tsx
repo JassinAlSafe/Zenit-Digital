@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { initializeGSAP } from "../utils/gsap";
 import AboutSection from "../Components/AboutSection";
 import StackedCardsContainer from "../Components/SectionsContainer";
 import PackagesSection from "../Components/Services/PackagesSection";
@@ -55,8 +56,8 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    // Register GSAP plugins inside useEffect to ensure it only runs client-side
-    gsap.registerPlugin(ScrollTrigger);
+    // Initialize GSAP with global configuration and plugins
+    initializeGSAP();
 
     // Create GSAP context for proper cleanup
     const ctx = gsap.context(() => {
@@ -83,27 +84,54 @@ export default function Page() {
           opacity: 1,
           rotation: 0,
           duration: 1.2,
+          delay: 0,
           ease: "elastic.out(1, 0.6)",
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false,
+          onStart: () => {
+            // Logo animation started
+          },
+          onComplete: () => {
+            // Logo entrance complete
+          }
         })
         .to(".loading-progress", {
           opacity: 1,
           y: 0,
           duration: 0.6,
+          delay: 0,
           ease: "power2.out",
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false,
+          onComplete: () => {
+            // Progress animation complete
+          }
         }, "-=0.4")
         .to(".loading-progress-bar", {
           x: "0%",
           duration: 2,
+          delay: 0,
           ease: "power2.inOut",
           repeat: -1,
+          repeatDelay: 0,
           yoyo: true,
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false
         }, "-=0.2")
         .to(".loading-logo", {
           scale: 1.05,
           duration: 0.3,
+          delay: 0,
           ease: "power2.inOut",
           yoyo: true,
           repeat: -1,
+          repeatDelay: 0,
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false
         }, "-=1.5");
     });
 

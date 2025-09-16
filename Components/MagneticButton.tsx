@@ -37,7 +37,11 @@ const MagneticButton = memo<MagneticButtonProps>(({
         x: deltaX,
         y: deltaY,
         duration: 0.4,
+        delay: 0,
         ease: "power2.out",
+        overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
     };
 
@@ -45,7 +49,11 @@ const MagneticButton = memo<MagneticButtonProps>(({
       gsap.to(button, {
         scale: 1.1,
         duration: 0.3,
+        delay: 0,
         ease: "power2.out",
+        overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
     };
 
@@ -55,7 +63,11 @@ const MagneticButton = memo<MagneticButtonProps>(({
         y: 0,
         scale: 1,
         duration: 0.6,
+        delay: 0,
         ease: "elastic.out(1, 0.3)",
+        overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
     };
 

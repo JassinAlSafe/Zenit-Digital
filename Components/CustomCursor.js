@@ -31,8 +31,11 @@ const CustomCursor = memo(() => {
         x: clientX,
         y: clientY,
         duration: 0.1,
+        delay: 0,
         ease: "power1.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
 
       // Animate follower (delayed for trailing effect)
@@ -40,8 +43,11 @@ const CustomCursor = memo(() => {
         x: clientX,
         y: clientY,
         duration: 0.3,
+        delay: 0,
         ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
     };
 
@@ -50,8 +56,11 @@ const CustomCursor = memo(() => {
       gsap.to([cursor, follower], {
         opacity: 1,
         duration: 0.3,
+        delay: 0,
         ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
       moveCursor(e);
     };
@@ -61,15 +70,23 @@ const CustomCursor = memo(() => {
       gsap.to(cursor, {
         scale: 0.8,
         duration: 0.2,
+        delay: 0,
         backgroundColor: "#0FB190",
+        ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
       gsap.to(follower, {
         scale: 0.8,
         duration: 0.2,
+        delay: 0,
         borderColor: "#0FB190",
         borderWidth: 2,
+        ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
     };
 
@@ -77,15 +94,23 @@ const CustomCursor = memo(() => {
       gsap.to(cursor, {
         scale: 1,
         duration: 0.2,
+        delay: 0,
         backgroundColor: "rgba(164, 148, 243, 1)",
+        ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
       gsap.to(follower, {
         scale: 1,
         duration: 0.2,
+        delay: 0,
         borderColor: "rgba(164, 148, 243, 1)",
         borderWidth: 1,
+        ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
     };
 
@@ -102,15 +127,23 @@ const CustomCursor = memo(() => {
         height: 12,
         backgroundColor: "rgba(164, 148, 243, 0.8)",
         duration: 0.3,
+        delay: 0,
+        ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
 
       gsap.to(follower, {
         width: 40,
         height: 40,
         duration: 0.3,
+        delay: 0,
         borderColor: "rgba(164, 148, 243, 0.5)",
+        ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
 
       // Center on the button immediately instead of magnetic effect
@@ -118,7 +151,11 @@ const CustomCursor = memo(() => {
         x: centerX,
         y: centerY,
         duration: 0.2,
+        delay: 0,
+        ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
     };
 
@@ -129,7 +166,11 @@ const CustomCursor = memo(() => {
         height: 8,
         backgroundColor: "rgba(164, 148, 243, 1)",
         duration: 0.3,
+        delay: 0,
+        ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
 
       gsap.to(follower, {
@@ -137,7 +178,11 @@ const CustomCursor = memo(() => {
         height: 32,
         borderColor: "rgba(164, 148, 243, 1)",
         duration: 0.3,
+        delay: 0,
+        ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
     };
 
@@ -146,7 +191,11 @@ const CustomCursor = memo(() => {
       gsap.to([cursor, follower], {
         opacity: 0,
         duration: 0.3,
+        delay: 0,
+        ease: "power2.out",
         overwrite: "auto",
+        force3D: true,
+        immediateRender: true
       });
     };
 
@@ -196,14 +245,22 @@ const CustomCursor = memo(() => {
           height: 12,
           backgroundColor: "#0FB190",
           duration: 0.3,
+          delay: 0,
+          ease: "power2.out",
           overwrite: "auto",
+          force3D: true,
+          immediateRender: true
         });
         gsap.to(follower, {
           width: 40,
           height: 40,
           borderColor: "#0FB190",
           duration: 0.3,
+          delay: 0,
+          ease: "power2.out",
           overwrite: "auto",
+          force3D: true,
+          immediateRender: true
         });
         break;
 
@@ -214,12 +271,20 @@ const CustomCursor = memo(() => {
           borderRadius: "2px",
           backgroundColor: "#A494F3",
           duration: 0.3,
+          delay: 0,
+          ease: "power2.out",
           overwrite: "auto",
+          force3D: true,
+          immediateRender: true
         });
         gsap.to(follower, {
           opacity: 0.5,
           duration: 0.3,
+          delay: 0,
+          ease: "power2.out",
           overwrite: "auto",
+          force3D: true,
+          immediateRender: true
         });
         break;
 
@@ -229,7 +294,11 @@ const CustomCursor = memo(() => {
           height: 10,
           backgroundColor: "#A494F3",
           duration: 0.3,
+          delay: 0,
+          ease: "power2.out",
           overwrite: "auto",
+          force3D: true,
+          immediateRender: true
         });
         gsap.to(follower, {
           width: 36,
@@ -237,7 +306,11 @@ const CustomCursor = memo(() => {
           opacity: 0.7,
           borderColor: "#A494F3",
           duration: 0.3,
+          delay: 0,
+          ease: "power2.out",
           overwrite: "auto",
+          force3D: true,
+          immediateRender: true
         });
         break;
 
@@ -248,7 +321,11 @@ const CustomCursor = memo(() => {
           borderRadius: "50%",
           backgroundColor: "rgba(164, 148, 243, 1)",
           duration: 0.3,
+          delay: 0,
+          ease: "power2.out",
           overwrite: "auto",
+          force3D: true,
+          immediateRender: true
         });
         gsap.to(follower, {
           width: 32,
@@ -256,7 +333,11 @@ const CustomCursor = memo(() => {
           opacity: 1,
           borderColor: "rgba(164, 148, 243, 1)",
           duration: 0.3,
+          delay: 0,
+          ease: "power2.out",
           overwrite: "auto",
+          force3D: true,
+          immediateRender: true
         });
     }
   }, [cursorType]);
