@@ -41,31 +41,29 @@ const Footer: React.FC = () => {
         // Set initial state
         gsap.set(footerTitleLetters, { y: 160, opacity: 1 });
 
-        // Create animation for each letter
-        footerTitleLetters.forEach((letter, index) => {
-          const tween = gsap.to(letter, {
-            y: 0,
-            duration: 1,
-            ease: "power3.out",
-            delay: index * 0.04, // Manual stagger effect
-            paused: true, // Start paused so ScrollTrigger can control it
-          });
-
-          // Store the tween reference
-          footerTweens.current.push(tween);
-
-          // Create a separate ScrollTrigger for this section only
-          const trigger = ScrollTrigger.create({
-            trigger: section,
-            start: "top 80%",
-            onEnter: () => tween.play(),
-            once: true,
-            id: `footer-letter-${index}`, // Give it a unique ID
-          });
-
-          // Store the trigger reference
-          footerScrollTriggers.current.push(trigger);
+        // Create a single animation for all letters with stagger
+        const letterTween = gsap.to(footerTitleLetters, {
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.04, // Use GSAP's built-in stagger
+          paused: true, // Start paused so ScrollTrigger can control it
         });
+
+        // Store the single tween reference
+        footerTweens.current.push(letterTween);
+
+        // Create a single ScrollTrigger for all letters
+        const trigger = ScrollTrigger.create({
+          trigger: section,
+          start: "top 80%",
+          onEnter: () => letterTween.play(),
+          once: true,
+          id: "footer-letters", // Single ID for all letters
+        });
+
+        // Store the single trigger reference
+        footerScrollTriggers.current.push(trigger);
       });
 
       // Store the context to clean it up later
