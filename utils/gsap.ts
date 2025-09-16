@@ -115,12 +115,42 @@ export const registerCustomEffects = () => {
   }
 };
 
+// Navigation and route change handler
+export const handleRouteChange = () => {
+  if (typeof window !== "undefined") {
+    // Kill all existing ScrollTriggers to prevent conflicts
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+
+    // Wait a frame then refresh ScrollTrigger
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+    });
+  }
+};
+
+// Reset GSAP animations for navigation
+export const resetGSAPForNavigation = () => {
+  if (typeof window !== "undefined") {
+    // Kill all running tweens
+    gsap.killTweensOf("*");
+
+    // Refresh ScrollTrigger calculations
+    ScrollTrigger.refresh();
+
+    // Scroll to top for consistent animation start
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+};
+
 // Master GSAP initialization - call once in your app root
 export const initializeGSAP = () => {
   if (typeof window !== "undefined") {
     configureGSAP();
     registerCustomEffects();
     setupGSAP();
+
+    // Make ScrollTrigger globally available for navigation handling
+    (window as any).ScrollTrigger = ScrollTrigger;
   }
 };
 

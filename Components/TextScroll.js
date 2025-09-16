@@ -28,14 +28,28 @@ const TextScroll = () => {
         {
           x: direction === "left" ? -containerWidth : 0,
           duration: 60,
+          delay: 0,
           ease: "linear",
           repeat: -1,
+          repeatDelay: 0,
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: true,
+          onStart: () => {
+            // Scrolling animation started
+          },
           onRepeat: function () {
             // Reset position to create seamless loop
             gsap.set(this.targets()[0], {
               x: direction === "left" ? 0 : -containerWidth,
+              overwrite: "auto",
+              force3D: true,
+              immediateRender: true
             });
           },
+          onComplete: () => {
+            // This won't fire due to infinite repeat, but available if needed
+          }
         }
       );
     };

@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { initializeGSAP } from "../utils/gsap";
+import { initializeGSAP, resetGSAPForNavigation } from "../utils/gsap";
 import AboutSection from "../Components/AboutSection";
 import StackedCardsContainer from "../Components/SectionsContainer";
 import PackagesSection from "../Components/Services/PackagesSection";
@@ -18,42 +18,98 @@ import { useLoadingState } from "../hooks/useLoadingState";
 import Image from "next/image";
 
 export default function Page() {
-  const { 
-    isLoading, 
-    isContentReady, 
-    startContentAnimation, 
-    hideLoadingScreen 
+  const {
+    isLoading,
+    isContentReady,
+    isHidden,
+    startContentAnimation,
+    hideLoadingScreen,
+    resetLoadingState
   } = useLoadingState();
   
   const pageContentRef = useRef(null);
   const loadingScreenRef = useRef(null);
 
-  // Add this useEffect to handle page refresh on back navigation
+  // Handle navigation and GSAP reset without full page reload
   useEffect(() => {
-    // Store the current path in sessionStorage when the component mounts
-    const currentPath = window.location.pathname;
+    if (typeof window === "undefined") return;
 
-    // Store current path for reference
-    sessionStorage.setItem("previousPath", currentPath);
+    const handleRouteChange = () => {
+      const currentPath = window.location.pathname;
+      const previousPath = sessionStorage.getItem("previousPath") || "/";
 
-    // Listen for popstate events (back/forward navigation)
-    const handlePopState = () => {
-      // Only reload if we're on the home page and coming back from somewhere else
-      if (window.location.pathname === "/") {
-        const timer = setTimeout(() => {
-          window.location.reload();
+      // If navigating to home page from another page
+      if (currentPath === "/" && previousPath !== "/") {
+        // Reset ScrollTrigger and GSAP animations
+        setTimeout(() => {
+          // Use our comprehensive GSAP reset utility
+          resetGSAPForNavigation();
+
+          // Reset loading state to restart entrance animations
+          resetLoadingState();
         }, 100);
-        return () => clearTimeout(timer);
+      }
+
+      // Update previous path for next navigation
+      sessionStorage.setItem("previousPath", currentPath);
+    };
+
+    // Store initial path
+    sessionStorage.setItem("previousPath", window.location.pathname);
+
+    // Listen for navigation events
+    window.addEventListener("popstate", handleRouteChange);
+
+    // Also listen for Next.js route changes (for client-side navigation)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && window.location.pathname === '/') {
+        handleRouteChange();
       }
     };
 
-    window.addEventListener("popstate", handlePopState);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Clean up event listener
     return () => {
-      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("popstate", handleRouteChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, []);
+  }, [resetLoadingState]);
+
+  // Handle hash-based navigation (e.g., /#work, /#services)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleHashNavigation = () => {
+      // Only handle hash navigation after content is ready and loading is complete
+      if (!isLoading && isHidden) {
+        const hash = window.location.hash;
+        if (hash) {
+          const targetId = hash.substring(1); // Remove the '#'
+          const targetElement = document.getElementById(targetId);
+
+          if (targetElement) {
+            // Small delay to ensure all animations and layout are complete
+            setTimeout(() => {
+              targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+              });
+            }, 500);
+          }
+        }
+      }
+    };
+
+    // Handle hash navigation on initial load
+    handleHashNavigation();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashNavigation);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashNavigation);
+    };
+  }, [isLoading, isHidden]);
 
   useEffect(() => {
     // Initialize GSAP with global configuration and plugins

@@ -30,16 +30,16 @@ const TestHeader = ({ onAnimationStart }) => {
   }, []);
 
   useEffect(() => {
-    // Hide everything initially
-    gsap.set('.subtext, .cta-button', { autoAlpha: 0 });
-    gsap.set([mobileVideoRef.current, desktopVideoRef.current], { autoAlpha: 0, scale: 0.9, x: 30 });
-    
-    // Hide sliding images initially
-    gsap.set([leftImageRef.current, rightImageRef.current], { autoAlpha: 0 });
-
-    // Number of words in the title
+    // Reset and hide everything initially (important for navigation resets)
     const words = document.querySelectorAll('.word');
     const wordCount = words.length;
+
+    gsap.set(words, { autoAlpha: 0, y: 50 });
+    gsap.set('.subtext, .cta-button', { autoAlpha: 0 });
+    gsap.set([mobileVideoRef.current, desktopVideoRef.current], { autoAlpha: 0, scale: 0.9, x: 30 });
+
+    // Hide sliding images initially
+    gsap.set([leftImageRef.current, rightImageRef.current], { autoAlpha: 0 });
     
     // Create a single timeline for all animations
     const tl = gsap.timeline({
@@ -53,27 +53,50 @@ const TestHeader = ({ onAnimationStart }) => {
     
     // Animate title words one by one - slowed down
     words.forEach((word, index) => {
-      tl.fromTo(word, 
+      tl.fromTo(word,
         { autoAlpha: 0, y: 50 },
-        { autoAlpha: 1, y: 0, duration: 0.7, ease: "power2.out" }, 
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.7,
+          delay: 0,
+          ease: "power2.out",
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false
+        },
         index * 0.2
       );
-      
+
       // After the last word animation starts, immediately queue up the next elements
       if (index === wordCount - 1) {
         // Add animations for paragraph and button at the same time, immediately after the last word starts
-        tl.to(['.subtext', '.cta-button'], { 
-          autoAlpha: 1, 
+        tl.to(['.subtext', '.cta-button'], {
+          autoAlpha: 1,
           duration: 0.8,
-          ease: "power2.out"
+          delay: 0,
+          ease: "power2.out",
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false,
+          onComplete: () => {
+            // Text and button animation complete
+          }
         }, "-=0.4");
-        
-       
+
+
         // Add sliding images animation
         tl.to([leftImageRef.current, rightImageRef.current], {
           autoAlpha: 1,
           duration: 0.6,
-          ease: "power2.out"
+          delay: 0,
+          ease: "power2.out",
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false,
+          onComplete: () => {
+            // Images animation complete
+          }
         }, "-=0.3");
       }
     });

@@ -25,6 +25,8 @@ const PackagesSection = () => {
             trigger: sectionRef.current,
             start: "top 80%",
             toggleActions: "play none none none",
+            invalidateOnRefresh: true,
+            refreshPriority: 1
           },
         });
 
@@ -32,7 +34,11 @@ const PackagesSection = () => {
           y: 50,
           opacity: 0,
           duration: 0.8,
+          delay: 0,
           ease: "power3.out",
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false
         });
 
         if (titleTl.scrollTrigger) {
@@ -47,6 +53,8 @@ const PackagesSection = () => {
             trigger: sectionRef.current,
             start: "top 75%",
             toggleActions: "play none none none",
+            invalidateOnRefresh: true,
+            refreshPriority: 2
           },
         });
 
@@ -54,7 +62,11 @@ const PackagesSection = () => {
           y: 30,
           opacity: 0,
           duration: 0.6,
+          delay: 0,
           ease: "power3.out",
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false
         });
 
         if (descTl.scrollTrigger) {
@@ -69,14 +81,21 @@ const PackagesSection = () => {
             trigger: ".packages-images-grid",
             start: "top 85%",
             toggleActions: "play none none none",
+            invalidateOnRefresh: true,
+            refreshPriority: 3
           },
         });
 
         imagesRef.current.forEach((image, index) => {
           if (image) {
             // Set initial state - hidden for animation
-            gsap.set(image, { y: 50, opacity: 0 });
-            
+            gsap.set(image, {
+              y: 50,
+              opacity: 0,
+              force3D: true,
+              immediateRender: true
+            });
+
             // Animate images in with stagger
             imagesTl.to(
               image,
@@ -84,7 +103,11 @@ const PackagesSection = () => {
                 y: 0,
                 opacity: 1,
                 duration: 0.8,
+                delay: 0,
                 ease: "power3.out",
+                overwrite: "auto",
+                force3D: true,
+                immediateRender: false
               },
               index * 0.2
             );

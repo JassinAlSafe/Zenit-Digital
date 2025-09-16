@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const AboutSection = () => {
   // State to detect Windows for platform-specific adjustments
   const [isWindows, setIsWindows] = useState(false);
@@ -22,6 +20,9 @@ const AboutSection = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      // Register ScrollTrigger plugin inside useEffect per best practices
+      gsap.registerPlugin(ScrollTrigger);
+
       const aboutText = document.querySelector(".about-text");
       const section = document.querySelector(".about-section");
       const scrollIndicator = document.querySelector(".scroll-indicator");
@@ -41,8 +42,11 @@ const AboutSection = () => {
 
       const maxOffset = 220; // Full progress for indicator
 
+      // Store ScrollTriggers for cleanup
+      const scrollTriggers = [];
+
       // **GSAP Animation**
-      gsap.timeline({
+      const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
@@ -50,6 +54,9 @@ const AboutSection = () => {
           scrub: 1,
           pin: true,
           markers: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          refreshPriority: 1,
           onUpdate: (self) => {
             const progress = self.progress; // Scroll progress (0 - 1)
 
@@ -66,19 +73,51 @@ const AboutSection = () => {
             circle.style.strokeDashoffset =
               maxOffset - syncedProgress * maxOffset;
           },
+          onStart: () => {
+            // ScrollTrigger animation started
+          },
+          onComplete: () => {
+            // ScrollTrigger animation completed
+          },
+          onRefresh: () => {
+            // ScrollTrigger refreshed
+          }
         },
       });
 
       // Show indicator only inside About Section
-      ScrollTrigger.create({
+      const indicatorTrigger = ScrollTrigger.create({
         trigger: section,
         start: "top center",
         end: "bottom top",
-        onEnter: () => scrollIndicator.classList.add("opacity-100"),
-        onLeave: () => scrollIndicator.classList.remove("opacity-100"),
-        onEnterBack: () => scrollIndicator.classList.add("opacity-100"),
-        onLeaveBack: () => scrollIndicator.classList.remove("opacity-100"),
+        invalidateOnRefresh: true,
+        refreshPriority: 2,
+        onEnter: () => {
+          scrollIndicator.classList.add("opacity-100");
+        },
+        onLeave: () => {
+          scrollIndicator.classList.remove("opacity-100");
+        },
+        onEnterBack: () => {
+          scrollIndicator.classList.add("opacity-100");
+        },
+        onLeaveBack: () => {
+          scrollIndicator.classList.remove("opacity-100");
+        },
+        onRefresh: () => {
+          // ScrollTrigger indicator refreshed
+        }
       });
+
+      scrollTriggers.push(indicatorTrigger);
+
+      // Cleanup function per CLAUDE.md best practices
+      return () => {
+        // Kill timeline
+        timeline.kill();
+        // Kill ScrollTriggers
+        scrollTriggers.forEach(trigger => trigger.kill());
+      };
     }
   }, []);
 

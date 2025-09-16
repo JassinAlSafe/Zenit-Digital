@@ -88,14 +88,28 @@ const Footer: React.FC = () => {
     };
 
     // Initialize animations
-    const ctx = initAnimation();
+    let ctx = initAnimation();
 
-    // Also run on window resize to handle potential layout shifts
-    window.addEventListener("resize", initAnimation);
+    // Debounced resize handler to prevent multiple triggers
+    let resizeTimeout: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Clean up before re-initializing
+        cleanup();
+        if (ctx) ctx.revert();
+        // Re-initialize animations
+        ctx = initAnimation();
+      }, 250); // Wait 250ms after resize ends
+    };
+
+    // Add resize listener with debouncing
+    window.addEventListener("resize", handleResize);
 
     // Cleanup function
     return () => {
-      window.removeEventListener("resize", initAnimation);
+      clearTimeout(resizeTimeout);
+      window.removeEventListener("resize", handleResize);
       cleanup();
       if (ctx) ctx.revert(); // Clean up the GSAP context
     };

@@ -137,6 +137,8 @@ const Navbar = () => {
           buttonRect.top + buttonRect.height / 2
         }px)`,
         opacity: 1,
+        force3D: true,
+        immediateRender: true
       });
 
       // Animate to full screen
@@ -147,7 +149,11 @@ const Navbar = () => {
           buttonRect.top + buttonRect.height / 2
         }px)`,
         duration: 0.8,
+        delay: 0,
         ease: "power3.out",
+        overwrite: "auto",
+        force3D: true,
+        immediateRender: false,
         onComplete: () => {
           // Show menu content after circle animation completes
           setShowMenuContent(true);
@@ -169,7 +175,11 @@ const Navbar = () => {
             buttonRect.left + buttonRect.width / 2
           }px ${buttonRect.top + buttonRect.height / 2}px)`,
           duration: 0.6,
+          delay: 0,
           ease: "power3.in",
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false,
           onComplete: () => setIsMenuOpen(false),
         });
       }, 300);
@@ -220,6 +230,8 @@ const Navbar = () => {
       gsap.set(navbar, {
         y: -100,
         opacity: 0,
+        force3D: true,
+        immediateRender: true
       });
       gsap.to(navbar, {
         y: 0,
@@ -227,12 +239,17 @@ const Navbar = () => {
         delay: 0.8,
         duration: 2,
         ease: "power4.out",
+        overwrite: "auto",
+        force3D: true,
+        immediateRender: false
       });
 
       // GSAP Animation for Menu Button
       gsap.set(menuButton, {
         scale: 0,
         opacity: 0,
+        force3D: true,
+        immediateRender: true
       });
       gsap.to(menuButton, {
         scale: 1,
@@ -240,6 +257,9 @@ const Navbar = () => {
         delay: 1.2,
         duration: 1.5,
         ease: "elastic.out(1, 0.3)",
+        overwrite: "auto",
+        force3D: true,
+        immediateRender: false
       });
 
       // Enhanced Desktop Button Animation
@@ -247,6 +267,8 @@ const Navbar = () => {
         gsap.set(desktopButton, {
           scale: 0,
           opacity: 0,
+          force3D: true,
+          immediateRender: true
         });
         gsap.to(desktopButton, {
           scale: 1,
@@ -254,6 +276,9 @@ const Navbar = () => {
           delay: 1.4,
           duration: 1.2,
           ease: "elastic.out(1, 0.3)",
+          overwrite: "auto",
+          force3D: true,
+          immediateRender: false
         });
       }
 
@@ -268,23 +293,36 @@ const Navbar = () => {
             scale: 1.08,
             y: -3,
             duration: 0.4,
+            delay: 0,
             ease: "power2.out",
+            overwrite: "auto",
+            force3D: true,
+            immediateRender: false
           });
 
           // Enhanced shadow effect
           gsap.to(buttonContainer, {
             boxShadow: "0 12px 30px rgba(0, 0, 0, 0.3)",
             duration: 0.4,
+            delay: 0,
             ease: "power2.out",
+            overwrite: "auto",
+            force3D: true,
+            immediateRender: false
           });
 
           // Subtle rotation wiggle
           gsap.to(buttonContainer, {
             rotation: 2,
             duration: 0.3,
+            delay: 0,
             ease: "power2.out",
             yoyo: true,
             repeat: 1,
+            repeatDelay: 0,
+            overwrite: "auto",
+            force3D: true,
+            immediateRender: false
           });
 
           // Color darkening for the FlipText inside
@@ -316,7 +354,11 @@ const Navbar = () => {
             rotation: 0,
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
             duration: 0.4,
+            delay: 0,
             ease: "power2.out",
+            overwrite: "auto",
+            force3D: true,
+            immediateRender: false
           });
 
           // Reset color for the FlipText inside
@@ -501,7 +543,16 @@ const Navbar = () => {
     gsap.fromTo(
       contactInfoRef.current,
       { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        delay: 0,
+        ease: "power2.out",
+        overwrite: "auto",
+        force3D: true,
+        immediateRender: false
+      }
     );
   };
 

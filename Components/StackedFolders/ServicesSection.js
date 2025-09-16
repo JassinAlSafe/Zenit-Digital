@@ -34,9 +34,8 @@ export default function ServicesSection() {
 
       // Cleanup function
       return () => {
-        // Kill all ScrollTriggers
+        // Kill only our specific ScrollTriggers
         scrollTriggers.forEach(trigger => trigger.kill());
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
       };
     }
   }, []);

@@ -30,23 +30,29 @@ export default function StackedCardsContainer() {
         // Set up the stacking context
         gsap.set(container, {
           position: "relative",
-          overflow: "visible"
+          overflow: "visible",
+          force3D: true,
+          immediateRender: true
         });
       
       // Set up our sections exactly as they should be
-      gsap.set(selectedWorksSection, { 
+      gsap.set(selectedWorksSection, {
         position: "relative",
         zIndex: 2,
         backgroundColor: "var(--custom-blue)",
         width: "100%",
-        margin: "0 auto"
+        margin: "0 auto",
+        force3D: true,
+        immediateRender: true
       });
       
       gsap.set(servicesSection, {
         backgroundColor: "white",
         marginTop: "-100vh",
         position: "relative",
-        zIndex: 1 
+        zIndex: 1,
+        force3D: true,
+        immediateRender: true
       });
       
       // Create a marker for transition
@@ -62,14 +68,30 @@ export default function StackedCardsContainer() {
           start: "top bottom",
           end: "bottom top",
           scrub: 1,
-          markers: false
+          markers: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          refreshPriority: 1,
+          onStart: () => {
+            // Stacked animation started
+          },
+          onComplete: () => {
+            // Stacked animation completed
+          },
+          onRefresh: () => {
+            // ScrollTrigger refreshed
+          }
         }
       });
       
       tl.to(selectedWorksSection, {
         y: "-30vh",
         duration: 0.3,
-        ease: "none"
+        delay: 0,
+        ease: "none",
+        overwrite: "auto",
+        force3D: true,
+        immediateRender: false
       }, 0);
       
       tl.to(selectedWorksSection, {
@@ -77,7 +99,11 @@ export default function StackedCardsContainer() {
         width: "80%",
         borderRadius: "50px",
         duration: 0.7,
+        delay: 0,
         ease: "none",
+        overwrite: "auto",
+        force3D: true,
+        immediateRender: false,
         onUpdate: function() {
           selectedWorksSection.style.marginLeft = "auto";
           selectedWorksSection.style.marginRight = "auto";
@@ -100,7 +126,11 @@ export default function StackedCardsContainer() {
               gsap.to(navbar, {
                 y: show ? "0%" : "-100%",
                 duration: 0.5,
-                ease: "power2.out"
+                delay: 0,
+                ease: "power2.out",
+                overwrite: "auto",
+                force3D: true,
+                immediateRender: false
               });
             }
           };

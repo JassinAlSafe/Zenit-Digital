@@ -1,13 +1,13 @@
-'use client';
+"use client";
 import React, { useEffect, useRef, memo } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /**
  * TextReveal Component
- * 
+ *
  * A reusable component that animates text with a letter-by-letter reveal animation on scroll.
- * 
+ *
  * @param {Object} props - Component props
  * @param {string} props.text - The text to animate
  * @param {string} [props.className] - Additional CSS classes for the container
@@ -17,101 +17,105 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * @param {number} [props.staggerDelay] - Delay between each letter animation (default: 0.04)
  * @param {number} [props.duration] - Duration of the animation (default: 1)
  */
-const TextReveal = memo(({
-  text,
-  className = "",
-  textClassName = "",
-  tag = "h1",
-  splitLines = true,
-  staggerDelay = 0.04,
-  duration = 1,
-  onComplete = () => {}
-}) => {
-  const containerRef = useRef(null);
-  const TextTag = tag;
-  
-  // Split text into lines if requested
-  const lines = splitLines ? text.split(" ").reduce((acc, word) => {
-    if (acc.length === 0) return [word];
-    
-    const lastLine = acc[acc.length - 1].split(" ");
-    if (lastLine.length > 3) {
-      return [...acc, word];
-    } else {
-      acc[acc.length - 1] += " " + word;
-      return acc;
-    }
-  }, []) : [text];
+const TextReveal = memo(
+  ({
+    text,
+    className = "",
+    textClassName = "",
+    tag = "h1",
+    splitLines = true,
+    staggerDelay = 0.04,
+    duration = 1,
+    onComplete = () => {},
+  }) => {
+    const containerRef = useRef(null);
+    const TextTag = tag;
 
-  useEffect(() => {
-    // Only run on client side
-    if (typeof window === "undefined") return;
-    
-    // Register ScrollTrigger
-    gsap.registerPlugin(ScrollTrigger);
-    
-    // Make sure the container is available
-    const container = containerRef.current;
-    if (!container) return;
-    
-    // Get all letter elements
-    const letters = container.querySelectorAll(".reveal-letter");
-    
-    // Initial setup - hide letters below their position
-    gsap.set(letters, { y: 160 });
-    
-    // Create a ScrollTrigger for the animation
-    ScrollTrigger.create({
-      trigger: container,
-      start: "top 80%",
-      onEnter: () => {
-        gsap.to(letters, {
-          y: 0,
-          duration: duration,
-          delay: 0,
-          ease: "power3.out",
-          stagger: staggerDelay,
-          overwrite: "auto",
-          force3D: true,
-          immediateRender: false,
-          onStart: () => {
-            // Animation started callback
-          },
-          onUpdate: function() {
-            // Progress tracking available here if needed
-          },
-          onComplete: onComplete
-        });
-      },
-      once: true
-    });
-    
-    // Cleanup on unmount
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, [text, duration, staggerDelay, onComplete]);
+    // Split text into lines if requested
+    const lines = splitLines
+      ? text.split(" ").reduce((acc, word) => {
+          if (acc.length === 0) return [word];
 
-  return (
-    <div ref={containerRef} className={className}>
-      <TextTag className={textClassName}>
-        {lines.map((line, lineIndex) => (
-          <div key={`line-${lineIndex}`} className="overflow-hidden">
-            {Array.from(line).map((letter, letterIndex) => (
-              <span 
-                key={`letter-${lineIndex}-${letterIndex}`} 
-                className="reveal-letter inline-block"
-              >
-                {letter === " " ? "\u00A0" : letter}
-              </span>
-            ))}
-          </div>
-        ))}
-      </TextTag>
-    </div>
-  );
-});
+          const lastLine = acc[acc.length - 1].split(" ");
+          if (lastLine.length > 3) {
+            return [...acc, word];
+          } else {
+            acc[acc.length - 1] += " " + word;
+            return acc;
+          }
+        }, [])
+      : [text];
 
-TextReveal.displayName = 'TextReveal';
+    useEffect(() => {
+      // Only run on client side
+      if (typeof window === "undefined") return;
+
+      // Register ScrollTrigger
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Make sure the container is available
+      const container = containerRef.current;
+      if (!container) return;
+
+      // Get all letter elements
+      const letters = container.querySelectorAll(".reveal-letter");
+
+      // Initial setup - hide letters below their position
+      gsap.set(letters, { y: 160 });
+
+      // Create a ScrollTrigger for the animation
+      const scrollTrigger = ScrollTrigger.create({
+        trigger: container,
+        start: "top 80%",
+        onEnter: () => {
+          gsap.to(letters, {
+            y: 0,
+            duration: duration,
+            delay: 0,
+            ease: "power3.out",
+            stagger: staggerDelay,
+            overwrite: "auto",
+            force3D: true,
+            immediateRender: false,
+            onStart: () => {
+              // Animation started callback
+            },
+            onUpdate: function () {
+              // Progress tracking available here if needed
+            },
+            onComplete: onComplete,
+          });
+        },
+        once: true,
+      });
+
+      // Cleanup on unmount - kill specific trigger instead of all
+      return () => {
+        scrollTrigger.kill();
+      };
+    }, [text, duration, staggerDelay, onComplete]);
+
+    return (
+      <div ref={containerRef} className={className}>
+        <TextTag className={textClassName}>
+          {lines.map((line, lineIndex) => (
+            <div key={`line-${lineIndex}`} className="overflow-hidden">
+              {Array.from(line).map((letter, letterIndex) => (
+                <span
+                  key={`letter-${lineIndex}-${letterIndex}`}
+                  className="reveal-letter inline-block"
+                >
+                  {letter === " " ? "\u00A0" : letter}
+                </span>
+              ))}
+            </div>
+          ))}
+        </TextTag>
+      </div>
+    );
+  }
+);
+
+TextReveal.displayName = "TextReveal";
 
 export default TextReveal;
