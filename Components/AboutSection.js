@@ -30,11 +30,11 @@ const AboutSection = () => {
         ".scroll-indicator circle:nth-child(2)"
       );
 
-      // Wrap each letter in a span
+      // Wrap each letter in a span with performance optimizations
       const textContent = aboutText.textContent;
       aboutText.innerHTML = textContent
         .split("")
-        .map((letter) => `<span class="letter">${letter}</span>`)
+        .map((letter) => `<span class="letter" style="will-change: color; transform: translateZ(0);">${letter}</span>`)
         .join("");
 
       const letters = document.querySelectorAll(".letter");
@@ -45,7 +45,7 @@ const AboutSection = () => {
       // Store ScrollTriggers for cleanup
       const scrollTriggers = [];
 
-      // **GSAP Animation**
+      // **GSAP Animation with integrated indicator**
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -57,59 +57,43 @@ const AboutSection = () => {
           anticipatePin: 1,
           invalidateOnRefresh: true,
           refreshPriority: 1,
+          id: "about-text-progress",
           onUpdate: (self) => {
-            const progress = self.progress; // Scroll progress (0 - 1)
+            // Cache progress calculation
+            const highlightIndex = Math.floor(self.progress * totalLetters);
 
-            // **Sync text highlighting with scroll**
-            const highlightIndex = Math.floor(progress * totalLetters);
+            // Batch DOM updates using requestAnimationFrame for better performance
+            if (self._lastHighlightIndex !== highlightIndex) {
+              // Only update letters that need to change
+              const start = Math.min(self._lastHighlightIndex || 0, highlightIndex);
+              const end = Math.max(self._lastHighlightIndex || 0, highlightIndex);
 
-            letters.forEach((letter, index) => {
-              letter.style.color =
-                index <= highlightIndex ? "var(--custom-pink)" : "#13496C";
-            });
+              for (let i = start; i <= end; i++) {
+                if (letters[i]) {
+                  letters[i].style.color = i <= highlightIndex ? "var(--custom-pink)" : "#13496C";
+                }
+              }
 
-            // **Sync Circle Progress Exactly with Text**
-            const syncedProgress = highlightIndex / totalLetters;
-            circle.style.strokeDashoffset =
-              maxOffset - syncedProgress * maxOffset;
+              // Update circle progress only when text changes
+              const syncedProgress = highlightIndex / totalLetters;
+              circle.style.strokeDashoffset = maxOffset - syncedProgress * maxOffset;
+
+              self._lastHighlightIndex = highlightIndex;
+            }
           },
           onStart: () => {
-            // ScrollTrigger animation started
+            // Show indicator when animation starts
+            scrollIndicator.classList.add("opacity-100");
           },
           onComplete: () => {
-            // ScrollTrigger animation completed
+            // Hide indicator when animation completes
+            scrollIndicator.classList.remove("opacity-100");
           },
           onRefresh: () => {
             // ScrollTrigger refreshed
           }
         },
       });
-
-      // Show indicator only inside About Section
-      const indicatorTrigger = ScrollTrigger.create({
-        trigger: section,
-        start: "top center",
-        end: "bottom top",
-        invalidateOnRefresh: true,
-        refreshPriority: 2,
-        onEnter: () => {
-          scrollIndicator.classList.add("opacity-100");
-        },
-        onLeave: () => {
-          scrollIndicator.classList.remove("opacity-100");
-        },
-        onEnterBack: () => {
-          scrollIndicator.classList.add("opacity-100");
-        },
-        onLeaveBack: () => {
-          scrollIndicator.classList.remove("opacity-100");
-        },
-        onRefresh: () => {
-          // ScrollTrigger indicator refreshed
-        }
-      });
-
-      scrollTriggers.push(indicatorTrigger);
 
       // Cleanup function per CLAUDE.md best practices
       return () => {

@@ -72,6 +72,7 @@ export default function StackedCardsContainer() {
           anticipatePin: 1,
           invalidateOnRefresh: true,
           refreshPriority: 1,
+          id: "stacked-cards-transition",
           onStart: () => {
             // Stacked animation started
           },
@@ -141,15 +142,17 @@ export default function StackedCardsContainer() {
             start: "top 50%",
             onEnter: () => toggleNavbar(false),
             onEnterBack: () => toggleNavbar(false),
-            onLeaveBack: () => toggleNavbar(true)
+            onLeaveBack: () => toggleNavbar(true),
+            id: "navbar-hide-selected-works"
           });
-          
+
           // Show navbar when entering services section
           ScrollTrigger.create({
             trigger: servicesSection,
             start: "top 80%",
             onEnter: () => toggleNavbar(true),
-            onLeaveBack: () => toggleNavbar(false)
+            onLeaveBack: () => toggleNavbar(false),
+            id: "navbar-show-services"
           });
         }
       }

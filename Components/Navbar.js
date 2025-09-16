@@ -426,6 +426,7 @@ const Navbar = () => {
           trigger: section,
           start: startPoint,
           end: endPoint,
+          id: `navbar-section-${index}`,
           onEnter: () => {
             // Update navbar colors
             setNavStyles({

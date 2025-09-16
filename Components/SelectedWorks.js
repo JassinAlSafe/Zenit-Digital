@@ -68,8 +68,9 @@ const SelectedWorks = () => {
             ease: "power3.out",
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: "top 80%",
+              start: "top 90%",
               toggleActions: "play none none none",
+              id: "selected-works-title-letters",
             },
           });
         }
@@ -81,8 +82,9 @@ const SelectedWorks = () => {
           if (projectElement) {
             const trigger = ScrollTrigger.create({
               trigger: projectElement,
-              start: "top 60%",
-              end: "bottom 40%", 
+              start: "top 70%",
+              end: "bottom 30%",
+              id: `project-trigger-${index + 1}`,
               onEnter: () => {
                 console.log(`✅ Entering project ${index + 1}`);
                 setCurrentImage(index + 1);
@@ -272,7 +274,7 @@ const SelectedWorks = () => {
         <div className="overflow-hidden inline-block">
           <h1 ref={titleRef} className={getTitleClasses()}>
             {Array.from("SELECTED WORKS").map((letter, index) => (
-              <span key={index} className="title-letter inline-block">
+              <span key={index} className="title-letter inline-block" style={{ willChange: "transform", transform: "translateZ(0)" }}>
                 {letter === " " ? "\u00A0" : letter}
               </span>
             ))}

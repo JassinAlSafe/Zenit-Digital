@@ -21,8 +21,9 @@ export default function ServicesSection() {
           ease: "power3.out",
           scrollTrigger: {
             trigger: ".services-section",
-            start: "top 80%",
+            start: "top 95%",
             toggleActions: "play none none none",
+            id: "services-title-letters",
           },
         });
         
@@ -59,6 +60,7 @@ export default function ServicesSection() {
                 <span
                   key={index}
                   className="services-title-letter inline-block"
+                  style={{ willChange: "transform", transform: "translateZ(0)" }}
                 >
                   {letter === " " ? "\u00A0" : letter}
                 </span>

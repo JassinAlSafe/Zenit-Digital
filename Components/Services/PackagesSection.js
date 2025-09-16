@@ -18,59 +18,42 @@ const PackagesSection = () => {
 
       const scrollTriggers = [];
 
-      // Title animation
-      if (titleRef.current) {
-        const titleTl = gsap.timeline({
+      // Combined title and description animation
+      if (titleRef.current && descriptionRef.current) {
+        const headerTl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 80%",
+            start: "top 85%",
             toggleActions: "play none none none",
             invalidateOnRefresh: true,
-            refreshPriority: 1
+            refreshPriority: 1,
+            id: "packages-header-animation"
           },
         });
 
-        titleTl.from(titleRef.current, {
-          y: 50,
-          opacity: 0,
-          duration: 0.8,
-          delay: 0,
-          ease: "power3.out",
-          overwrite: "auto",
-          force3D: true,
-          immediateRender: false
-        });
+        // Animate title first, then description with slight delay
+        headerTl
+          .from(titleRef.current, {
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            overwrite: "auto",
+            force3D: true,
+            immediateRender: false
+          })
+          .from(descriptionRef.current, {
+            y: 30,
+            opacity: 0,
+            duration: 0.6,
+            ease: "power3.out",
+            overwrite: "auto",
+            force3D: true,
+            immediateRender: false
+          }, 0.2);
 
-        if (titleTl.scrollTrigger) {
-          scrollTriggers.push(titleTl.scrollTrigger);
-        }
-      }
-
-      // Description animation
-      if (descriptionRef.current) {
-        const descTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
-            toggleActions: "play none none none",
-            invalidateOnRefresh: true,
-            refreshPriority: 2
-          },
-        });
-
-        descTl.from(descriptionRef.current, {
-          y: 30,
-          opacity: 0,
-          duration: 0.6,
-          delay: 0,
-          ease: "power3.out",
-          overwrite: "auto",
-          force3D: true,
-          immediateRender: false
-        });
-
-        if (descTl.scrollTrigger) {
-          scrollTriggers.push(descTl.scrollTrigger);
+        if (headerTl.scrollTrigger) {
+          scrollTriggers.push(headerTl.scrollTrigger);
         }
       }
 
@@ -82,18 +65,20 @@ const PackagesSection = () => {
             start: "top 85%",
             toggleActions: "play none none none",
             invalidateOnRefresh: true,
-            refreshPriority: 3
+            refreshPriority: 3,
+            id: "packages-images-stagger"
           },
         });
 
         imagesRef.current.forEach((image, index) => {
           if (image) {
-            // Set initial state - hidden for animation
+            // Set initial state - hidden for animation with performance optimization
             gsap.set(image, {
               y: 50,
               opacity: 0,
               force3D: true,
-              immediateRender: true
+              immediateRender: true,
+              willChange: "transform, opacity"
             });
 
             // Animate images in with stagger
