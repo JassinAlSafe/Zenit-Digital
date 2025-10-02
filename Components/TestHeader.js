@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
-
+import MagneticButton from "./MagneticButton";
 const TestHeader = ({ onAnimationStart }) => {
   // Create refs for the video elements and sliding images
   const mobileVideoRef = useRef(null);
@@ -99,7 +99,7 @@ const TestHeader = ({ onAnimationStart }) => {
       return "text-4xl 2xl:text-[11rem] lg:text-7xl md:text-5xl font-medium lg:font-medium leading-none mb-6 text-custom-blue";
     } else {
       // macOS classes (original)
-      return "text-5xl 2xl:text-[13rem] lg:text-8xl md:text-6xl font-medium lg:font-medium leading-none mb-6 text-custom-blue";
+      return "text-5xl 2xl:text-[10rem] lg:text-8xl md:text-6xl font-medium lg:font-medium leading-none mb-6 text-custom-blue";
     }
   };
 
@@ -110,7 +110,7 @@ const TestHeader = ({ onAnimationStart }) => {
       return "subtext font-light 2xl:text-xl text-lg mb-8 text-gray-500 max-w-xl mx-auto";
     } else {
       // macOS classes (original)
-      return "subtext font-light 2xl:text-2xl text-xl mb-8 text-gray-500 max-w-xl mx-auto";
+      return "subtext font-light 2xl:text-3xl 2xl:px-0 text-xl mb-8 text-gray-500 max-w-xl mx-auto";
     }
   };
 
@@ -205,7 +205,7 @@ const TestHeader = ({ onAnimationStart }) => {
   }}
 />
 
-        <div className="w-full overflow-hidden flex items-center justify-center flex-col mt-12  ">
+        <div className="w-full overflow-hidden flex items-center justify-center flex-col mt-12 2xl:mt-32  ">
           
         <h2 className="text-lg font-semibold hidden lg:flex ">
         <div className="relative flex items-center justify-center md:justify-start mt-20">
@@ -243,14 +243,17 @@ const TestHeader = ({ onAnimationStart }) => {
                 </p>
 
                 <Link href="/booking">
-                  <button
-                    className="cta-button bg-custom-blue text-custom-pink hover:bg-[#2C2C75] font-normal py-3 px-6 rounded-full inline-flex items-center"
-                  >
+
+                <MagneticButton
+                className="cta-button bg-custom-blue text-custom-pink hover:bg-[#2C2C75] font-normal py-3 px-6 rounded-full inline-flex items-center"
+                magneticStrength={0.5}
+              >
+                
                     Explore
                     <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
                     </svg>
-                  </button>
+                  </MagneticButton>
                 </Link>
               </div>
 

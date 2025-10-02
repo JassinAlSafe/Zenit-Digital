@@ -1,12 +1,69 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React from "react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useRef, useState, useEffect } from "react";
 
-gsap.registerPlugin(ScrollTrigger);
+// Utility function for className merging (replace with your actual cn function)
+const cn = (...classes) => classes.filter(Boolean).join(" ");
 
+// TextReveal component from Magic UI
+export const TextReveal = ({ children, className }) => {
+  const targetRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+  });
+
+  if (typeof children !== "string") {
+    throw new Error("TextReveal: children must be a string");
+  }
+
+  const words = children.split(" ");
+
+  return (
+    <div ref={targetRef} className={cn("relative z-0 h-[200vh]", className)}>
+      <div
+        className={
+          "sticky top-0 mx-auto flex h-[50%] max-w-7xl items-center bg-transparent px-4"
+        }
+      >
+        <span
+          ref={targetRef}
+          className={
+            "flex flex-wrap text-black/20 dark:text-white/20"
+          }
+        >
+          {words.map((word, i) => {
+            const start = i / words.length;
+            const end = start + 1 / words.length;
+            return (
+              <Word key={i} progress={scrollYProgress} range={[start, end]}>
+                {word}
+              </Word>
+            );
+          })}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const Word = ({ children, progress, range }) => {
+  const opacity = useTransform(progress, range, [0, 1]);
+  return (
+    <span className="xl:lg-3 relative mx-1 lg:mx-1.5">
+      <span className="absolute opacity-30">{children}</span>
+      <motion.span
+        style={{ opacity: opacity }}
+        className={"text-custom-pink dark:text-custom-pink"}
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
+};
+
+// Updated AboutSection component
 const AboutSection = () => {
-  // State to detect Windows for platform-specific adjustments
   const [isWindows, setIsWindows] = useState(false);
 
   // Function to detect Windows
@@ -20,126 +77,34 @@ const AboutSection = () => {
     setIsWindows(detectWindows());
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const aboutText = document.querySelector(".about-text");
-      const section = document.querySelector(".about-section");
-      const scrollIndicator = document.querySelector(".scroll-indicator");
-      const circle = document.querySelector(
-        ".scroll-indicator circle:nth-child(2)"
-      );
-
-      // Wrap each letter in a span
-      const textContent = aboutText.textContent;
-      aboutText.innerHTML = textContent
-        .split("")
-        .map((letter) => `<span class="letter">${letter}</span>`)
-        .join("");
-
-      const letters = document.querySelectorAll(".letter");
-      const totalLetters = letters.length;
-
-      const maxOffset = 220; // Full progress for indicator
-
-      // **GSAP Animation**
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1,
-          pin: true,
-          markers: false,
-          onUpdate: (self) => {
-            const progress = self.progress; // Scroll progress (0 - 1)
-
-            // **Sync text highlighting with scroll**
-            const highlightIndex = Math.floor(progress * totalLetters);
-
-            letters.forEach((letter, index) => {
-              letter.style.color =
-                index <= highlightIndex ? "var(--custom-pink)" : "#13496C";
-            });
-
-            // **Sync Circle Progress Exactly with Text**
-            const syncedProgress = highlightIndex / totalLetters;
-            circle.style.strokeDashoffset =
-              maxOffset - syncedProgress * maxOffset;
-          },
-        },
-      });
-
-      // Show indicator only inside About Section
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top center",
-        end: "bottom top",
-        onEnter: () => scrollIndicator.classList.add("opacity-100"),
-        onLeave: () => scrollIndicator.classList.remove("opacity-100"),
-        onEnterBack: () => scrollIndicator.classList.add("opacity-100"),
-        onLeaveBack: () => scrollIndicator.classList.remove("opacity-100"),
-      });
-    }
-  }, []);
-
   // Get platform-specific text classes
   const getTextClasses = () => {
+    const baseClasses = "flex flex-wrap font-normal text-left";
     if (isWindows) {
       // Windows-specific text sizing - reduced to prevent overflow
-      return "about-text 2xl:text-[8.5rem] px-12  text-4xl text-[#13496C] md:text-7xl lg:text-7xl font-normal text-left";
+      return `${baseClasses} 2xl:text-[8.5rem] px-12 text-4xl text-[#13496C] md:text-7xl lg:text-7xl`;
     } else {
       // macOS classes (original)
-      return "about-text 2xl:text-[10rem] text-5xl text-[#13496C] md:text-8xl lg:text-8xl font-normal text-left";
+      return `${baseClasses} 2xl:text-[10rem] text-5xl text-[#13496C] md:text-7xl lg:text-8xl`;
     }
   };
 
   return (
-    <>
-      {/* Scroll Indicator */}
-      <div
-        // Add this ID for navigation
-        className="scroll-indicator fixed bottom-5 right-5  w-16 h-16 flex justify-center items-center z-10 opacity-0 transition-opacity duration-300 "
-      >
-        <svg className="rotate-[-90deg]" width="64" height="64">
-          <circle
-            className="stroke-custom-blue"
-            cx="32"
-            cy="32"
-            r="28"
-            strokeWidth="4"
-            fill="none"
-          />
-          <circle
-            className="stroke-custom-pink"
-            cx="32"
-            cy="32"
-            r="28"
-            strokeWidth="4"
-            fill="none"
-            strokeDasharray="188"
-            strokeDashoffset="188"
-            style={{ transition: "stroke-dashoffset 0.1s ease-out" }}
-          />
-        </svg>
+    <section
+      id="about"
+      className="about-section min-h-screen w-full"
+      data-bg="var(--custom-blue)"
+      data-text="#13496C"
+      data-button-bg="var(--custom-pink)"
+      data-button-text="var(--custom-blue)"
+      data-navbar-text="var(--custom-pink)"
+    >
+      <div className="w-full h-full flex items-center justify-center">
+        <TextReveal className={getTextClasses()}>
+          We create elevating digital solutions that empower startups through innovative software and purposeful design.
+        </TextReveal>
       </div>
-
-      <section
-        id="about"
-        className="about-section h-screen flex items-center justify-center "
-        data-bg="var(--custom-blue)"
-        data-text="#13496C"
-        data-button-bg="var(--custom-pink)"
-        data-button-text="var(--custom-blue)"
-        data-navbar-text="var(--custom-pink)"
-      >
-        <div className="container 2xl:max-w-[90%] mx-auto px-4 2xl:px-0 text-center text-[#13496C]">
-          <h2 className={getTextClasses()}>
-            We create elevating digital solutions that empower startups through
-            innovative software and purposeful design.
-          </h2>
-        </div>
-      </section>
-    </>
+    </section>
   );
 };
 

@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SelectedWorks from "./SelectedWorks";
 import Service from "./StackedFolders/Service";
+import ScrollStack, { ScrollStackItem } from '../Components/ScrollStack';
 
 export default function StackedCardsContainer() {
   const containerRef = useRef(null);

@@ -8,7 +8,7 @@ import logo2 from "../assets/logo2.png";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import FlipText from "./FlipText";
-
+import AnimatedButton from "./AnimatedButton";
 gsap.registerPlugin(ScrollTrigger);
 
 // TextReveal Component for animated text (keep your existing code)
@@ -411,7 +411,7 @@ const Navbar = () => {
               alt="Zenit Logo dark"
               width={20}
               height={20}
-              className="absolute top-0 left-0 transition-opacity duration-500"
+              className="absolute hover:cursor-pointer top-0 left-0 transition-opacity duration-500"
               style={{
                 opacity:
                   navStyles.navbarTextColor?.includes("custom-pink") ||
@@ -471,13 +471,14 @@ const Navbar = () => {
         {/* Button - Right */}
         <div className="hidden md:flex items-center ml-auto z-50 ">
           <Link href="/booking">
-            <FlipText
+            {/* <FlipText
               className="desktop-button border border-1 border-custom-blue/20 px-6 py-2 text-white font-medium rounded-3xl hover:bg-gray-800 transition-colors duration-500"
               animationType="slide"
               duration={0.3}
             >
               Let&apos;s Talk
-            </FlipText>
+            </FlipText> */}
+            <AnimatedButton/>
           </Link>
         </div>
       </nav>

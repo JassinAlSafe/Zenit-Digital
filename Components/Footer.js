@@ -222,7 +222,7 @@ const Footer = () => {
             {/* Working Globally Section - with default styling */}
             <div className="absolute bottom-8 left-8 flex justify-end items-center">
               <div className="w-12 h-12 border bg-custom-blue border-custom-pink rounded-full flex items-center justify-center mr-4 overflow-hidden">
-                <video
+                {/* <video
                   autoPlay
                   loop
                   muted
@@ -231,7 +231,7 @@ const Footer = () => {
                   src={videoSrc}
                 >
                   Your browser does not support the video tag.
-                </video>
+                </video> */}
               </div>
               <div>
                 <p className="text-sm 2xl:text-xl text-custom-green">
@@ -316,7 +316,7 @@ const Footer = () => {
           {/* Working Globally Section - with MP4 video replacing the globe emoji */}
           <div className="absolute bottom-8 left-8 flex justify-end items-center">
             <div className="w-12 h-12 border bg-custom-blue border-custom-pink rounded-full flex items-center justify-center mr-4 overflow-hidden">
-              <video
+              {/* <video
                 autoPlay
                 loop
                 muted
@@ -325,7 +325,7 @@ const Footer = () => {
                 src={videoSrc}
               >
                 Your browser does not support the video tag.
-              </video>
+              </video> */}
             </div>
             <div>
               <p className={getSubtitleClasses()}>

@@ -8,12 +8,21 @@ import Test from "../Components/test";
 import Footer from "../Components/Footer";
 import TextScroll from "../Components/TextScroll";
 import Cookiebot from "../Components/Cookiebot";
-
+import Packages from "../Components/Packages";
 import TestHeader from "../Components/TestHeader";
 import Strategy from "../Components/Strategy";
 import Image from "next/image";
+import Faq from "../Components/Faq";
+import { Carousel, Card } from "../Components/AppleCardsCarousel";
+import { AppleCardsCarouselDemo } from "../Components/ AppleCardsCarouselDemo";
+import CtaBanner from "../Components/CtaBanner";
+import StatsSection from "../Components/StatsSection";
+// import ScrollStack, { ScrollStackItem } from '../Components/ScrollStack';
+
 
 export default function Page() {
+
+
   // Add loading state
   const [loading, setLoading] = useState(true);
   const [contentReady, setContentReady] = useState(false);
@@ -196,15 +205,21 @@ export default function Page() {
         <Cookiebot />
         {/* <HeaderLogo /> */}
         <TestHeader onAnimationStart={handleContentAnimationStart} />
+        <div >
         <AboutSection />
+
+        </div>
 
         {/* Replace individual sections with the stacked container */}
         <StackedCardsContainer />
-
-        {/* <TextScroll /> */}
-        {/* <Testimonials /> */}
-        {/* <Test /> */}
+{/* <ScrollStack/> */}
+<StatsSection/>
+      {/* <Packages/> */}
         <Strategy/>
+        <Faq />
+        {/* <CtaBanner /> */}
+        {/* <AppleCardsCarouselDemo/> */}
+
         <Footer />
       </div>
     </main>

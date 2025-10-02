@@ -1,95 +1,106 @@
-// import React, { useState } from 'react';
-// import { ChevronDown, ChevronUp, Zap, CheckCircle, User } from 'lucide-react';
-// import Image from 'next/image';
-// import people from './../public/image.png';
+import React, { useState } from 'react';
+import { Plus, Minus } from 'lucide-react';
 
-// const Faq = () => {
-//   const [openSections, setOpenSections] = useState({});
+export default function Faq() {
+  const [openFaq, setOpenFaq] = useState(null);
 
-//   const toggleSection = (section) => {
-//     setOpenSections(prev => ({
-//       ...prev,
-//       [section]: !prev[section]
-//     }));
-//   };
+  const faqs = [
+    {
+      question: "Who is Aria for?",
+      answer: "Aria is designed for B2B marketplaces and businesses looking to streamline their payment processes and improve customer experience."
+    },
+    {
+      question: "What countries does Aria support for buyers and suppliers?",
+      answer: "Aria supports a wide range of countries for both buyers and suppliers, with coverage across North America, Europe, and Asia Pacific regions."
+    },
+    {
+      question: "Can Aria be white-labeled?",
+      answer: "Yes, Aria offers white-label solutions that allow you to customize the platform with your own branding and maintain a consistent user experience."
+    },
+    {
+      question: "How long does integration typically take?",
+      answer: "Most integrations are completed within 2-4 weeks, depending on your existing infrastructure and customization requirements. Our technical team provides full support throughout the process."
+    },
+    {
+      question: "What payment methods does Aria support?",
+      answer: "Aria supports multiple payment methods including bank transfers, credit cards, digital wallets, and specialized B2B payment solutions like net terms and purchase orders."
+    },
 
-//   const faqSections = [
-//     {
-//       id: 'digital',
-//       title: 'Digitala lås, IMD & trygghet',
-//       content: 'Information om digitala lås, IMD-system och säkerhetslösningar.'
-//     },
-//     {
-//       id: 'administration',
-//       title: 'Effektivare administration',
-//       content: 'Verktyg och funktioner för att effektivisera din administration.'
-//     },
-//     {
-//       id: 'experience',
-//       title: 'Attraktivare upplevelse',
-//       content: 'Förbättra användarupplevelsen med moderna lösningar.'
-//     }
-//   ];
+  ];
 
-//   return (
-//     <div className="min-h-screen bg-white flex items-center justify-center p-8">
-//       <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        
-//         {/* Left side - Square Image */}
-//         <div className="flex justify-center">
-//           <div className="w-96 h-96  rounded-md flex items-center justify-center">
-//             <Image 
-//                      src={people}
-//                      alt="Frame Logo" 
-//                      width="60" 
-//                      height="60"
-//                      className="loading-logo" 
-//                    />
-//           </div>
-//         </div>
+  const toggleFaq = (index) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
 
-//         {/* Right side - FAQ Section */}
-//         <div className="space-y-8">
-//           <div>
-//             <h1 className="text-4xl lg:text-5xl font-medium text-gray-900 mb-2">
-//               Simplifying your tech
-//             </h1>
-//           </div>
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-16 bg-white">
+      {/* Title */}
+      <div className="mb-12">
+        <h1 className="text-4xl lg:text-5xl font-medium text-custom-blue leading-tight">
+          Got Questions?         
+        </h1>
+      </div>
+      
+      <div className="grid lg:grid-cols-2 gap-4 items-start">
+        {/* Left side - Image */}
+        <div className="relative max-w-lg">          
+          <img 
+            src="/group.webp"
+            className="w-full aspect-square object-cover rounded-xl shadow-lg"
+          />
+          
+          {/* Overlay card */}
+          <div className="absolute bottom-6 left-6 right-6">
+            <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="text-custom-pink text-2xl font-bold">€€€</div>
+                  <div>
+                    <div className="text-gray-900 font-semibold">MRR Calculator for B2B</div>
+                    <div className="text-gray-600 text-sm">marketplaces</div>
+                  </div>
+                </div>
+                <div className="bg-custom-pink rounded-full p-2">
+                  <svg className="w-5 h-5 text-custom-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-//           <div className="space-y-4">
-//             {faqSections.map((section) => (
-//               <div key={section.id} className="border-b border-gray-200">
-//                 <button
-//                   onClick={() => toggleSection(section.id)}
-//                   className="w-full py-6 flex items-center justify-between text-left hover:text-red-50 transition-colors"
-//                 >
-//                   <span className="text-xl text-gray-600 font-normal">
-//                     {section.title}
-//                   </span>
-//                   {openSections[section.id] ? (
-//                     <ChevronUp className="w-6 h-6 text-gray-400" />
-//                   ) : (
-//                     <ChevronDown className="w-6 h-6 text-gray-400" />
-//                   )}
-//                 </button>
-                
-//                 {openSections[section.id] && (
-//                   <div className="pb-6 text-gray-600">
-//                     {section.content}
-//                   </div>
-//                 )}
-//               </div>
-//             ))}
-//           </div>
-
-//           <button className="border-2 border-[#A494F3] hover:bg-[#A494F3] text-[#A494F3] hover:text-white px-8 py-3 rounded-full font-semibold transition-colors">
-//             Kom igång
-//           </button>
-//         </div>
-
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Faq;
+        {/* Right side - FAQ */}
+        <div className="space-y-4">
+          {faqs.map((faq, index) => (
+            <div key={index} className="border-b border-gray-200 pb-4">
+              <button
+                onClick={() => toggleFaq(index)}
+                className="w-full flex items-center justify-between text-left py-4   transition-colors"
+              >
+                <span className="text-xl font-normal text-custom-blue pr-8    ">
+                  {faq.question}
+                </span>
+                <div className="flex-shrink-0 rounded-full p-1 ">
+                  {openFaq === index ? (
+                    <Minus className="w-5 h-5 text-custom-pink" />
+                  ) : (
+                    <Plus className="w-5 h-5 text-custom-pink font-bold" />
+                  )}
+                </div>
+              </button>
+              
+              {openFaq === index && (
+                <div className="mt-2 pb-4">
+                  <p className="text-gray-600 leading-relaxed">
+                    {faq.answer}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

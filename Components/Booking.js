@@ -2,10 +2,13 @@
 import React, { useState, useEffect } from "react";
 // Import framer-motion for animations
 import { motion } from "framer-motion";
+import { useOS } from "../utils/OsProvider"; // Import the OS hook
 
 const BookingForm = () => {
   // Animation state
   const [isVisible, setIsVisible] = useState(false);
+  
+  const { isWindows, isDetected } = useOS(); // Use the OS hook
 
   // Set animation visible on component mount
   useEffect(() => {
@@ -128,6 +131,50 @@ const BookingForm = () => {
     });
   };
 
+  // Get platform-specific mobile title classes
+  const getMobileTitleClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing
+      return "text-3xl font-sm text-black mb-8 pt-8";
+    } else {
+      // macOS classes (original)
+      return "text-4xl font-sm text-black mb-8 pt-8";
+    }
+  };
+
+  // Get platform-specific mobile feature text classes
+  const getMobileFeatureTextClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing
+      return "text-black text-base font-medium";
+    } else {
+      // macOS classes (original)
+      return "text-black text-lg font-medium";
+    }
+  };
+
+  // Get platform-specific desktop title classes
+  const getDesktopTitleClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing - reduced to prevent overflow
+      return "text-2xl md:text-3xl lg:text-4xl 2xl:text-6xl font-md";
+    } else {
+      // macOS classes (original)
+      return "text-3xl md:text-4xl lg:text-5xl 2xl:text-7xl font-md";
+    }
+  };
+
+  // Get platform-specific desktop feature text classes
+  const getDesktopFeatureTextClasses = () => {
+    if (isWindows) {
+      // Windows-specific text sizing
+      return "text-xs md:text-sm lg:text-base font-sm";
+    } else {
+      // macOS classes (original)
+      return "text-sm md:text-base lg:text-lg font-sm";
+    }
+  };
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -149,6 +196,56 @@ const BookingForm = () => {
     },
   };
 
+  // Wait for OS detection before rendering to prevent hydration mismatch
+  if (!isDetected) {
+    return (
+      <section
+        className="w-full min-h-screen overflow-x-hidden"
+        data-bg="white"
+        data-text="black"
+        data-button-bg="var(--custom-blue)"
+        data-button-text="var(--custom-pink)"
+        data-navbar-text="black"
+      >
+        {/* Default mobile layout */}
+        <div className="w-full py-12 px-6 md:hidden bg-[#ffffff]">
+          <motion.div
+            className="max-w-lg mx-auto text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="text-4xl font-sm text-black mb-8 pt-8">
+              Book a<br />
+              <span>Digital consultation</span>
+            </h1>
+            {/* Rest of default mobile content... */}
+          </motion.div>
+        </div>
+
+        {/* Default desktop layout */}
+        <div className="flex flex-col md:flex-row w-full min-h-screen md:h-screen">
+          <motion.div
+            className="w-full md:w-1/2 p-4 md:p-8 lg:p-12 flex-col justify-center bg-white text-black hidden md:flex"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: isVisible ? 1 : 0, x: isVisible ? 0 : -50 }}
+            transition={{ duration: 0.7 }}
+          >
+            <div className="mb-4 md:mb-8">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl 2xl:text-7xl font-md">
+                Book your
+                <br />
+                digital <span>consultation</span>
+              </h1>
+            </div>
+            {/* Rest of default desktop content... */}
+          </motion.div>
+          {/* Form area remains the same for default... */}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       className="w-full min-h-screen overflow-x-hidden"
@@ -166,7 +263,7 @@ const BookingForm = () => {
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-4xl font-sm text-black mb-8 pt-8">
+          <h1 className={getMobileTitleClasses()}>
             Book a<br />
             <span>Digital consultation</span>
           </h1>
@@ -192,7 +289,7 @@ const BookingForm = () => {
                   <line x1="12" y1="17" x2="12" y2="21"></line>
                 </svg>
               </div>
-              <p className="text-black text-lg font-medium">
+              <p className={getMobileFeatureTextClasses()}>
                 Transform your digital presence with our expert team
               </p>
             </motion.div>
@@ -213,7 +310,7 @@ const BookingForm = () => {
                   <circle cx="11" cy="11" r="2"></circle>
                 </svg>
               </div>
-              <p className="text-black text-lg font-medium">
+              <p className={getMobileFeatureTextClasses()}>
                 Custom web design and development solutions
               </p>
             </motion.div>
@@ -235,7 +332,7 @@ const BookingForm = () => {
                   <line x1="14" y1="1" x2="14" y2="4"></line>
                 </svg>
               </div>
-              <p className="text-black text-lg font-medium">
+              <p className={getMobileFeatureTextClasses()}>
                 Digital marketing that delivers measurable results
               </p>
             </motion.div>
@@ -253,7 +350,7 @@ const BookingForm = () => {
           transition={{ duration: 0.7 }}
         >
           <div className="mb-4 md:mb-8">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl 2xl:text-7xl font-md">
+            <h1 className={getDesktopTitleClasses()}>
               Book your
               <br />
               digital <span>consultation</span>
@@ -283,7 +380,7 @@ const BookingForm = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-sm md:text-base lg:text-lg font-sm">
+                <p className={getDesktopFeatureTextClasses()}>
                   Transform your digital presence with our expert team
                 </p>
               </div>
@@ -306,7 +403,7 @@ const BookingForm = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-sm md:text-base lg:text-lg font-sm">
+                <p className={getDesktopFeatureTextClasses()}>
                   Custom web design and development solutions
                 </p>
               </div>
@@ -330,7 +427,7 @@ const BookingForm = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-sm md:text-base lg:text-lg font-sm">
+                <p className={getDesktopFeatureTextClasses()}>
                   Digital marketing that delivers measurable results
                 </p>
               </div>

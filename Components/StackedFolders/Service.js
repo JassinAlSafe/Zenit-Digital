@@ -70,10 +70,10 @@ export default function Service() {
   const getDescriptionClasses = () => {
     if (isWindows) {
       // Windows-specific text sizing
-      return "max-w-[40ch] ml-5 text-sm lg:text-lg font-normal leading-relaxed text-custom-green animated-text";
+      return "max-w-[40ch] ml-5 text-sm lg:text-lg  font-normal leading-relaxed text-custom-green animated-text";
     } else {
       // macOS classes (original)
-      return "max-w-[40ch] ml-5 text-sm lg:text-xl font-normal leading-relaxed text-custom-green animated-text";
+      return "max-w-[40ch] ml-5 text-sm text-gray-500 lg:text-xl font-normal leading-relaxed text-custom-green animated-text";
     }
   };
 
